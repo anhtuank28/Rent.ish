@@ -1,13 +1,69 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model Product {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  description  String?
+  retail_price Decimal  @db.Decimal(10, 2)
+  rental_price Decimal  @db.Decimal(10, 2)
+  created_at   DateTime @default(now())
+
+  variants ProductVariant[]
+}
+
+model ProductVariant {
+  id         String  @id @default(uuid()) @db.Uuid
+  product_id String  @db.Uuid
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  size       String
+  color      String
+  sku        String  @unique
+
+  inventory InventoryUnit[]
+
+  @@index([product_id])
+}
+
+model InventoryUnit {
+  id         String         @id @default(uuid()) @db.Uuid
+  variant_id String         @db.Uuid
+  variant    ProductVariant @relation(fields: [variant_id], references: [id], onDelete: Cascade)
+  barcode    String         @unique
+  status     String         @default("AVAILABLE")
+
+  bookings BookingItem[]
+
+  @@index([variant_id])
+}
+
+model Booking {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @db.Uuid
+  total_price Decimal  @db.Decimal(10, 2)
+  status      String   @default("PENDING")
+  created_at  DateTime @default(now())
+
+  items BookingItem[]
+
+  @@index([user_id])
+}
+
+model BookingItem {
+  id                String        @id @default(uuid()) @db.Uuid
+  booking_id        String        @db.Uuid
+  booking           Booking       @relation(fields: [booking_id], references: [id], onDelete: Cascade)
+  inventory_unit_id String        @db.Uuid
+  inventory_unit    InventoryUnit @relation(fields: [inventory_unit_id], references: [id], onDelete: Cascade)
+  item_type         String        @default("PRIMARY")
+
+  rental_period Unsupported("daterange")
+
+  @@index([booking_id])
+  @@index([inventory_unit_id])
 }
