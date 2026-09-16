@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Navbar() {
   return (
@@ -17,14 +18,13 @@ export function Navbar() {
           {/* Logo */}
           <div className="flex items-center gap-4 shrink-0">
             <Link href="/" className="flex items-center gap-4">
-              <img
+              <Image
+                src="/logo.png"
                 alt="Rent-ish Logo"
+                width={142}
+                height={32}
                 className="h-8 w-auto object-contain"
-                src="https://lh3.googleusercontent.com/aida/AEtjO1U4Jw_sQZMV2SGYtxAQRLouJB8-6jBWrV3nPwaIxlTltmAB_yDfAyAKCPzfwf0h03d3gos-n02Vr1hsD4b-yrczw76WnhGkZNSexkn4nZKOr0xFZDc5zqdUp_ZXzAdpBH-iV5sin4gV11QZwtgSG1k7B9yGCVGSkjxSZfHefyplAGRHkfBtATu9WCL2fnNfbp-jab7vFNowbnwfAuw3LTQUxMusSulYj1gEHIcyH6z6YH5q9R0xovqKN-k"
               />
-              <span className="font-headline-sm text-headline-sm tracking-tight text-on-surface font-semibold">
-                Rent-ish
-              </span>
             </Link>
           </div>
 
