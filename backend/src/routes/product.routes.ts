@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { ProductController } from "../controllers/product.controller.js";
+import { BookingController } from "../controllers/booking.controller.js";
 
 const router = Router();
 
@@ -8,6 +9,9 @@ router.get("/", ProductController.getAll);
 
 // Lấy chi tiết 1 sản phẩm
 router.get("/:id", ProductController.getById);
+
+// Kiểm tra tình trạng trống (availability) của sản phẩm
+router.get("/:id/availability", BookingController.checkAvailability);
 
 // Tạo sản phẩm mới (Admin)
 // TODO: Thêm middleware auth(ADMIN) và validate()

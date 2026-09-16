@@ -16,6 +16,7 @@ import { errorHandler } from "./middlewares/error.middleware.js";
 const app = express();
 
 import productRoutes from "./routes/product.routes.js";
+import bookingRoutes from "./routes/booking.routes.js";
 
 // ─── Global Middlewares ────────────────────────────
 app.use(cors());
@@ -33,7 +34,7 @@ app.get("/api/health", (_req, res) => {
 
 // ─── API Routes ────────────────────────────────────
 app.use("/api/products", productRoutes);
-// app.use("/api/bookings", bookingRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // ─── Global Error Handler (PHẢI ĐẶT CUỐI CÙNG) ───
 app.use(errorHandler);
