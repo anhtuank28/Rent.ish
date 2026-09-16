@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#dfc1aa",
+              "on-tertiary-fixed": "#2c1605",
+              error: "#ba1a1a",
+              "tertiary-fixed-dim": "#e7bfa2",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#6a615c",
+              "tertiary-container": "#eec5a8",
+              "secondary-container": "#eaddd7",
+              "surface-variant": "#e5e2df",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-container": "#6e503a",
+              "on-primary-container": "#685240",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f3f0ed",
+              "tertiary-fixed": "#ffdcc4",
+              "on-surface-variant": "#4e453e",
+              "on-surface": "#1c1c1a",
+              "primary-container": "#e5c7b0",
+              "on-error-container": "#93000a",
+              "surface-container-highest": "#e5e2df",
+              "inverse-surface": "#31302f",
+              tertiary: "#775841",
+              "surface-tint": "#715a47",
+              secondary: "#655d58",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed-variant": "#5d412b",
+              primary: "#715a47",
+              "error-container": "#ffdad6",
+              "outline-variant": "#d2c4bb",
+              "on-secondary-fixed-variant": "#4d4540",
+              "on-background": "#1c1c1a",
+              "surface-dim": "#dcdad7",
+              "surface-bright": "#fcf9f6",
+              "secondary-fixed-dim": "#d0c4be",
+              "primary-fixed-dim": "#dfc1aa",
+              "on-secondary-fixed": "#201a16",
+              "on-secondary": "#ffffff",
+              "surface-container-low": "#f6f3f0",
+              "surface-container": "#f0edea",
+              surface: "#fcf9f6",
+              "on-primary-fixed-variant": "#574331",
+              outline: "#80756d",
+              "surface-container-high": "#eae8e5",
+              "secondary-fixed": "#ece0d9",
+              background: "#fcf9f6",
+              "primary-fixed": "#fcddc5",
+              "on-primary-fixed": "#28180a",
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+              lg: "2rem",
+              xl: "3rem",
+              full: "9999px",
+            },
+            spacing: {
+              "space-xs": "0.25rem",
+              "space-xl": "2.5rem",
+              margin: "1.5rem",
+              "space-sm": "0.5rem",
+              "gutter-lg": "2rem",
+              "space-md": "1rem",
+              "margin-sm": "1rem",
+              gutter: "1.5rem",
+              "gutter-sm": "1rem",
+              "margin-lg": "4rem",
+              "space-lg": "1.5rem",
+            },
+            fontFamily: {
+              "display-mobile": ["Outfit"],
+              "label-sm": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "headline-sm": ["Outfit"],
+              "label-md": ["Plus Jakarta Sans"],
+              "label-lg": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "headline-md": ["Outfit"],
+              "headline-lg-mobile": ["Outfit"],
+              display: ["Outfit"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "headline-lg": ["Outfit"],
+            },
+            fontSize: {
+              "display-mobile": [
+                "36px",
+                {
+                  lineHeight: "44px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "600",
+                },
+              ],
+              "label-sm": [
+                "11px",
+                {
+                  lineHeight: "14px",
+                  letterSpacing: "0.02em",
+                  fontWeight: "500",
+                },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "headline-sm": [
+                "20px",
+                { lineHeight: "28px", fontWeight: "500" },
+              ],
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.02em",
+                  fontWeight: "600",
+                },
+              ],
+              "label-lg": [
+                "14px",
+                {
+                  lineHeight: "20px",
+                  letterSpacing: "0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "headline-md": [
+                "24px",
+                {
+                  lineHeight: "32px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "500",
+                },
+              ],
+              "headline-lg-mobile": [
+                "28px",
+                {
+                  lineHeight: "36px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              display: [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+              "headline-lg": [
+                "36px",
+                {
+                  lineHeight: "44px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-background font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"
+  >
+    <header
+      class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(36,30,26,0.04)]"
+    >
+      <div
+        class="h-20 max-w-[1360px] mx-auto px-margin-sm md:px-margin lg:px-margin-lg flex items-center justify-between gap-space-md"
+      >
+        <div class="flex items-center gap-space-md">
+          <a
+            class="flex items-center gap-space-sm"
+            data-path="rental-bag"
+            href="#"
+            ><img
+              alt="Modern clean wordmark for 'Rent-ish' fashion rental brand in soft rounded typography with warm camel beige accent dot or dash. Brand logo"
+              class="h-8 w-auto object-contain"
+              src="https://lh3.googleusercontent.com/aida/AEtjO1U4Jw_sQZMV2SGYtxAQRLouJB8-6jBWrV3nPwaIxlTltmAB_yDfAyAKCPzfwf0h03d3gos-n02Vr1hsD4b-yrczw76WnhGkZNSexkn4nZKOr0xFZDc5zqdUp_ZXzAdpBH-iV5sin4gV11QZwtgSG1k7B9yGCVGSkjxSZfHefyplAGRHkfBtATu9WCL2fnNfbp-jab7vFNowbnwfAuw3LTQUxMusSulYj1gEHIcyH6z6YH5q9R0xovqKN-k"
+            /><span
+              class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-semibold"
+              >Rent-ish</span
+            ></a
+          >
+          <div
+            class="hidden xl:flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low text-on-surface-variant"
+          >
+            <span class="material-symbols-outlined text-sm text-primary"
+              >lock</span
+            ><span
+              class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant"
+              >256-Bit SSL Secured</span
+            >
+          </div>
+        </div>
+        <nav
+          class="hidden md:flex items-center gap-space-xs bg-surface-container-low/70 p-1.5 rounded-full"
+          data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-full"
+        >
+          <a
+            class="font-label-md text-label-md px-space-md py-1.5 rounded-full text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="rental-bag"
+            href="#"
+            >1. Rental Bag</a
+          ><span class="text-outline-variant text-xs">•</span
+          ><a
+            aria-current="page"
+            class="px-space-md py-1.5 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-full"
+            data-path="delivery-and-payment"
+            href="#"
+            >2. Delivery &amp; Payment</a
+          ><span class="text-outline-variant text-xs">•</span
+          ><a
+            class="font-label-md text-label-md px-space-md py-1.5 rounded-full text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="order-confirmation"
+            href="#"
+            >3. Confirmation</a
+          >
+        </nav>
+        <div class="flex items-center gap-space-md">
+          <a
+            class="hidden sm:flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md"
+            data-path="concierge-support"
+            href="#"
+            ><span class="material-symbols-outlined text-lg text-primary"
+              >support_agent</span
+            ><span>Concierge</span></a
+          >
+          <div class="h-5 w-px bg-surface-variant hidden sm:block"></div>
+          <div class="flex items-center gap-space-sm">
+            <img
+              alt="Profile"
+              class="w-8 h-8 rounded-full object-cover shadow-[0_2px_6px_0_rgba(36,30,26,0.08)]"
+              src="https://lh3.googleusercontent.com/aida/AEtjO1X0Jr74IOGD9ioWsHhrZhoW78-aRNPj-d9bVe7_5615dwaaM7XeKZXBJ15-GZMv2ftNJip9kkqAixsrR4mQ8hFESexU4mLZwFFik236P66fFIkZHp3gSn0ZC1kV3Gs6PzvaB6W3XB1_e6D_jDRuVtOxVhzM_t4ZL39N0hUGI_15KxYKH1Om7Xuk2aScdpeujOafTiBXPUzR8iNr9ETMIkFJcv75aJiaGO5i4JBMIF6sHl-gjwHc_KwEEp62"
+            /><span
+              class="hidden lg:inline-block font-label-md text-label-md text-on-surface font-medium"
+              >Camille V.</span
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="w-full pt-20 bg-background min-h-[calc(100vh-140px)]">
+      <div class="flex flex-col w-full">
+        <div
+          class="max-w-[1360px] w-full mx-auto px-margin-sm md:px-margin lg:px-margin-lg py-space-md lg:py-space-xl"
+        >
+          <!-- Top Step Bar & Trust Header -->
+          <div
+            class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-sm mb-space-lg pb-space-sm"
+          >
+            <div class="flex items-center gap-space-sm">
+              <span
+                class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm"
+                >2</span
+              >
+              <div>
+                <h1
+                  class="font-headline-md text-headline-md text-on-surface tracking-tight leading-tight"
+                >
+                  Delivery &amp; Payment
+                </h1>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Step 2 of 3 • Review rental duration, enter delivery
+                  destination, and reserve.
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-low text-on-surface-variant shadow-sm self-stretch md:self-auto justify-center"
+            >
+              <span
+                class="material-symbols-outlined text-base text-primary"
+                style="font-variation-settings: &quot;FILL&quot; 1"
+                >verified_user</span
+              >
+              <span
+                class="font-label-sm text-label-sm text-on-surface font-medium"
+                >Guaranteed arrival 2 days before event</span
+              >
+            </div>
+          </div>
+          <!-- Main Split-Screen Layout (60% Form / 40% Summary) -->
+          <div
+            class="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-gutter-lg items-start"
+          >
+            <!-- LEFT COLUMN: Checkout Form (7 cols in 12-col grid ≈ 58-60%) -->
+            <div class="lg:col-span-7 flex flex-col gap-space-lg">
+              <!-- Trust Anchor Banner -->
+              <div
+                class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md"
+              >
+                <div class="flex items-center gap-space-sm">
+                  <div
+                    class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center flex-shrink-0 text-primary"
+                  >
+                    <span class="material-symbols-outlined text-xl"
+                      >event_available</span
+                    >
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span
+                        class="font-label-md text-label-md text-on-surface font-semibold"
+                        >Event Date: Friday, Oct 16</span
+                      >
+                      <span
+                        class="text-xs px-2 py-0.5 rounded-full bg-surface-container text-primary font-medium"
+                        >4-Day Rental</span
+                      >
+                    </div>
+                    <p
+                      class="font-body-sm text-body-sm text-on-surface-variant"
+                    >
+                      Guaranteed Courier Delivery:
+                      <span class="text-on-surface font-semibold"
+                        >Wednesday, Oct 14</span
+                      >
+                      (by 7:00 PM)
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="text-primary hover:text-on-primary-fixed-variant font-label-md text-label-md flex items-center gap-1 transition-colors px-space-sm py-1 rounded-full hover:bg-surface-container"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-sm"
+                    >edit_calendar</span
+                  >
+                  <span>Edit Dates</span>
+                </button>
+              </div>
+              <!-- STEP 1: Delivery Address & Shipping Mode -->
+              <section
+                class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm space-y-space-md"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-space-sm">
+                    <span
+                      class="w-6 h-6 rounded-full bg-surface-container text-primary text-xs font-semibold flex items-center justify-center"
+                      >1</span
+                    >
+                    <h2
+                      class="font-headline-sm text-headline-sm text-on-surface"
+                    >
+                      Delivery Address &amp; Logistics
+                    </h2>
+                  </div>
+                  <span
+                    class="font-label-sm text-label-sm text-on-surface-variant"
+                    >NYC &amp; Tri-State Standard Area</span
+                  >
+                </div>
+                <!-- Form Fields -->
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 gap-space-md pt-space-xs"
+                >
+                  <div>
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="first-name"
+                      >First Name</label
+                    >
+                    <input
+                      class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                      id="first-name"
+                      type="text"
+                      value="Camille"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="last-name"
+                      >Last Name</label
+                    >
+                    <input
+                      class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                      id="last-name"
+                      type="text"
+                      value="Vandermeer"
+                    />
+                  </div>
+                  <div class="sm:col-span-2">
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="street-addr"
+                      >Street Address</label
+                    >
+                    <input
+                      class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                      id="street-addr"
+                      placeholder="House number and street name"
+                      type="text"
+                      value="452 West Broadway"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="apt-suite"
+                      >Apt / Suite / Unit
+                      <span class="text-on-surface-variant text-xs"
+                        >(Optional)</span
+                      ></label
+                    >
+                    <input
+                      class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                      id="apt-suite"
+                      type="text"
+                      value="Apt 4B"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="city"
+                      >City</label
+                    >
+                    <input
+                      class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                      id="city"
+                      type="text"
+                      value="New York"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="state-region"
+                      >State / Region</label
+                    >
+                    <select
+                      class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all appearance-none cursor-pointer"
+                      id="state-region"
+                    >
+                      <option selected="" value="NY">New York (NY)</option>
+                      <option value="NJ">New Jersey (NJ)</option>
+                      <option value="CT">Connecticut (CT)</option>
+                      <option value="CA">California (CA)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="zip-code"
+                      >ZIP Code</label
+                    >
+                    <input
+                      class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                      id="zip-code"
+                      type="text"
+                      value="10012"
+                    />
+                  </div>
+                  <div class="sm:col-span-2">
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="phone-number"
+                      >Mobile Phone
+                      <span class="text-xs text-on-surface-variant"
+                        >(For direct door courier tracking &amp; SMS delivery
+                        codes)</span
+                      ></label
+                    >
+                    <div class="relative">
+                      <span
+                        class="absolute left-4 top-3 text-on-surface-variant material-symbols-outlined text-lg"
+                        >call</span
+                      >
+                      <input
+                        class="w-full h-12 pl-11 pr-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                        id="phone-number"
+                        type="tel"
+                        value="+1 (212) 555-0198"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- Delivery Mode Radios -->
+                <div class="pt-space-sm space-y-space-sm">
+                  <span
+                    class="block font-label-md text-label-md text-on-surface font-semibold"
+                    >Select Dispatch Method</span
+                  >
+                  <label
+                    class="relative flex items-center justify-between p-4 rounded-2xl bg-surface-container-low cursor-pointer hover:bg-secondary-container/40 transition-colors"
+                  >
+                    <div class="flex items-center gap-space-sm">
+                      <input
+                        checked=""
+                        class="w-4 h-4 text-on-surface accent-primary focus:ring-0 cursor-pointer"
+                        name="shipping_option"
+                        type="radio"
+                        value="standard"
+                      />
+                      <div>
+                        <div class="flex items-center gap-2">
+                          <p
+                            class="font-label-md text-label-md text-on-surface font-semibold"
+                          >
+                            Standard Rental Courier
+                          </p>
+                          <span
+                            class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container"
+                            >Recommended</span
+                          >
+                        </div>
+                        <p
+                          class="font-body-sm text-body-sm text-on-surface-variant"
+                        >
+                          Arrives 2 full days before your event on Wednesday,
+                          Oct 14
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      class="font-label-md text-label-md text-primary font-bold"
+                      >FREE</span
+                    >
+                  </label>
+                  <label
+                    class="relative flex items-center justify-between p-4 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-low cursor-pointer transition-colors"
+                  >
+                    <div class="flex items-center gap-space-sm">
+                      <input
+                        class="w-4 h-4 text-on-surface accent-primary focus:ring-0 cursor-pointer"
+                        name="shipping_option"
+                        type="radio"
+                        value="priority"
+                      />
+                      <div>
+                        <p
+                          class="font-label-md text-label-md text-on-surface font-semibold"
+                        >
+                          Priority Morning Express Dispatch
+                        </p>
+                        <p
+                          class="font-body-sm text-body-sm text-on-surface-variant"
+                        >
+                          Guaranteed arrival before 10:30 AM on Oct 14 with
+                          white-glove messenger
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      class="font-label-md text-label-md text-on-surface font-semibold"
+                      >+$12.00</span
+                    >
+                  </label>
+                </div>
+              </section>
+              <!-- STEP 2: Identity & Rental Security Verification -->
+              <section
+                class="bg-surface-container-low rounded-lg p-space-lg shadow-sm space-y-space-md"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-space-sm">
+                    <span
+                      class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container text-xs font-semibold flex items-center justify-center"
+                      >2</span
+                    >
+                    <h2
+                      class="font-headline-sm text-headline-sm text-on-surface"
+                    >
+                      Member Safeguard &amp; ID Protection
+                    </h2>
+                  </div>
+                  <span class="material-symbols-outlined text-primary text-xl"
+                    >shield_person</span
+                  >
+                </div>
+                <div
+                  class="p-space-md rounded-2xl bg-surface-container-lowest flex items-start gap-space-md"
+                >
+                  <div
+                    class="w-10 h-10 rounded-full bg-primary-container/40 text-primary flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-xl"
+                      >fingerprint</span
+                    >
+                  </div>
+                  <div class="space-y-1">
+                    <p
+                      class="font-label-md text-label-md text-on-surface font-semibold"
+                    >
+                      Instant Rental Verification
+                    </p>
+                    <p
+                      class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed"
+                    >
+                      To protect high-value designer garments, first-time
+                      Rent-ish members complete a frictionless 10-second SMS
+                      check after placing this order.
+                      <span class="text-on-surface font-medium"
+                        >No credit score impact.</span
+                      >
+                    </p>
+                  </div>
+                </div>
+                <label
+                  class="flex items-center gap-3 cursor-pointer select-none"
+                >
+                  <input
+                    checked=""
+                    class="w-4 h-4 rounded text-primary accent-primary cursor-pointer"
+                    type="checkbox"
+                  />
+                  <span
+                    class="font-body-sm text-body-sm text-on-surface font-medium"
+                    >Save this verified profile for 1-click rentals on upcoming
+                    dates</span
+                  >
+                </label>
+              </section>
+              <!-- STEP 3: Payment Method -->
+              <section
+                class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm space-y-space-md"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-space-sm">
+                    <span
+                      class="w-6 h-6 rounded-full bg-surface-container text-primary text-xs font-semibold flex items-center justify-center"
+                      >3</span
+                    >
+                    <h2
+                      class="font-headline-sm text-headline-sm text-on-surface"
+                    >
+                      Payment Method
+                    </h2>
+                  </div>
+                  <div class="flex items-center gap-1 text-on-surface-variant">
+                    <span class="material-symbols-outlined text-sm text-primary"
+                      >lock</span
+                    >
+                    <span class="font-label-sm text-label-sm"
+                      >End-to-End Encrypted</span
+                    >
+                  </div>
+                </div>
+                <!-- Payment Tabs -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <button
+                    class="py-2.5 px-3 rounded-xl font-label-md text-label-md bg-inverse-surface text-surface flex items-center justify-center gap-1.5 shadow-sm transition-transform active:scale-95"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-base"
+                      >credit_card</span
+                    >
+                    <span>Card</span>
+                  </button>
+                  <button
+                    class="py-2.5 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface hover:bg-surface-container flex items-center justify-center gap-1 transition-colors"
+                    type="button"
+                  >
+                    <span class="font-semibold text-xs tracking-tight"
+                      >Pay</span
+                    >
+                  </button>
+                  <button
+                    class="py-2.5 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface hover:bg-surface-container flex items-center justify-center gap-1 transition-colors"
+                    type="button"
+                  >
+                    <span class="font-bold text-xs italic tracking-tight"
+                      >PayPal</span
+                    >
+                  </button>
+                  <button
+                    class="py-2.5 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface hover:bg-surface-container flex items-center justify-center gap-1 transition-colors"
+                    type="button"
+                  >
+                    <span class="font-bold text-[11px] tracking-tight"
+                      >Klarna (4x)</span
+                    >
+                  </button>
+                </div>
+                <!-- Card Form -->
+                <div class="space-y-space-md pt-2">
+                  <div>
+                    <label
+                      class="block font-label-md text-label-md text-on-surface mb-1.5"
+                      for="cardholder-name"
+                      >Cardholder Name</label
+                    >
+                    <input
+                      class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                      id="cardholder-name"
+                      type="text"
+                      value="Camille Vandermeer"
+                    />
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                      <label
+                        class="font-label-md text-label-md text-on-surface"
+                        for="card-number"
+                        >Card Number</label
+                      >
+                      <div
+                        class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium"
+                      >
+                        <span
+                          class="px-1.5 py-0.5 rounded bg-surface-container text-[10px] font-bold"
+                          >VISA</span
+                        >
+                        <span
+                          class="px-1.5 py-0.5 rounded bg-surface-container text-[10px] font-bold"
+                          >MC</span
+                        >
+                        <span
+                          class="px-1.5 py-0.5 rounded bg-surface-container text-[10px] font-bold"
+                          >AMEX</span
+                        >
+                      </div>
+                    </div>
+                    <div class="relative">
+                      <input
+                        class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                        id="card-number"
+                        type="text"
+                        value="•••• •••• •••• 8241"
+                      />
+                      <span
+                        class="absolute right-4 top-3 text-primary material-symbols-outlined text-lg"
+                        >contactless</span
+                      >
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-space-md">
+                    <div>
+                      <label
+                        class="block font-label-md text-label-md text-on-surface mb-1.5"
+                        for="card-expiry"
+                        >Expiration Date</label
+                      >
+                      <input
+                        class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                        id="card-expiry"
+                        placeholder="MM / YY"
+                        type="text"
+                        value="08 / 27"
+                      />
+                    </div>
+                    <div>
+                      <div class="flex items-center justify-between mb-1.5">
+                        <label
+                          class="font-label-md text-label-md text-on-surface"
+                          for="card-cvv"
+                          >Security Code</label
+                        >
+                        <span
+                          class="text-xs text-on-surface-variant flex items-center gap-0.5 cursor-help"
+                          title="3-digit CVV on back of Visa/Mastercard, or 4 digits on front of AMEX"
+                        >
+                          <span class="material-symbols-outlined text-xs"
+                            >help</span
+                          >
+                          <span>3 digits</span>
+                        </span>
+                      </div>
+                      <input
+                        class="w-full h-12 px-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container transition-all"
+                        id="card-cvv"
+                        maxlength="4"
+                        type="password"
+                        value="794"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- Rental Agreement Checkbox -->
+                <div class="pt-2">
+                  <label
+                    class="flex items-start gap-3 cursor-pointer select-none"
+                  >
+                    <input
+                      checked=""
+                      class="mt-1 w-4 h-4 rounded text-primary accent-primary cursor-pointer flex-shrink-0"
+                      type="checkbox"
+                    />
+                    <span
+                      class="font-body-sm text-body-sm text-on-surface-variant leading-snug"
+                    >
+                      I authorize a temporary
+                      <span class="font-semibold text-on-surface"
+                        >$0.00 pre-authorization verification hold</span
+                      >
+                      for rental terms and agree to the
+                      <a
+                        class="text-primary underline font-medium hover:text-on-primary-fixed-variant"
+                        href="#"
+                        >Rent-ish Rental Agreement</a
+                      >. No hold or fee is charged unless garments are kept past
+                      the scheduled return date.
+                    </span>
+                  </label>
+                </div>
+                <!-- Primary Confirmation Button -->
+                <div class="pt-space-sm space-y-space-sm">
+                  <button
+                    class="w-full py-4 px-space-lg rounded-full bg-primary-container hover:bg-[#ddb99f] text-on-primary-container font-headline-sm text-headline-sm font-semibold tracking-tight transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-xl">lock</span>
+                    <span>Confirm &amp; Reserve Rental • $95.00</span>
+                  </button>
+                  <p
+                    class="font-label-sm text-label-sm text-on-surface-variant text-center leading-relaxed"
+                  >
+                    🛡️ Free cancellation up to 48 hours before dispatch. Returns
+                    postmarked by Monday, Oct 19 with prepaid bag.
+                  </p>
+                </div>
+              </section>
+            </div>
+            <!-- RIGHT COLUMN: Sticky Order Summary & Guarantees (5 cols ≈ 40-42%) -->
+            <div
+              class="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24"
+            >
+              <!-- Summary Card -->
+              <div
+                class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm space-y-space-md"
+              >
+                <div class="flex items-center justify-between pb-space-xs">
+                  <h2 class="font-headline-sm text-headline-sm text-on-surface">
+                    Rental Order Summary
+                  </h2>
+                  <span
+                    class="font-label-md text-label-md px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-medium"
+                    >2 Items</span
+                  >
+                </div>
+                <!-- Item 1: Silk Maxi -->
+                <div
+                  class="flex gap-space-md p-3 rounded-2xl bg-surface-container-low/60 hover:bg-surface-container-low transition-colors"
+                >
+                  <img
+                    class="w-20 h-28 rounded-xl object-cover flex-shrink-0 shadow-sm"
+                    data-alt="Editorial photograph of an elegant model wearing an architectural high-neck champagne draped silk maxi evening dress standing in a sunlit warm-toned studio with cream walls and natural soft light"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2ltVJIZ4KcnzBklKe7kfHqk53hP0t4TqcUgfGcGQjlJdq1jJmBFXSz3WU5tXPSCWZ7pMS-1jSAbZXew5NLrhqs_YZP8CRM3WyBgNiLzTJNQC67ZZG6RMlFAkOqLYfJzH_WNOpGfe5ktcANQCo16PYv9F2HcgvDIoYgzni68eZ06_45u9svsSeIYqAkNKoJq5rYfkJD-YhN65l_cArIlnT0iKUd2UexOn39fISKl7GgjqKlyhMwZFkzg"
+                  />
+                  <div class="flex flex-col justify-between flex-1 min-w-0">
+                    <div>
+                      <span
+                        class="text-[10px] font-bold uppercase tracking-wider text-primary"
+                        >AURA STUDIO</span
+                      >
+                      <h3
+                        class="font-label-lg text-label-lg text-on-surface font-semibold truncate"
+                      >
+                        Draped Silk Maxi Dress
+                      </h3>
+                      <p
+                        class="font-body-sm text-body-sm text-on-surface-variant text-xs mt-0.5"
+                      >
+                        Primary: Size S •
+                        <span class="text-on-surface font-medium"
+                          >Backup: Size M (Free)</span
+                        >
+                      </p>
+                      <div
+                        class="flex items-center gap-1 mt-1 text-on-surface-variant text-[11px]"
+                      >
+                        <span
+                          class="material-symbols-outlined text-xs text-primary"
+                          >calendar_today</span
+                        >
+                        <span>Oct 14 – Oct 19 (4-Day)</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline justify-between pt-1">
+                      <span
+                        class="font-label-md text-label-md text-on-surface font-bold"
+                        >$45.00</span
+                      >
+                      <span
+                        class="text-[11px] text-on-surface-variant line-through"
+                        >Retail $450</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <!-- Item 2: Cowl Neck Midi -->
+                <div
+                  class="flex gap-space-md p-3 rounded-2xl bg-surface-container-low/60 hover:bg-surface-container-low transition-colors"
+                >
+                  <img
+                    class="w-20 h-28 rounded-xl object-cover flex-shrink-0 shadow-sm"
+                    data-alt="Fashion editorial portrait of a woman wearing a terracotta blush cowl neck bias cut satin slip midi dress holding a natural rattan woven clutch in warm linen studio backdrop"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-Wk8mHoucynZoBL7FbKR6mLAvWoJjZrYOfIwTa15tP4Yxf7jHCww77W_z7lyjuv5ZcWhGTA27uoWMZiw2z9nBw02gwvPvzma2LtIfz4HO0lkU0OfxWJN7S5RDWw3djgQULW00dae7hFrO-pM2Lcc4jvZrYsZEeMFnrWdVb5ZHgbxxK1Jmn74jkJ10FqUCq05LAw_SHUNBb-7G5i5YEjcckzVsbMbMlSo7lD-3aCHfBZJZz0Mfs-GiEA"
+                  />
+                  <div class="flex flex-col justify-between flex-1 min-w-0">
+                    <div>
+                      <span
+                        class="text-[10px] font-bold uppercase tracking-wider text-primary"
+                        >CULT GAIA</span
+                      >
+                      <h3
+                        class="font-label-lg text-label-lg text-on-surface font-semibold truncate"
+                      >
+                        Sunset Cowl Neck Bias Midi
+                      </h3>
+                      <p
+                        class="font-body-sm text-body-sm text-on-surface-variant text-xs mt-0.5"
+                      >
+                        Primary: Size M •
+                        <span class="text-on-surface font-medium"
+                          >Backup: Size S (Free)</span
+                        >
+                      </p>
+                      <div
+                        class="flex items-center gap-1 mt-1 text-on-surface-variant text-[11px]"
+                      >
+                        <span
+                          class="material-symbols-outlined text-xs text-primary"
+                          >calendar_today</span
+                        >
+                        <span>Oct 14 – Oct 19 (4-Day)</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline justify-between pt-1">
+                      <span
+                        class="font-label-md text-label-md text-on-surface font-bold"
+                        >$45.00</span
+                      >
+                      <span
+                        class="text-[11px] text-on-surface-variant line-through"
+                        >Retail $390</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <!-- Price Breakdown Table -->
+                <div class="space-y-2.5 pt-space-xs text-body-sm font-body-sm">
+                  <div class="flex justify-between text-on-surface-variant">
+                    <span>Rental Subtotal (2 Garments)</span>
+                    <span class="text-on-surface font-medium">$90.00</span>
+                  </div>
+                  <div class="flex justify-between text-on-surface-variant">
+                    <span class="flex items-center gap-1">
+                      2x Complimentary Backup Sizes
+                      <span
+                        class="material-symbols-outlined text-xs text-primary"
+                        title="We include a second size for every piece free so your fit is guaranteed"
+                        >check_circle</span
+                      >
+                    </span>
+                    <span class="text-primary font-semibold">FREE ($0.00)</span>
+                  </div>
+                  <div class="flex justify-between text-on-surface-variant">
+                    <span>Professional Eco-Cleaning</span>
+                    <span class="text-primary font-semibold">FREE</span>
+                  </div>
+                  <div class="flex justify-between text-on-surface-variant">
+                    <span>2-Way Carbon-Neutral Shipping</span>
+                    <span class="text-primary font-semibold">FREE</span>
+                  </div>
+                  <div class="flex justify-between text-on-surface-variant">
+                    <span class="flex items-center gap-1">
+                      Rent-ish Care™ Damage Waiver
+                      <span
+                        class="material-symbols-outlined text-xs text-on-surface-variant"
+                        title="Covers spills, minor zip snags, and routine event stains"
+                        >info</span
+                      >
+                    </span>
+                    <span class="text-on-surface font-medium">$5.00</span>
+                  </div>
+                  <div class="flex justify-between text-on-surface-variant">
+                    <span>Temporary Security Deposit Hold</span>
+                    <span class="text-on-surface font-medium">$0.00</span>
+                  </div>
+                  <!-- Total Due Row -->
+                  <div class="pt-3 flex items-baseline justify-between">
+                    <div>
+                      <span
+                        class="font-headline-sm text-headline-sm text-on-surface font-bold"
+                        >Total Due Now</span
+                      >
+                      <p class="text-[11px] text-on-surface-variant">
+                        Includes all taxes, courier fees &amp; care
+                      </p>
+                    </div>
+                    <span
+                      class="font-headline-lg text-headline-lg text-on-surface font-bold"
+                      >$95.00</span
+                    >
+                  </div>
+                </div>
+                <!-- Savings Callout -->
+                <div
+                  class="py-2.5 px-4 rounded-xl bg-primary-fixed/50 flex items-center justify-between text-on-primary-fixed"
+                >
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-base"
+                      >savings</span
+                    >
+                    <span class="font-label-md text-label-md font-semibold"
+                      >Circular Savings</span
+                    >
+                  </div>
+                  <span class="font-label-md text-label-md font-bold"
+                    >✨ You save $745 vs buying</span
+                  >
+                </div>
+              </div>
+              <!-- Rent-ish Guarantees Card -->
+              <div
+                class="bg-surface-container-low rounded-lg p-space-md space-y-space-sm"
+              >
+                <div class="flex items-center gap-2 pb-1">
+                  <span
+                    class="material-symbols-outlined text-primary text-lg"
+                    style="font-variation-settings: &quot;FILL&quot; 1"
+                    >workspace_premium</span
+                  >
+                  <h3
+                    class="font-label-lg text-label-lg text-on-surface font-bold"
+                  >
+                    The Rent-ish Member Guarantee
+                  </h3>
+                </div>
+                <div class="space-y-space-sm text-body-sm font-body-sm">
+                  <div class="flex items-start gap-2.5">
+                    <span
+                      class="material-symbols-outlined text-base text-primary mt-0.5"
+                      >straighten</span
+                    >
+                    <div>
+                      <strong class="text-on-surface text-xs block"
+                        >100% Fit Guarantee</strong
+                      >
+                      <p
+                        class="text-on-surface-variant text-xs leading-relaxed"
+                      >
+                        If neither your primary nor backup size fits, get an
+                        immediate 100% rental credit or express same-day
+                        messenger swap.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2.5">
+                    <span
+                      class="material-symbols-outlined text-base text-primary mt-0.5"
+                      >keyboard_return</span
+                    >
+                    <div>
+                      <strong class="text-on-surface text-xs block"
+                        >Effortless Prepaid Returns</strong
+                      >
+                      <p
+                        class="text-on-surface-variant text-xs leading-relaxed"
+                      >
+                        Simply slip garments into the included reusable satchel
+                        on Oct 19. Drop at any UPS box or schedule doorstep
+                        pickup.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-2.5">
+                    <span
+                      class="material-symbols-outlined text-base text-primary mt-0.5"
+                      >dry_cleaning</span
+                    >
+                    <div>
+                      <strong class="text-on-surface text-xs block"
+                        >Zero Dry Cleaning Chores</strong
+                      >
+                      <p
+                        class="text-on-surface-variant text-xs leading-relaxed"
+                      >
+                        Never worry about laundry. All items are meticulously
+                        sanitized in our NYC eco-steam atelier upon receipt.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Concierge Assist Inline Trigger -->
+                <div class="pt-2">
+                  <button
+                    class="w-full py-2.5 px-3 rounded-xl bg-surface-container-lowest hover:bg-surface text-on-surface flex items-center justify-center gap-2 transition-colors shadow-sm"
+                    type="button"
+                  >
+                    <span
+                      class="material-symbols-outlined text-primary text-base"
+                      >chat</span
+                    >
+                    <span class="font-label-md text-label-md"
+                      >Need sizing or delivery advice? Chat with Concierge</span
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer
+      class="w-full bg-surface-container-low shadow-[0_-1px_8px_rgba(36,30,26,0.03)] py-space-xl"
+    >
+      <div
+        class="max-w-[1360px] mx-auto px-margin-sm md:px-margin lg:px-margin-lg flex flex-col md:flex-row items-center justify-between gap-space-lg"
+      >
+        <div
+          class="flex flex-wrap items-center justify-center md:justify-start gap-space-lg text-on-surface-variant"
+        >
+          <div class="flex items-center gap-space-xs">
+            <span class="material-symbols-outlined text-base text-primary"
+              >verified_user</span
+            ><span class="font-label-md text-label-md"
+              >Rental Fit &amp; Authenticity Guarantee</span
+            >
+          </div>
+          <div class="flex items-center gap-space-xs">
+            <span class="material-symbols-outlined text-base text-primary"
+              >dry_cleaning</span
+            ><span class="font-label-md text-label-md"
+              >Complimentary Eco Eco-Cleaning</span
+            >
+          </div>
+          <div class="flex items-center gap-space-xs">
+            <span class="material-symbols-outlined text-base text-primary"
+              >lock</span
+            ><span class="font-label-md text-label-md"
+              >PCI-DSS Level 1 Encryption</span
+            >
+          </div>
+        </div>
+        <div
+          class="flex items-center gap-space-lg font-label-sm text-label-sm text-on-surface-variant"
+        >
+          <a
+            class="hover:text-on-surface transition-colors"
+            data-path="rental-terms-guarantee"
+            href="#"
+            >Rental Terms &amp; Policy</a
+          ><span class="text-outline-variant">|</span
+          ><a
+            class="hover:text-on-surface transition-colors"
+            data-path="concierge-support"
+            href="#"
+            >Concierge Desk (24/7)</a
+          ><span class="text-outline-variant">|</span
+          ><span class="text-secondary">© 2024 Rent-ish Inc.</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -2,17 +2,21 @@
 
 ## 1. Tech Stack Overview
 - **Root Architecture:** Monorepo.
-- **Backend:** Node.js, Express, Prisma ORM, PostgreSQL.
+- **Backend:** Node.js, Express, TypeScript, Prisma ORM, PostgreSQL.
 - **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS.
 
 ## 2. Core Business Logic
 - The system must prevent double-booking using PostgreSQL `daterange` and GiST exclusion constraints on the `BookingItem` table.
 
-## 3. MASTER ROADMAP
+## 3. Development Rules
+- **SENIOR PERSONA:** Mọi dòng code, cấu trúc hệ thống, và kịch bản kiểm thử đều phải được thiết kế và viết dưới góc nhìn của một Senior Fullstack/QA Engineer tại một công ty công nghệ lớn (Top-tier Tech Company). Luôn đặt tính mở rộng, bảo mật, và hiệu năng lên hàng đầu.
+- **MANDATORY TESTING:** Bất cứ khi nào hoàn thành code cho một API, tính năng hoặc module nào, **BẮT BUỘC** phải tự động viết script/lệnh để kiểm thử (test) lại ngay lập tức và báo cáo kết quả QA cho user trước khi chuyển sang bước tiếp theo. Không được viết code mù mà không test.
+
+## 4. MASTER ROADMAP
 # 🗺️ RENT-ISH — Master Roadmap
 
 > **Project:** Rent-ish (Fashion Rental Platform)  
-> **Role:** Sole Full-Stack Developer  
+> **Role:** Sole Senior Full-Stack Developer  
 > **Stack:** Node.js/Express · Next.js App Router · Tailwind · PostgreSQL · Prisma 7  
 > **Current State:** Scaffolding ✅ | DB Schema ✅ | GiST Constraint ✅  
 

@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#ffffff",
+              "secondary-fixed-dim": "#d0c4be",
+              "surface-container-low": "#f6f3f0",
+              "surface-tint": "#715a47",
+              "on-primary-container": "#685240",
+              "primary-fixed-dim": "#dfc1aa",
+              "on-error": "#ffffff",
+              primary: "#715a47",
+              error: "#ba1a1a",
+              "primary-fixed": "#fcddc5",
+              "surface-container-high": "#eae8e5",
+              "on-tertiary-fixed-variant": "#5d412b",
+              "secondary-container": "#eaddd7",
+              "primary-container": "#e5c7b0",
+              "on-background": "#1c1c1a",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#31302f",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#d2c4bb",
+              "tertiary-fixed-dim": "#e7bfa2",
+              outline: "#80756d",
+              "on-primary-fixed-variant": "#574331",
+              surface: "#fcf9f6",
+              tertiary: "#775841",
+              "tertiary-fixed": "#ffdcc4",
+              background: "#fcf9f6",
+              "on-secondary-container": "#6a615c",
+              "on-surface-variant": "#4e453e",
+              "inverse-on-surface": "#f3f0ed",
+              "on-surface": "#1c1c1a",
+              "secondary-fixed": "#ece0d9",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-container": "#6e503a",
+              "surface-dim": "#dcdad7",
+              "tertiary-container": "#eec5a8",
+              "surface-container-highest": "#e5e2df",
+              "on-primary-fixed": "#28180a",
+              "surface-container": "#f0edea",
+              "surface-variant": "#e5e2df",
+              "on-tertiary-fixed": "#2c1605",
+              "on-secondary-fixed-variant": "#4d4540",
+              secondary: "#655d58",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#201a16",
+              "surface-bright": "#fcf9f6",
+              "inverse-primary": "#dfc1aa",
+            },
+            borderRadius: {
+              DEFAULT: "1rem",
+              lg: "2rem",
+              xl: "3rem",
+              full: "9999px",
+            },
+            spacing: {
+              "margin-sm": "1rem",
+              "gutter-lg": "2rem",
+              gutter: "1.5rem",
+              margin: "1.5rem",
+              "margin-lg": "4rem",
+              "space-lg": "1.5rem",
+              "space-xs": "0.25rem",
+              "space-md": "1rem",
+              "space-xl": "2.5rem",
+              "gutter-sm": "1rem",
+              "space-sm": "0.5rem",
+            },
+            fontFamily: {
+              "headline-lg-mobile": ["Outfit"],
+              "body-sm": ["Plus Jakarta Sans"],
+              display: ["Outfit"],
+              "body-md": ["Plus Jakarta Sans"],
+              "headline-sm": ["Outfit"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "headline-lg": ["Outfit"],
+              "display-mobile": ["Outfit"],
+              "label-md": ["Plus Jakarta Sans"],
+              "headline-md": ["Outfit"],
+              "label-lg": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              "headline-lg-mobile": [
+                "28px",
+                {
+                  lineHeight: "36px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              display: [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "headline-sm": [
+                "20px",
+                { lineHeight: "28px", fontWeight: "500" },
+              ],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+              "headline-lg": [
+                "36px",
+                {
+                  lineHeight: "44px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "display-mobile": [
+                "36px",
+                {
+                  lineHeight: "44px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "600",
+                },
+              ],
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.02em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-md": [
+                "24px",
+                {
+                  lineHeight: "32px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "500",
+                },
+              ],
+              "label-lg": [
+                "14px",
+                {
+                  lineHeight: "20px",
+                  letterSpacing: "0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "label-sm": [
+                "11px",
+                {
+                  lineHeight: "14px",
+                  letterSpacing: "0.02em",
+                  fontWeight: "500",
+                },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"
+  >
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_4px_20px_-2px_rgba(36,30,26,0.05)]"
+    >
+      <div
+        class="w-full bg-primary-container/60 text-on-primary-container py-2 px-margin-lg text-center font-label-md text-label-md tracking-wide flex items-center justify-center gap-space-sm"
+      >
+        <span
+          >✨ Free backup size included on every rental + Carbon-neutral
+          doorstep delivery</span
+        >
+      </div>
+      <div
+        class="h-20 max-w-[1360px] mx-auto px-margin-lg flex items-center justify-between gap-gutter"
+      >
+        <div class="flex items-center gap-space-xl">
+          <a
+            class="flex items-center gap-space-sm focus:outline-none"
+            data-path="home"
+            href="#"
+            ><img
+              alt="Modern clean wordmark for 'Rent-ish' fashion rental brand in soft rounded typography with warm camel beige accent dot or dash. Brand logo"
+              class="h-8 w-auto object-contain"
+              src="https://lh3.googleusercontent.com/aida/AEtjO1U4Jw_sQZMV2SGYtxAQRLouJB8-6jBWrV3nPwaIxlTltmAB_yDfAyAKCPzfwf0h03d3gos-n02Vr1hsD4b-yrczw76WnhGkZNSexkn4nZKOr0xFZDc5zqdUp_ZXzAdpBH-iV5sin4gV11QZwtgSG1k7B9yGCVGSkjxSZfHefyplAGRHkfBtATu9WCL2fnNfbp-jab7vFNowbnwfAuw3LTQUxMusSulYj1gEHIcyH6z6YH5q9R0xovqKN-k"
+            /><span
+              class="font-headline-md text-headline-md tracking-tight text-on-surface font-semibold"
+              >Rent-ish</span
+            ></a
+          >
+          <nav
+            class="hidden lg:flex items-center gap-space-xs p-1 bg-surface-container-low rounded-full"
+            data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-full"
+          >
+            <a
+              class="px-space-md py-2 rounded-full font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all"
+              data-path="new-arrivals"
+              href="#"
+              >New Arrivals</a
+            ><a
+              aria-current="page"
+              class="px-space-md py-2 transition-all bg-primary-container text-on-primary-container font-semibold rounded-full"
+              data-path="dresses"
+              href="#"
+              >Dresses</a
+            ><a
+              class="px-space-md py-2 rounded-full font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all"
+              data-path="occasions"
+              href="#"
+              >Occasions</a
+            ><a
+              class="px-space-md py-2 rounded-full font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all"
+              data-path="rent-ish-pass"
+              href="#"
+              >Rent-ish Pass</a
+            ><a
+              class="px-space-md py-2 rounded-full font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all"
+              data-path="how-it-works"
+              href="#"
+              >How It Works</a
+            >
+          </nav>
+        </div>
+        <div class="flex items-center gap-space-md">
+          <div class="relative hidden sm:flex items-center">
+            <button
+              class="flex items-center gap-space-sm px-space-md py-2 bg-surface-container-lowest text-on-surface-variant rounded-full shadow-[0_2px_8px_rgba(36,30,26,0.04)] hover:bg-surface-container-high hover:text-on-surface transition-colors"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[20px]">search</span
+              ><span class="font-body-sm text-body-sm text-on-surface-variant"
+                >Search curated looks...</span
+              >
+            </button>
+          </div>
+          <a
+            class="relative p-2.5 rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-center"
+            data-path="wishlist"
+            href="#"
+            ><span class="material-symbols-outlined text-[22px]">favorite</span
+            ><span
+              class="absolute top-1 right-1 min-w-[18px] h-[18px] bg-primary text-on-primary font-label-sm text-label-sm rounded-full flex items-center justify-center px-1"
+              >4</span
+            ></a
+          ><a
+            class="relative p-2.5 rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-center"
+            data-path="cart"
+            href="#"
+            ><span class="material-symbols-outlined text-[22px]"
+              >shopping_bag</span
+            ><span
+              class="absolute top-1 right-1 min-w-[18px] h-[18px] bg-primary text-on-primary font-label-sm text-label-sm rounded-full flex items-center justify-center px-1"
+              >1</span
+            ></a
+          ><a
+            class="p-0.5 rounded-full hover:ring-2 hover:ring-primary-container transition-all flex items-center justify-center ml-space-xs"
+            data-path="account"
+            href="#"
+            ><img
+              alt="Profile"
+              class="w-8 h-8 rounded-full object-cover"
+              src="https://lh3.googleusercontent.com/aida/AEtjO1X0Jr74IOGD9ioWsHhrZhoW78-aRNPj-d9bVe7_5615dwaaM7XeKZXBJ15-GZMv2ftNJip9kkqAixsrR4mQ8hFESexU4mLZwFFik236P66fFIkZHp3gSn0ZC1kV3Gs6PzvaB6W3XB1_e6D_jDRuVtOxVhzM_t4ZL39N0hUGI_15KxYKH1Om7Xuk2aScdpeujOafTiBXPUzR8iNr9ETMIkFJcv75aJiaGO5i4JBMIF6sHl-gjwHc_KwEEp62"
+          /></a>
+        </div>
+      </div>
+    </header>
+    <main class="w-full pt-28 bg-surface">
+      <div class="flex flex-col w-full">
+        <!-- Breadcrumbs & Utility Bar -->
+        <div
+          class="w-full max-w-[1360px] mx-auto px-margin-sm md:px-margin lg:px-margin-lg py-space-md"
+        >
+          <div
+            class="flex flex-wrap items-center justify-between gap-space-sm text-on-surface-variant"
+          >
+            <nav
+              aria-label="Breadcrumb"
+              class="flex items-center gap-space-xs font-label-md text-label-md"
+            >
+              <a class="hover:text-on-surface transition-colors" href="#"
+                >Home</a
+              >
+              <span class="material-symbols-outlined text-[16px] text-outline"
+                >chevron_right</span
+              >
+              <a class="hover:text-on-surface transition-colors" href="#"
+                >Dresses</a
+              >
+              <span class="material-symbols-outlined text-[16px] text-outline"
+                >chevron_right</span
+              >
+              <a class="hover:text-on-surface transition-colors" href="#"
+                >Evening Wear</a
+              >
+              <span class="material-symbols-outlined text-[16px] text-outline"
+                >chevron_right</span
+              >
+              <span
+                class="text-on-surface font-semibold truncate max-w-[180px] sm:max-w-xs"
+                >Draped Silk Maxi Dress in Champagne</span
+              >
+            </nav>
+            <div class="flex items-center gap-space-md">
+              <button
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-colors"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[16px]">share</span>
+                <span>Share</span>
+              </button>
+              <div
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-container/40 text-on-primary-container font-label-sm text-label-sm"
+              >
+                <span class="material-symbols-outlined text-[16px] fill-current"
+                  >favorite</span
+                >
+                <span>Wishlisted 418 times</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Main Hero Layout (Split Gallery + Booking Card) -->
+        <section
+          class="w-full max-w-[1360px] mx-auto px-margin-sm md:px-margin lg:px-margin-lg pb-space-xl"
+        >
+          <div
+            class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg items-start"
+          >
+            <!-- Left Column (60% Desktop: lg:col-span-7) -->
+            <div class="lg:col-span-7 flex flex-col gap-space-lg">
+              <!-- Main Showcase Asset -->
+              <div
+                class="relative w-full rounded-xl overflow-hidden bg-surface-container shadow-[0_8px_28px_-6px_rgba(36,30,26,0.06)] group"
+              >
+                <div class="aspect-[3/4] w-full overflow-hidden relative">
+                  <img
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    data-alt="Sculptural champagne silk halter neck maxi dress with elegant liquid drape across the torso and floor length fluidity. Studio lit with warm cream tones, high fashion luxury editorial."
+                    id="main-stage-image"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZJ9T0jJwUwqHnhcvbi1rXmKKWQjfvxtZGCpc6f9HrgsnHJuoIMEA9tBrK-7KnF-5r6IwlPB7PNLkFX8qtTlHOG7sS9jkpZAHtyJqdmIsD3zDCssJnDiG_8SDLuBh5gul5pzGYn_PeCGHy-u_YwHPisqQ5kmgNYUjFS5MLcNTyqQBzkPT56lKLuM60Dn9ZwX8E9NuKOQqakMOgUncI5ZIZC42PcO_Cio2ixZMDuAW-X1HT2X3hRfV6nA"
+                  />
+                  <!-- Overlay Badges -->
+                  <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
+                    <span
+                      class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-md font-label-sm text-label-sm text-on-surface shadow-[0_4px_12px_rgba(36,30,26,0.08)] flex items-center gap-1.5"
+                    >
+                      <span
+                        class="w-2 h-2 rounded-full bg-primary animate-pulse"
+                      ></span>
+                      <span>Trending: Rented 38 times this month</span>
+                    </span>
+                    <span
+                      class="px-3 py-1 rounded-full bg-secondary-container/90 backdrop-blur-md font-label-sm text-label-sm text-on-secondary-container w-max"
+                    >
+                      Couture Silhouette
+                    </span>
+                  </div>
+                  <!-- Floating Top Right Actions -->
+                  <div
+                    class="absolute top-4 right-4 flex items-center gap-2 z-10"
+                  >
+                    <button
+                      aria-label="Toggle favorite"
+                      class="w-11 h-11 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md hover:bg-surface-container-lowest transition-transform active:scale-95"
+                      type="button"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[22px] text-primary"
+                        >favorite</span
+                      >
+                    </button>
+                    <button
+                      aria-label="Zoom photo"
+                      class="w-11 h-11 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md hover:bg-surface-container-lowest transition-transform active:scale-95"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[20px]"
+                        >zoom_in</span
+                      >
+                    </button>
+                  </div>
+                  <!-- Micro bottom watermark pill -->
+                  <div
+                    class="absolute bottom-4 right-4 bg-on-background/70 backdrop-blur-md text-surface font-label-sm text-label-sm px-3 py-1 rounded-full flex items-center gap-1.5"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >auto_awesome</span
+                    >
+                    <span>100% Verified Pure Silk Satin</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Thumbnail Carousel Strip -->
+              <div
+                class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none"
+              >
+                <button
+                  class="gallery-thumb flex-shrink-0 w-20 sm:w-24 aspect-[3/4] rounded-DEFAULT overflow-hidden bg-primary-container p-0.5 shadow-sm transition-all focus:outline-none"
+                  type="button"
+                >
+                  <img
+                    class="w-full h-full object-cover rounded-DEFAULT"
+                    data-alt="Front view full-length of woman in sculpted champagne halter maxi dress against soft beige background."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRcldLTP-_LnC5ynlXvdBVp01PMiwj_fWTTUDDQBbha8Ei6QhPYk5N95xCQRXjFtJ8snEZcifFUr1N62EKgFPezvu3a6-lONrs2bJQLqTwmJjfmDqqF_AGx53kTiV591JwBWPco8tdZcT20524eZGIv3w4mbiI3OiX8MKrh3ytvfIJcw8r29krUFLMldrZ1sU7Ajbr0K7S3iIxKctwm1MCpvua3K0hF7jC0dpynoAgAb-fLltGE19dgA"
+                  />
+                </button>
+                <button
+                  class="gallery-thumb flex-shrink-0 w-20 sm:w-24 aspect-[3/4] rounded-DEFAULT overflow-hidden bg-surface-container-low opacity-75 hover:opacity-100 transition-all focus:outline-none"
+                  type="button"
+                >
+                  <img
+                    class="w-full h-full object-cover rounded-DEFAULT"
+                    data-alt="Model in warm nude cowl neck slip dress carrying small woven clutch in natural daylight."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuACzz022oaE9ZbsmZaS14sa8o1CxNC1-d7JmrGrAT2HEEHE6c3kdC0m7isCHq3E8LnbjV11Qdtsh_zeUw_eo3ioyDh2flT3LExxT5UyQPme_ysw44ucAk2FbZxbkuzpPRAi7IU-H5tes5rhQsDiwCxoHpo1aUbeei13TS7Ua7gX0ZtxY16M2AIBP2URFN5ZoKxIuIw-e5q6dX2dPNijVUotJhfwb2msQuizWbJWo3h2_nqvEQifkSwGYQ"
+                  />
+                </button>
+                <button
+                  class="gallery-thumb flex-shrink-0 w-20 sm:w-24 aspect-[3/4] rounded-DEFAULT overflow-hidden bg-surface-container-low opacity-75 hover:opacity-100 transition-all focus:outline-none"
+                  type="button"
+                >
+                  <img
+                    class="w-full h-full object-cover rounded-DEFAULT"
+                    data-alt="Close-up detail of architectural crisscross halter drape and backless cut on luxury champagne silk gown."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdeNBgU0qurTcYrXpohHzR3Mn0927IRwMJkiI7HWcQTeSV0Xrqn2UNGX6ZYPHVKXb8runoZ4MyChJGU3ZLWPuhASNvQKhU8sS1xtNx2M_PPOiR8Lds-9qn7YZ_SX5XLbIZnQF6dLcc4AVj8AIDNvSQJF-0NotqRdSDBGThiOiMnQ2ocSlfy4-N02cMhbdS9ukmOB6ANp9ZAl358DYW29Ceo-JrbKaTMWgzy-vRDlBevT2bPFRgvJWI1Q"
+                  />
+                </button>
+                <button
+                  class="gallery-thumb flex-shrink-0 w-20 sm:w-24 aspect-[3/4] rounded-DEFAULT overflow-hidden bg-surface-container-low opacity-75 hover:opacity-100 transition-all focus:outline-none"
+                  type="button"
+                >
+                  <img
+                    class="w-full h-full object-cover rounded-DEFAULT"
+                    data-alt="Macro texture shot of heavy Mulberry champagne satin silk reflecting soft studio lighting."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8NLNb4OO6lUN2uGXRM_jUp2JGY8f1R4WfHOebgtVtrNeGvgAlJChSg7VeEdsnOrYHfbnfQwHFtgmoTOl--vG07mW7I0XqC2RPnGMPOI-4OmThATbGWhDW4W8mq6aLeKi7LoG73GyVoMZ9zEaLjqXbch0yGq9xqtT5ou26ua4EQzlAyfHL27TrAn4HjvUfkWc9YJ3Y179NJdv07hho5dOM2aEGF_H_IqS01qW__AcpPIRFKziGaTKkzw"
+                  />
+                </button>
+                <button
+                  class="gallery-thumb relative flex-shrink-0 w-20 sm:w-24 aspect-[3/4] rounded-DEFAULT overflow-hidden bg-inverse-surface opacity-85 hover:opacity-100 transition-all text-on-primary focus:outline-none group"
+                  type="button"
+                >
+                  <img
+                    class="w-full h-full object-cover mix-blend-overlay"
+                    data-alt="Runway model walking gracefully in champagne floor-length gown with dramatic motion."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgJxd0J3vksgl1Ltznou2X8ZEELzsd3lNRIBHXvqaQtQ3OFAtBudNxfoYYM-s7Hgt_CWOnAGzogenyhLjvUbP9WkZDpZJI62-zkiQ9SC87cGPUDHxCAthpwgV5ZzgHVi5QaFV_0vsBPSNly6TzidCiCXvtH8pLbrPVSz9eYJXoO8f0S_aLK687hBnvKodxsIxzoqYZ4tXgp1KVB5yAUAfIV3JhcZPX0o6hhhLOSorHAGSftO6Op5p-Lg"
+                  />
+                  <div
+                    class="absolute inset-0 flex flex-col items-center justify-center text-center p-1 bg-on-background/30"
+                  >
+                    <span
+                      class="w-7 h-7 rounded-full bg-surface-container-lowest text-on-surface flex items-center justify-center shadow-md group-hover:scale-110 transition-transform"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >play_arrow</span
+                      >
+                    </span>
+                    <span
+                      class="font-label-sm text-[10px] mt-1 text-white uppercase tracking-wider font-semibold"
+                      >Runway</span
+                    >
+                  </div>
+                </button>
+              </div>
+              <!-- Rent-ish In Real Life (RIRL) Mini-Section -->
+              <div
+                class="bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_8px_24px_-4px_rgba(36,30,26,0.04)] mt-2"
+              >
+                <div class="flex items-center justify-between mb-space-md">
+                  <div>
+                    <h3
+                      class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2"
+                    >
+                      <span>Rented by Real Babes</span>
+                      <span
+                        class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm"
+                        >RIRL</span
+                      >
+                    </h3>
+                    <p
+                      class="font-body-sm text-body-sm text-on-surface-variant"
+                    >
+                      See genuine renter styling on different heights &amp;
+                      bodies
+                    </p>
+                  </div>
+                  <a
+                    class="font-label-md text-label-md text-primary font-semibold hover:underline flex items-center gap-1"
+                    href="#customer-gallery"
+                  >
+                    <span>See 42 member photos</span>
+                    <span class="material-symbols-outlined text-[16px]"
+                      >arrow_forward</span
+                    >
+                  </a>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <!-- Member 1 -->
+                  <div
+                    class="relative group rounded-DEFAULT overflow-hidden aspect-[4/5] bg-surface-container"
+                  >
+                    <img
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      data-alt="Customer selfie wearing champagne maxi dress at outdoor vineyard wedding reception, smiling warmly."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi3PcampxpbboGx4pGmcyIzKl4rdoqDN91eigIqNv08qJ2PiHwxMRFHcJCyQZPXDeznOHmh96s_MHfMPTIYlR08n4oG_QqN8XF32Eq7hbFEXSfBD8xswGMc6tizgRQCMI3smO_DnjfyaeE4Aub_J9mSaoVKNl1x9T6GsmmEYbGzYS6DgnYpn05oc0G40d93eMv9SIpplgstJq7oRS-B-ZzT18PePWpnj-E43b1ZIMi4w39kHtSzkbP_w"
+                    />
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-on-background/80 via-transparent to-transparent flex flex-col justify-end p-2.5"
+                    >
+                      <span
+                        class="font-label-sm text-label-sm text-white font-semibold leading-tight"
+                        >Camille</span
+                      >
+                      <span
+                        class="font-body-sm text-[11px] text-surface-container-high"
+                        >5'7" • Size S</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Member 2 -->
+                  <div
+                    class="relative group rounded-DEFAULT overflow-hidden aspect-[4/5] bg-surface-container"
+                  >
+                    <img
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      data-alt="Young woman posing gracefully in luxury hotel hallway wearing the champagne silk evening gown with golden accessories."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyVKrA4HwqXvB4Fic64AgZcNnklPhRjXxU2Orpl3lgiiBpO4xA4TPOe2Jp_V0EEcN75OTBztK34FkmqeVzef_4h61B4fDLM4qfU04zF-u1PIYSIOfnaxCWT3fIECBR52uw-rMxkI389Zy1meD1FuYQvlkz_j-BLdpjS5RItWxuVcRfexM1ceGEHFXtVKTZyjFKUH5oh19VmD1xMvHSoj1r7Hl-vJkst9bX3NjMphY7AXLl4FU-A6ioYw"
+                    />
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-on-background/80 via-transparent to-transparent flex flex-col justify-end p-2.5"
+                    >
+                      <span
+                        class="font-label-sm text-label-sm text-white font-semibold leading-tight"
+                        >Jessica</span
+                      >
+                      <span
+                        class="font-body-sm text-[11px] text-surface-container-high"
+                        >5'4" • Size M</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Member 3 -->
+                  <div
+                    class="relative group rounded-DEFAULT overflow-hidden aspect-[4/5] bg-surface-container"
+                  >
+                    <img
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      data-alt="Tall woman laughing in champagne silk dress at a gala dinner with soft ambient chandeliers."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuComp4DranXy3KNxpLkyw6dpNRDwT7ledFyQSgLtDunBVDqXPjmPs3_exKthzPFDUxKjJ3ls5OcJHhrUuwJqzGW8SFxU298hqmup1php71KhyacE0eM8Ykw9C8YFMcoXSGcxsm6wHGvtIPUUtX5HB6AwOwRCALJEWnRDjRhGayTLNUKKVH7kBBDbk8XSdyPgZ1Ktk0TpO3bX8VwJaE8fFT8TVCeeyMP8mXb41RLdVUNE2jT8HLwotDtfg"
+                    />
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-on-background/80 via-transparent to-transparent flex flex-col justify-end p-2.5"
+                    >
+                      <span
+                        class="font-label-sm text-label-sm text-white font-semibold leading-tight"
+                        >Taylor</span
+                      >
+                      <span
+                        class="font-body-sm text-[11px] text-surface-container-high"
+                        >5'9" • Size S</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Member 4 -->
+                  <div
+                    class="relative group rounded-DEFAULT overflow-hidden aspect-[4/5] bg-surface-container cursor-pointer"
+                  >
+                    <img
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      data-alt="Curvy model in champagne draped halter dress standing before clean architectural background."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMlgunM8YWNOrRDBJu_yl8i05ssDv_qpcC38ZzkhGSNyB4DyCzlr9qvkViR2u-cxlxL2R2TDfulLkMhihWFZTcIgxkCZPn6zGfQ7V9KHevbnHwbEOJfchnpCrXMA6fEx3DFVrVOcBV_PiD4u7BESUuYt0Aphe_pbT1unqcv5OM7rtUoowkrD_MuxoI55Id7ifCUYIEhL2mddqDq3djIORkv63YKscbhiwvhVf2_IpU5H-nhaKzyupjug"
+                    />
+                    <div
+                      class="absolute inset-0 bg-on-background/60 flex flex-col items-center justify-center text-center p-2 text-white hover:bg-on-background/70 transition-colors"
+                    >
+                      <span
+                        class="font-headline-sm text-headline-sm font-semibold"
+                        >+38</span
+                      >
+                      <span
+                        class="font-label-sm text-[11px] text-surface-container-highest uppercase tracking-wider"
+                        >More Styles</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Right Column (40% Desktop: lg:col-span-5) - Booking Engine -->
+            <div class="lg:col-span-5 lg:sticky lg:top-28">
+              <div
+                class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-xl shadow-[0_12px_36px_-6px_rgba(36,30,26,0.08)] flex flex-col gap-space-lg"
+              >
+                <!-- Heading & Designer Meta -->
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span
+                      class="font-label-md text-label-md tracking-widest uppercase font-semibold text-primary"
+                      >AURA STUDIO</span
+                    >
+                    <span
+                      class="px-2.5 py-0.5 rounded-full bg-tertiary-container/60 text-on-tertiary-container font-label-sm text-label-sm font-medium"
+                      >Verified Runway Drop</span
+                    >
+                  </div>
+                  <h1
+                    class="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-snug"
+                  >
+                    Draped Silk Maxi Dress in Champagne
+                  </h1>
+                  <div class="flex items-center gap-2 pt-1">
+                    <div class="flex items-center text-[#d48c3b]">
+                      <span
+                        class="material-symbols-outlined text-[18px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[18px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[18px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[18px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[18px] fill-current"
+                        >star</span
+                      >
+                    </div>
+                    <span
+                      class="font-label-md text-label-md font-semibold text-on-surface"
+                      >4.9</span
+                    >
+                    <span
+                      class="font-body-sm text-body-sm text-on-surface-variant"
+                      >(128 reviews)</span
+                    >
+                    <span class="text-outline-variant">•</span>
+                    <span
+                      class="font-label-sm text-label-sm text-primary font-medium"
+                      >Top Rated RSVP Fit</span
+                    >
+                  </div>
+                </div>
+                <!-- Pricing & Membership Block -->
+                <div
+                  class="p-space-md rounded-DEFAULT bg-surface-container-low flex flex-col gap-2"
+                >
+                  <div class="flex items-baseline justify-between">
+                    <div class="flex items-baseline gap-2">
+                      <span
+                        class="font-headline-lg text-headline-lg font-semibold text-on-surface"
+                        id="display-price"
+                        >$42</span
+                      >
+                      <span
+                        class="font-body-sm text-body-sm text-on-surface-variant"
+                        >/ 4-day rental</span
+                      >
+                    </div>
+                    <div class="text-right">
+                      <span
+                        class="font-body-sm text-body-sm text-outline line-through"
+                        >Retail $450</span
+                      >
+                      <span
+                        class="block font-label-sm text-label-sm text-primary font-semibold"
+                        >Save 91%</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center justify-between pt-2 border-t-0 bg-surface-container-lowest px-3 py-2 rounded-full"
+                  >
+                    <div class="flex items-center gap-2 text-on-surface">
+                      <span
+                        class="material-symbols-outlined text-[18px] text-tertiary"
+                        >workspace_premium</span
+                      >
+                      <span class="font-label-sm text-label-sm font-medium"
+                        >Or rotate with Rent-ish Pass</span
+                      >
+                    </div>
+                    <span
+                      class="font-label-sm text-label-sm font-semibold text-primary"
+                      >$0 / checkout</span
+                    >
+                  </div>
+                </div>
+                <!-- Rental Duration Pill Toggle -->
+                <div class="space-y-2">
+                  <div class="flex justify-between items-center">
+                    <label
+                      class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold"
+                      >Rental Duration</label
+                    >
+                    <span
+                      class="font-body-sm text-body-sm text-on-surface-variant"
+                      >Keep longer for destination events</span
+                    >
+                  </div>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button
+                      class="duration-btn py-2.5 px-3 rounded-full font-label-md text-label-md font-semibold bg-primary-container text-on-primary-container shadow-sm transition-all text-center"
+                      type="button"
+                    >
+                      4 Days
+                    </button>
+                    <button
+                      class="duration-btn py-2.5 px-3 rounded-full font-label-md text-label-md font-medium bg-surface-container-low text-on-surface hover:bg-surface-container transition-all text-center"
+                      type="button"
+                    >
+                      8 Days (+$18)
+                    </button>
+                    <button
+                      class="duration-btn py-2.5 px-3 rounded-full font-label-md text-label-md font-medium bg-surface-container-low text-on-surface hover:bg-surface-container transition-all text-center"
+                      type="button"
+                    >
+                      16 Days (+$36)
+                    </button>
+                  </div>
+                </div>
+                <!-- Interactive Mini Calendar Selector -->
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <label
+                      class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold"
+                      >Select Event Window</label
+                    >
+                    <span
+                      class="font-label-sm text-label-sm text-primary font-semibold flex items-center gap-1"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >calendar_month</span
+                      >
+                      October 2025
+                    </span>
+                  </div>
+                  <!-- Calendar Grid Card -->
+                  <div class="p-3.5 rounded-DEFAULT bg-surface-container-low">
+                    <div
+                      class="grid grid-cols-7 text-center font-label-sm text-[11px] text-on-surface-variant mb-2 font-semibold"
+                    >
+                      <span>Mo</span><span>Tu</span><span>We</span
+                      ><span>Th</span><span>Fr</span><span>Sa</span
+                      ><span>Su</span>
+                    </div>
+                    <div
+                      class="grid grid-cols-7 gap-y-1 text-center font-body-sm text-body-sm"
+                    >
+                      <span class="text-outline-variant py-1">20</span>
+                      <span class="text-outline-variant py-1">21</span>
+                      <span class="text-outline py-1">22</span>
+                      <span class="text-on-surface py-1">23</span>
+                      <!-- Active rental range block -->
+                      <button
+                        class="py-1 rounded-l-full bg-primary-container text-on-primary-container font-semibold text-center"
+                        type="button"
+                      >
+                        24
+                      </button>
+                      <button
+                        class="py-1 bg-primary-container/70 text-on-primary-container font-semibold text-center"
+                        type="button"
+                      >
+                        25
+                      </button>
+                      <button
+                        class="py-1 bg-primary-container text-on-primary-container font-bold text-center relative"
+                        type="button"
+                      >
+                        26
+                        <span
+                          class="absolute -top-1 right-1 w-1.5 h-1.5 rounded-full bg-tertiary"
+                        ></span>
+                      </button>
+                      <button
+                        class="py-1 rounded-r-full bg-primary-container text-on-primary-container font-semibold text-center"
+                        type="button"
+                      >
+                        27
+                      </button>
+                      <button
+                        class="text-on-surface py-1 hover:bg-surface-container rounded-full"
+                        type="button"
+                      >
+                        28
+                      </button>
+                      <button
+                        class="text-on-surface py-1 hover:bg-surface-container rounded-full"
+                        type="button"
+                      >
+                        29
+                      </button>
+                      <button
+                        class="text-on-surface py-1 hover:bg-surface-container rounded-full"
+                        type="button"
+                      >
+                        30
+                      </button>
+                      <button
+                        class="text-on-surface py-1 hover:bg-surface-container rounded-full"
+                        type="button"
+                      >
+                        31
+                      </button>
+                      <span class="text-outline-variant py-1">1</span>
+                      <span class="text-outline-variant py-1">2</span>
+                    </div>
+                  </div>
+                  <!-- Delivery Timeline Bar -->
+                  <div
+                    class="p-3 bg-surface-container-low rounded-DEFAULT flex flex-col gap-2"
+                  >
+                    <div
+                      class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"
+                    >
+                      <div class="flex items-center gap-1.5 text-on-surface">
+                        <span
+                          class="material-symbols-outlined text-[16px] text-primary"
+                          >local_shipping</span
+                        >
+                        <span class="font-semibold">Thu, Oct 24</span>
+                        <span class="text-on-surface-variant text-[11px]"
+                          >(Arrives Early)</span
+                        >
+                      </div>
+                      <div
+                        class="flex items-center gap-1 text-tertiary font-semibold"
+                      >
+                        <span class="material-symbols-outlined text-[16px]"
+                          >celebration</span
+                        >
+                        <span>Sat, Oct 26</span>
+                      </div>
+                      <div class="flex items-center gap-1 text-on-surface">
+                        <span class="material-symbols-outlined text-[16px]"
+                          >assignment_return</span
+                        >
+                        <span class="font-semibold">Mon, Oct 28</span>
+                      </div>
+                    </div>
+                    <div
+                      class="relative w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden"
+                    >
+                      <div
+                        class="absolute left-0 top-0 h-full w-full bg-gradient-to-r from-primary-container via-tertiary-container to-primary-container"
+                      ></div>
+                    </div>
+                    <p
+                      class="font-body-sm text-[12px] text-on-surface-variant text-center"
+                    >
+                      Doorstep delivery by 7 PM on Oct 24 • Complimentary return
+                      pouch included
+                    </p>
+                  </div>
+                </div>
+                <!-- Size Selection -->
+                <div class="space-y-2.5">
+                  <div class="flex justify-between items-center">
+                    <label
+                      class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold"
+                      >Primary Size</label
+                    >
+                    <button
+                      class="font-label-sm text-label-sm text-primary font-semibold hover:underline flex items-center gap-0.5"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[15px]"
+                        >straighten</span
+                      >
+                      <span>Size &amp; Fit Assistant</span>
+                    </button>
+                  </div>
+                  <!-- Size Options -->
+                  <div class="grid grid-cols-5 gap-2">
+                    <button
+                      class="size-btn py-2.5 rounded-full font-label-md text-label-md font-semibold bg-surface-container-low text-on-surface hover:bg-surface-container text-center transition-all"
+                      type="button"
+                    >
+                      XS
+                    </button>
+                    <button
+                      class="size-btn py-2.5 rounded-full font-label-md text-label-md font-semibold bg-on-surface text-on-primary shadow-sm text-center transition-all relative"
+                      type="button"
+                    >
+                      S
+                      <span
+                        class="absolute -top-2 left-1/2 -translate-x-1/2 px-1.5 py-0.2 bg-primary text-[9px] text-on-primary rounded-full font-bold uppercase whitespace-nowrap"
+                        >2 Left</span
+                      >
+                    </button>
+                    <button
+                      class="size-btn py-2.5 rounded-full font-label-md text-label-md font-semibold bg-surface-container-low text-on-surface hover:bg-surface-container text-center transition-all"
+                      type="button"
+                    >
+                      M
+                    </button>
+                    <button
+                      class="size-btn py-2.5 rounded-full font-label-md text-label-md font-semibold bg-surface-container-low text-on-surface hover:bg-surface-container text-center transition-all"
+                      type="button"
+                    >
+                      L
+                    </button>
+                    <button
+                      class="size-btn py-2.5 rounded-full font-label-md text-label-md font-semibold bg-surface-container-low text-on-surface hover:bg-surface-container text-center transition-all"
+                      type="button"
+                    >
+                      XL
+                    </button>
+                  </div>
+                  <!-- Fit Meter Bar -->
+                  <div
+                    class="px-3.5 py-2.5 rounded-DEFAULT bg-surface-container-low flex flex-col gap-1.5"
+                  >
+                    <div
+                      class="flex items-center justify-between font-label-sm text-label-sm"
+                    >
+                      <span class="font-semibold text-on-surface"
+                        >True to Size</span
+                      >
+                      <span class="text-on-surface-variant"
+                        >91% consensus based on 128 wears</span
+                      >
+                    </div>
+                    <div
+                      class="relative w-full h-1.5 bg-surface-container-highest rounded-full"
+                    >
+                      <div
+                        class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-primary ring-2 ring-surface-container-lowest"
+                      ></div>
+                    </div>
+                    <div
+                      class="flex justify-between text-[11px] text-outline font-label-sm"
+                    >
+                      <span>Runs Small</span>
+                      <span class="font-semibold text-on-surface"
+                        >Standard</span
+                      >
+                      <span>Runs Large</span>
+                    </div>
+                  </div>
+                  <!-- Free Backup Size Feature Card -->
+                  <div
+                    class="p-3.5 rounded-DEFAULT bg-secondary-container/40 flex flex-col gap-2.5"
+                  >
+                    <label class="flex items-center gap-2.5 cursor-pointer">
+                      <input
+                        checked=""
+                        class="w-4 h-4 rounded accent-primary text-on-primary focus:ring-0"
+                        type="checkbox"
+                      />
+                      <span
+                        class="font-label-sm text-label-sm font-semibold text-on-surface"
+                      >
+                        Include a FREE 2nd backup size for $0
+                      </span>
+                    </label>
+                    <div class="flex items-center gap-2 pl-6">
+                      <span
+                        class="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap"
+                        >Backup size:</span
+                      >
+                      <select
+                        class="flex-1 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm rounded-full px-3 py-1.5 outline-none shadow-sm cursor-pointer"
+                      >
+                        <option selected="" value="M">
+                          Size M (Recommended for 5'7" renters)
+                        </option>
+                        <option value="XS">Size XS</option>
+                        <option value="L">Size L</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- CTAs -->
+                <div class="space-y-2.5 pt-1">
+                  <button
+                    class="w-full h-12 rounded-full bg-primary-container hover:bg-tertiary-container text-on-primary-container font-label-lg text-label-lg font-bold shadow-[0_6px_20px_rgba(36,30,26,0.12)] hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[20px]"
+                      >shopping_bag</span
+                    >
+                    <span>Book Your Dates • $42</span>
+                  </button>
+                  <div class="flex items-center gap-2">
+                    <button
+                      class="flex-1 h-11 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-2"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >favorite</span
+                      >
+                      <span>Add to Wishlist</span>
+                    </button>
+                    <button
+                      class="px-4 h-11 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors flex items-center justify-center"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >help_outline</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <!-- Rental Guarantee Trust Chips -->
+                <div class="grid grid-cols-3 gap-2 pt-2 border-t-0">
+                  <div
+                    class="flex flex-col items-center text-center p-2 rounded-DEFAULT bg-surface-container-low"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[20px] text-primary mb-1"
+                      >dry_cleaning</span
+                    >
+                    <span
+                      class="font-label-sm text-label-sm font-semibold text-on-surface leading-tight"
+                      >Dry Clean</span
+                    >
+                    <span
+                      class="font-body-sm text-[11px] text-on-surface-variant mt-0.5"
+                      >We handle care</span
+                    >
+                  </div>
+                  <div
+                    class="flex flex-col items-center text-center p-2 rounded-DEFAULT bg-surface-container-low"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[20px] text-primary mb-1"
+                      >health_and_safety</span
+                    >
+                    <span
+                      class="font-label-sm text-label-sm font-semibold text-on-surface leading-tight"
+                      >Accident Cover</span
+                    >
+                    <span
+                      class="font-body-sm text-[11px] text-on-surface-variant mt-0.5"
+                      >Spills protected</span
+                    >
+                  </div>
+                  <div
+                    class="flex flex-col items-center text-center p-2 rounded-DEFAULT bg-surface-container-low"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[20px] text-primary mb-1"
+                      >autorenew</span
+                    >
+                    <span
+                      class="font-label-sm text-label-sm font-semibold text-on-surface leading-tight"
+                      >Easy Return</span
+                    >
+                    <span
+                      class="font-body-sm text-[11px] text-on-surface-variant mt-0.5"
+                      >Prepaid UPS bag</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Editorial Lower Content Tabs Section -->
+        <section class="w-full bg-surface-container-low py-space-xl">
+          <div
+            class="max-w-[1360px] mx-auto px-margin-sm md:px-margin lg:px-margin-lg"
+          >
+            <div
+              class="bg-surface-container-lowest rounded-xl p-space-lg md:p-space-xl shadow-[0_8px_30px_-6px_rgba(36,30,26,0.04)]"
+            >
+              <!-- Tab Navigation Header -->
+              <div
+                class="flex items-center gap-2 sm:gap-4 overflow-x-auto pb-4 border-b-0 scrollbar-none"
+              >
+                <button
+                  class="tab-btn px-5 py-2.5 rounded-full font-label-md text-label-md font-semibold bg-primary-container text-on-primary-container transition-all"
+                  type="button"
+                >
+                  Garment &amp; Fabric Details
+                </button>
+                <button
+                  class="tab-btn px-5 py-2.5 rounded-full font-label-md text-label-md font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all"
+                  type="button"
+                >
+                  Stylist Notes &amp; Fit
+                </button>
+                <button
+                  class="tab-btn px-5 py-2.5 rounded-full font-label-md text-label-md font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all"
+                  type="button"
+                >
+                  Measurements &amp; Sizing Guide
+                </button>
+                <button
+                  class="tab-btn px-5 py-2.5 rounded-full font-label-md text-label-md font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all"
+                  type="button"
+                >
+                  Delivery &amp; Eco Packaging
+                </button>
+              </div>
+              <!-- Tab Body Content (Garment Details + Stylist Note in 2-column layout) -->
+              <div
+                class="grid grid-cols-1 md:grid-cols-12 gap-gutter-lg pt-space-lg"
+              >
+                <div class="md:col-span-7 space-y-space-md">
+                  <h3 class="font-headline-md text-headline-md text-on-surface">
+                    The Atelier Craft
+                  </h3>
+                  <p
+                    class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed"
+                  >
+                    Crafted in Melbourne by Aura Studio, this floor-sweeping
+                    maxi dress features an architectural crisscross halter drape
+                    that gathers at the natural waist before cascading into an
+                    asymmetrical cascade. Cut on the bias from substantial
+                    22-momme Mulberry silk satin for zero transparency and
+                    maximum liquid drape.
+                  </p>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <div
+                      class="flex items-start gap-2.5 p-3 rounded-DEFAULT bg-surface-container-low"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[20px] text-primary mt-0.5"
+                        >check_circle</span
+                      >
+                      <div>
+                        <span
+                          class="font-label-md text-label-md font-semibold text-on-surface block"
+                          >100% Mulberry Silk</span
+                        >
+                        <span
+                          class="font-body-sm text-[12px] text-on-surface-variant"
+                          >Substantial 22-momme heavy satin weave</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="flex items-start gap-2.5 p-3 rounded-DEFAULT bg-surface-container-low"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[20px] text-primary mt-0.5"
+                        >check_circle</span
+                      >
+                      <div>
+                        <span
+                          class="font-label-md text-label-md font-semibold text-on-surface block"
+                          >Architectural Halter</span
+                        >
+                        <span
+                          class="font-body-sm text-[12px] text-on-surface-variant"
+                          >Twisted wrap neckline with hook closure</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="flex items-start gap-2.5 p-3 rounded-DEFAULT bg-surface-container-low"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[20px] text-primary mt-0.5"
+                        >check_circle</span
+                      >
+                      <div>
+                        <span
+                          class="font-label-md text-label-md font-semibold text-on-surface block"
+                          >Concealed Side Zip</span
+                        >
+                        <span
+                          class="font-body-sm text-[12px] text-on-surface-variant"
+                          >Discreet YKK closure for a smooth contour</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="flex items-start gap-2.5 p-3 rounded-DEFAULT bg-surface-container-low"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[20px] text-primary mt-0.5"
+                        >check_circle</span
+                      >
+                      <div>
+                        <span
+                          class="font-label-md text-label-md font-semibold text-on-surface block"
+                          >Bra Recommendation</span
+                        >
+                        <span
+                          class="font-body-sm text-[12px] text-on-surface-variant"
+                          >Adhesive backless cups or pasties</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="md:col-span-5 flex flex-col justify-between p-space-lg rounded-xl bg-surface-container-low"
+                >
+                  <div class="space-y-3">
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[20px] text-tertiary"
+                        >stylus</span
+                      >
+                      <span
+                        class="font-label-md text-label-md uppercase tracking-wider text-on-surface font-semibold"
+                        >Stylist Editorial Note</span
+                      >
+                    </div>
+                    <p
+                      class="font-body-md text-body-md text-on-surface-variant italic leading-relaxed"
+                    >
+                      "Our lead stylist recommends pairing this champagne drape
+                      with understated gold architectural drop earrings, nude or
+                      metallic strappy heels, and an off-white structured clutch
+                      to keep the fluid silhouette focal."
+                    </p>
+                  </div>
+                  <div class="pt-4 flex items-center gap-3">
+                    <img
+                      class="w-10 h-10 rounded-full object-cover"
+                      data-alt="Portrait of lead personal stylist smiling gently in studio warm light."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAV_HLMb_a2RBS7uOnE7chAizCxOuu9Vb8ovq95PDXhl-KjZlXWvNWlQP5MlX1gbSXiU0NC7wBjpRDjWEADENjClb3-SPt89fgX1EGi_o0N5krhrVLcFnB-OXy1yrbztCRUteCmZNuEojWR25Nd4ocQU5AsNqJ6Tcx17x7hopGK1bQZX0shoAEQzrjKvnCn3CIqYKab5soYu6rusTvSnbLuPPwJo-kHn1lIi2TaXXdIWdF3HoLm4285Hg"
+                    />
+                    <div>
+                      <span
+                        class="font-label-sm text-label-sm font-semibold text-on-surface block"
+                        >Helena Vance</span
+                      >
+                      <span
+                        class="font-body-sm text-[12px] text-on-surface-variant"
+                        >Head of Curation, Rent-ish NYC</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Complete The Look Carousel Section -->
+        <section
+          class="w-full max-w-[1360px] mx-auto px-margin-sm md:px-margin lg:px-margin-lg py-space-xl"
+        >
+          <div
+            class="flex flex-col sm:flex-row sm:items-end justify-between mb-space-lg gap-2"
+          >
+            <div>
+              <span
+                class="font-label-md text-label-md uppercase tracking-widest text-primary font-semibold"
+                >Atelier Curation</span
+              >
+              <h2 class="font-headline-lg text-headline-lg text-on-surface">
+                Complete The Look
+              </h2>
+              <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                Rent coordinating designer accessories at special bundled rates
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                aria-label="Scroll left"
+                class="w-10 h-10 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface transition-colors"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]"
+                  >chevron_left</span
+                >
+              </button>
+              <button
+                aria-label="Scroll right"
+                class="w-10 h-10 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface transition-colors"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[20px]"
+                  >chevron_right</span
+                >
+              </button>
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter"
+          >
+            <!-- Item 1 -->
+            <div
+              class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] group flex flex-col justify-between p-space-md"
+            >
+              <div
+                class="aspect-square rounded-DEFAULT overflow-hidden bg-surface-container relative mb-space-md"
+              >
+                <img
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  data-alt="Cult Gaia woven bamboo acrylic structured evening clutch on warm neutral surface."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5btY3PI1dtvQjhvW-kL-gRPfcj4ZvpC4dWam3HbHpWbzprkACLcya5yltWmYsSfH7Lq1ZaS_fHZa9yOoBErcqAIMzQA9pbf9mcRxTOOeStkVY-oHE7Bzidaj62Jo0S4EIQK-lVb4x4nR-B5NHfQ7AOUxB172MG8A690Iag4AarO3-FhTqDGR5j7oSPQ6tZaBzb6QkUss_krc5qO-yNC5RNfuhxHwhSwjBi8FKnqFWapri5x1gZ0N76Q"
+                />
+                <span
+                  class="absolute top-2 left-2 px-2.5 py-1 bg-surface-container-lowest/90 backdrop-blur-sm rounded-full font-label-sm text-[11px] font-semibold text-on-surface"
+                  >Cult Gaia</span
+                >
+              </div>
+              <div class="space-y-1">
+                <h4
+                  class="font-headline-sm text-[17px] leading-snug text-on-surface font-semibold"
+                >
+                  Bamboo Acrylic Minaudière
+                </h4>
+                <div class="flex items-baseline justify-between pt-1">
+                  <div>
+                    <span
+                      class="font-label-lg text-label-lg font-bold text-on-surface"
+                      >$18</span
+                    >
+                    <span
+                      class="font-body-sm text-[12px] text-on-surface-variant"
+                      >/ 4 days</span
+                    >
+                  </div>
+                  <span
+                    class="font-body-sm text-[12px] text-outline line-through"
+                    >Retail $398</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full py-2 rounded-full bg-surface-container-low hover:bg-primary-container hover:text-on-primary-container text-on-surface font-label-sm text-label-sm font-semibold transition-colors flex items-center justify-center gap-1"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                <span>Add to Rental</span>
+              </button>
+            </div>
+            <!-- Item 2 -->
+            <div
+              class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] group flex flex-col justify-between p-space-md"
+            >
+              <div
+                class="aspect-square rounded-DEFAULT overflow-hidden bg-surface-container relative mb-space-md"
+              >
+                <img
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  data-alt="Sophie Buhai sculptural baroque pearl drop gold earrings against warm linen background."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAizNd3HYJyp7KF_I1ZhX2pp2ZAb4G0GCn_9lbN5Kzkc5Z6oDRkI16WJEY9UPlwJkmq5O80_-_Xg6vNuIII-FTXx9d5BKN6yvsJ-Rvyjo6Jr_nn3mzU8nbB8noPablB0Ur2GmyDeWfbrZ6jXZoRBUz5mt2JZ6h1X9aasQVscSHXhB7xV8WG6guE9dhUoW5rTYnSKovb9eCGtvKCoJoM60_uQQzm9R1SmKY9NvPQPrGIsA_zI1bFsQlkYg"
+                />
+                <span
+                  class="absolute top-2 left-2 px-2.5 py-1 bg-surface-container-lowest/90 backdrop-blur-sm rounded-full font-label-sm text-[11px] font-semibold text-on-surface"
+                  >Sophie Buhai</span
+                >
+              </div>
+              <div class="space-y-1">
+                <h4
+                  class="font-headline-sm text-[17px] leading-snug text-on-surface font-semibold"
+                >
+                  Baroque Pearl Drop Earrings
+                </h4>
+                <div class="flex items-baseline justify-between pt-1">
+                  <div>
+                    <span
+                      class="font-label-lg text-label-lg font-bold text-on-surface"
+                      >$12</span
+                    >
+                    <span
+                      class="font-body-sm text-[12px] text-on-surface-variant"
+                      >/ 4 days</span
+                    >
+                  </div>
+                  <span
+                    class="font-body-sm text-[12px] text-outline line-through"
+                    >Retail $275</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full py-2 rounded-full bg-surface-container-low hover:bg-primary-container hover:text-on-primary-container text-on-surface font-label-sm text-label-sm font-semibold transition-colors flex items-center justify-center gap-1"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                <span>Add to Rental</span>
+              </button>
+            </div>
+            <!-- Item 3 -->
+            <div
+              class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] group flex flex-col justify-between p-space-md"
+            >
+              <div
+                class="aspect-square rounded-DEFAULT overflow-hidden bg-surface-container relative mb-space-md"
+              >
+                <img
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  data-alt="Khaite minimalist silk sheer evening wrap stole draped over elegant display form."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG71a9gfjzuUoj5rgV9G_jadrmZsGBQmBCkcP2wpLqrRPJOM5FehhEF20DYQIh5nnWSAhpGUCnxlcFiE_0KZPdU8z4li3xqvTnza4gOUATgKlTFba4gmt35uwJ8MprAuIZ_yGeXW7UXb2HFmHx8yBhEadpVVXu0e8-C9KnR3doGSnw1uPqSVhfw_nB9UxXY3_uv-jbxg8-AMqbLsp_zfCGJFhJm8N_qmyZzXRj0H3u2mxC6w65_5Pwbw"
+                />
+                <span
+                  class="absolute top-2 left-2 px-2.5 py-1 bg-surface-container-lowest/90 backdrop-blur-sm rounded-full font-label-sm text-[11px] font-semibold text-on-surface"
+                  >Khaite</span
+                >
+              </div>
+              <div class="space-y-1">
+                <h4
+                  class="font-headline-sm text-[17px] leading-snug text-on-surface font-semibold"
+                >
+                  Minimalist Silk Wrap Stole
+                </h4>
+                <div class="flex items-baseline justify-between pt-1">
+                  <div>
+                    <span
+                      class="font-label-lg text-label-lg font-bold text-on-surface"
+                      >$15</span
+                    >
+                    <span
+                      class="font-body-sm text-[12px] text-on-surface-variant"
+                      >/ 4 days</span
+                    >
+                  </div>
+                  <span
+                    class="font-body-sm text-[12px] text-outline line-through"
+                    >Retail $320</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full py-2 rounded-full bg-surface-container-low hover:bg-primary-container hover:text-on-primary-container text-on-surface font-label-sm text-label-sm font-semibold transition-colors flex items-center justify-center gap-1"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                <span>Add to Rental</span>
+              </button>
+            </div>
+            <!-- Item 4 -->
+            <div
+              class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] group flex flex-col justify-between p-space-md"
+            >
+              <div
+                class="aspect-square rounded-DEFAULT overflow-hidden bg-surface-container relative mb-space-md"
+              >
+                <img
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  data-alt="Manolo Blahnik pointed toe champagne satin mules with delicate buckle on museum plinth."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlDRcXQ3y5lJcEtoCZLa0PDbhP2K2sgmHtM6TdBQxVPpAqeQhv4rsM2JpL1KwO6CEpz4taSuk0KljRYnY896U_inzAv01Nvzem1t8h36d51OUaZIBboY37BlWKgWeTH4MlbrYt4FoDhT4LI77rRkQ92aw5L_2JRQq6hAu3G2kCPwPOlkZuA3Tqvef4X0upcKR5y0lY0jb8I9s7ySf4KCLm_ug5ch1kZAHfBYgBXbr_xWaMmYhPh5LfQg"
+                />
+                <span
+                  class="absolute top-2 left-2 px-2.5 py-1 bg-surface-container-lowest/90 backdrop-blur-sm rounded-full font-label-sm text-[11px] font-semibold text-on-surface"
+                  >Manolo Blahnik</span
+                >
+              </div>
+              <div class="space-y-1">
+                <h4
+                  class="font-headline-sm text-[17px] leading-snug text-on-surface font-semibold"
+                >
+                  Satin Sculpted Mules
+                </h4>
+                <div class="flex items-baseline justify-between pt-1">
+                  <div>
+                    <span
+                      class="font-label-lg text-label-lg font-bold text-on-surface"
+                      >$24</span
+                    >
+                    <span
+                      class="font-body-sm text-[12px] text-on-surface-variant"
+                      >/ 4 days</span
+                    >
+                  </div>
+                  <span
+                    class="font-body-sm text-[12px] text-outline line-through"
+                    >Retail $795</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full py-2 rounded-full bg-surface-container-low hover:bg-primary-container hover:text-on-primary-container text-on-surface font-label-sm text-label-sm font-semibold transition-colors flex items-center justify-center gap-1"
+                type="button"
+              >
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                <span>Add to Rental</span>
+              </button>
+            </div>
+          </div>
+        </section>
+        <!-- Customer Fit Reviews Section -->
+        <section class="w-full bg-surface py-space-xl" id="customer-gallery">
+          <div
+            class="max-w-[1360px] mx-auto px-margin-sm md:px-margin lg:px-margin-lg"
+          >
+            <!-- Section Header & Aggregate Metrics -->
+            <div
+              class="p-space-lg md:p-space-xl rounded-xl bg-surface-container-lowest shadow-[0_8px_24px_-4px_rgba(36,30,26,0.04)] mb-space-lg"
+            >
+              <div
+                class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg items-center"
+              >
+                <div
+                  class="lg:col-span-4 flex flex-col items-center sm:items-start text-center sm:text-left"
+                >
+                  <span
+                    class="font-display text-[56px] leading-none font-bold text-on-surface"
+                    >4.9</span
+                  >
+                  <div class="flex items-center text-[#d48c3b] my-2">
+                    <span
+                      class="material-symbols-outlined text-[24px] fill-current"
+                      >star</span
+                    >
+                    <span
+                      class="material-symbols-outlined text-[24px] fill-current"
+                      >star</span
+                    >
+                    <span
+                      class="material-symbols-outlined text-[24px] fill-current"
+                      >star</span
+                    >
+                    <span
+                      class="material-symbols-outlined text-[24px] fill-current"
+                      >star</span
+                    >
+                    <span
+                      class="material-symbols-outlined text-[24px] fill-current"
+                      >star</span
+                    >
+                  </div>
+                  <p
+                    class="font-body-md text-body-md text-on-surface-variant font-medium"
+                  >
+                    Based on 128 verified rental feedback submissions
+                  </p>
+                  <span
+                    class="mt-2 inline-flex items-center gap-1 font-label-sm text-label-sm text-primary font-semibold"
+                  >
+                    <span class="material-symbols-outlined text-[16px]"
+                      >verified</span
+                    >
+                    100% Real Rent-ish Renters
+                  </span>
+                </div>
+                <!-- Fit Consensus Visual Bars -->
+                <div
+                  class="lg:col-span-8 flex flex-col justify-center space-y-3"
+                >
+                  <h4
+                    class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold"
+                  >
+                    Renter Fit Consensus
+                  </h4>
+                  <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                      <span
+                        class="w-24 text-right font-label-sm text-label-sm text-on-surface-variant"
+                        >Runs Small</span
+                      >
+                      <div
+                        class="flex-1 h-3 rounded-full bg-surface-container overflow-hidden"
+                      >
+                        <div
+                          class="h-full bg-secondary w-[4%] rounded-full"
+                        ></div>
+                      </div>
+                      <span
+                        class="w-10 font-label-sm text-label-sm font-semibold text-on-surface"
+                        >4%</span
+                      >
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span
+                        class="w-24 text-right font-label-sm text-label-sm font-bold text-on-surface"
+                        >True to Size</span
+                      >
+                      <div
+                        class="flex-1 h-3 rounded-full bg-surface-container overflow-hidden"
+                      >
+                        <div
+                          class="h-full bg-primary w-[91%] rounded-full"
+                        ></div>
+                      </div>
+                      <span
+                        class="w-10 font-label-sm text-label-sm font-bold text-primary"
+                        >91%</span
+                      >
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span
+                        class="w-24 text-right font-label-sm text-label-sm text-on-surface-variant"
+                        >Runs Large</span
+                      >
+                      <div
+                        class="flex-1 h-3 rounded-full bg-surface-container overflow-hidden"
+                      >
+                        <div
+                          class="h-full bg-secondary w-[5%] rounded-full"
+                        ></div>
+                      </div>
+                      <span
+                        class="w-10 font-label-sm text-label-sm font-semibold text-on-surface"
+                        >5%</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Body Type Filter Chips -->
+                  <div class="flex flex-wrap items-center gap-2 pt-3">
+                    <span
+                      class="font-label-sm text-label-sm text-on-surface-variant font-semibold"
+                      >Filter:</span
+                    >
+                    <button
+                      class="px-3 py-1 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm font-semibold"
+                      type="button"
+                    >
+                      All Bodies
+                    </button>
+                    <button
+                      class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm"
+                      type="button"
+                    >
+                      Petite (&lt; 5'4")
+                    </button>
+                    <button
+                      class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm"
+                      type="button"
+                    >
+                      Average (5'4" - 5'7")
+                    </button>
+                    <button
+                      class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm"
+                      type="button"
+                    >
+                      Tall (5'8"+)
+                    </button>
+                    <button
+                      class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[14px]"
+                        >photo_camera</span
+                      >
+                      <span>With Photos (42)</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Detailed Review Cards (2 Column Bento) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+              <!-- Review 1 -->
+              <div
+                class="p-space-lg rounded-xl bg-surface-container-lowest shadow-[0_8px_24px_-4px_rgba(36,30,26,0.04)] flex flex-col justify-between gap-space-md"
+              >
+                <div class="space-y-3">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <img
+                        class="w-11 h-11 rounded-full object-cover"
+                        data-alt="Customer avatar photo, young brunette woman smiling outdoors."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyHaK5sszAWjjVpz_eXTrZuk36zxStW91raGW1l4s3rLXw3Kv6awU2mhFl6pYxh_iL9v81aZQgsq9jhfoPVTtJQMDTZa78txz3LMSfVbTICx8CIUOWnbDIwYFioPLwmrBIxrOBqGyKFx8ampl6a0OaNp-71rmtENjlpMnrgmfSU39Wwm5-yI-zkzdrP-FHNGUfLNaDO3lqDzf47zg25M-l5sLkEqNq93vl5dlWiElgqXOMXe5yBl1nvA"
+                      />
+                      <div>
+                        <div class="flex items-center gap-1.5">
+                          <h5
+                            class="font-headline-sm text-[16px] text-on-surface font-semibold"
+                          >
+                            Elena Rostova
+                          </h5>
+                          <span
+                            class="material-symbols-outlined text-[16px] text-primary"
+                            >verified</span
+                          >
+                        </div>
+                        <span
+                          class="font-body-sm text-[12px] text-on-surface-variant"
+                          >Rented for a Black-Tie Summer Wedding</span
+                        >
+                      </div>
+                    </div>
+                    <div class="flex items-center text-[#d48c3b]">
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Reviewer Metadata Badges -->
+                  <div
+                    class="flex flex-wrap items-center gap-1.5 font-label-sm text-[11px]"
+                  >
+                    <span
+                      class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant"
+                      >Height: 5'8"</span
+                    >
+                    <span
+                      class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant"
+                      >Usual Size: S</span
+                    >
+                    <span
+                      class="px-2.5 py-0.5 rounded-full bg-primary-container/60 text-on-primary-container font-semibold"
+                      >Rented: S (Fit perfectly)</span
+                    >
+                  </div>
+                  <p
+                    class="font-body-md text-body-md text-on-surface-variant leading-relaxed"
+                  >
+                    "I cannot overstate how many compliments I received! The
+                    silk has the dreamiest, heavy quality that drapes like
+                    couture without clinging in the wrong places. Wore 3-inch
+                    heels and the hem dusted the floor in the most ethereal way.
+                    The free backup size gave me total peace of mind."
+                  </p>
+                </div>
+                <!-- Review Photo Thumbnail Strip -->
+                <div class="flex items-center gap-2 pt-1">
+                  <div
+                    class="w-16 h-20 rounded-DEFAULT overflow-hidden bg-surface-container"
+                  >
+                    <img
+                      class="w-full h-full object-cover"
+                      data-alt="Customer photo showing full drape of dress at evening event."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq8LctqQ4r3PGFClEmCwEs99xbXkM1bdQwaJqltV6SiZnMYc5C6lU_GKCjEJ1lNbWPyiiqQ5NL8iOLSkJ8OGPRAXaw8Fm7CLuQ7C2g9iaTViQUdCn7Nk2LN3S01eGzNYy7um2uMv1QSpAB9tZfi2cpDwEm8_IA3RiWhurq_VT895eFCg5Xcf6RHpfnpM6MXFLfivZ0KtYpIWDdT7zKryXDuSY_4JJf5mPp5Jaieb4LLlJi8meNyDdEOA"
+                    />
+                  </div>
+                  <div
+                    class="w-16 h-20 rounded-DEFAULT overflow-hidden bg-surface-container"
+                  >
+                    <img
+                      class="w-full h-full object-cover"
+                      data-alt="Close up photo of the halter neckline and earrings worn by the customer."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdDQ9lgrFU4PgAiIDy3xToLh5_bFfK0OaPOZzQTKkefrBsUzVFrvMK5eW-LBpSBMCZMkGbfQ4x19WyJQKnkE8Ta4AWtgcSzEHprjnw4yA9aFwdOyBgJwWhCapWt7wWRuvRNsKdktfSSmWDuGzHAlGo-bVna6Z_oahK6Xpsh6M56RBP_UkSHNtdOx5aLrGmx8vzLQxF6AI5PbsoDcKDA-pw72-kYh_EknnHp5iw9EWxlr1cDcbM-2PK6Q"
+                    />
+                  </div>
+                  <span
+                    class="font-label-sm text-[11px] text-on-surface-variant pl-2"
+                    >Uploaded on Sep 29, 2025</span
+                  >
+                </div>
+              </div>
+              <!-- Review 2 -->
+              <div
+                class="p-space-lg rounded-xl bg-surface-container-lowest shadow-[0_8px_24px_-4px_rgba(36,30,26,0.04)] flex flex-col justify-between gap-space-md"
+              >
+                <div class="space-y-3">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <img
+                        class="w-11 h-11 rounded-full object-cover"
+                        data-alt="Smiling blonde woman in natural light avatar."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkNDnzg5G7OgRVIGCFg-8Xj79EydYFKtZWttzQyel53thp5LYF9kSKaamEBVwjv-0ubc0qVFejz82NeleiEzjTtBBMPKppUs3bHlK-_1qIq4w93aG7nUDSnj7cs0TYG8G51lcrPyAUYQi85x4-Af_5FMpsIAnwhy1qKsr3zeVuM-Z9WabKJ2fVapIszMlRxb509cfV0YUMcXPyW-eXQAobxxOsU850JjD5GFjLFSwMrWpnogzPqCmGIQ"
+                      />
+                      <div>
+                        <div class="flex items-center gap-1.5">
+                          <h5
+                            class="font-headline-sm text-[16px] text-on-surface font-semibold"
+                          >
+                            Morgan Chen
+                          </h5>
+                          <span
+                            class="material-symbols-outlined text-[16px] text-primary"
+                            >verified</span
+                          >
+                        </div>
+                        <span
+                          class="font-body-sm text-[12px] text-on-surface-variant"
+                          >Rented for Annual Charity Gala</span
+                        >
+                      </div>
+                    </div>
+                    <div class="flex items-center text-[#d48c3b]">
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                      <span
+                        class="material-symbols-outlined text-[16px] fill-current"
+                        >star</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Reviewer Metadata Badges -->
+                  <div
+                    class="flex flex-wrap items-center gap-1.5 font-label-sm text-[11px]"
+                  >
+                    <span
+                      class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant"
+                      >Height: 5'4"</span
+                    >
+                    <span
+                      class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant"
+                      >Usual Size: M</span
+                    >
+                    <span
+                      class="px-2.5 py-0.5 rounded-full bg-primary-container/60 text-on-primary-container font-semibold"
+                      >Rented: M &amp; S (Wore M)</span
+                    >
+                  </div>
+                  <p
+                    class="font-body-md text-body-md text-on-surface-variant leading-relaxed"
+                  >
+                    "Being 5'4", I was worried about the length, but paired with
+                    3.5" platform heels it was phenomenal. The color is not a
+                    harsh metallic gold—it's a very creamy, champagne taupe that
+                    flatters warm skin tones. The prepaid return bag made Monday
+                    morning dropoff completely effortless!"
+                  </p>
+                </div>
+                <!-- Review Photo Thumbnail Strip -->
+                <div class="flex items-center gap-2 pt-1">
+                  <div
+                    class="w-16 h-20 rounded-DEFAULT overflow-hidden bg-surface-container"
+                  >
+                    <img
+                      class="w-full h-full object-cover"
+                      data-alt="Customer photo posing with friend at museum gala in the champagne silk dress."
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDulz9PDTQBEJ1a8aytindh7SQbUTGrrO5yZ6kVzXHQNFxZteYH2V7_F7gvtkJYXwX3gzCFcRqW4AP0Zv702mJ353eRtcArqaHulF7IBt7wxbh4uFNJdJ5nF7p0K9xnUkFKN2JrVFb-oucFvNtYlAXM8jhAht0aXbT5dmqVooJjXfxYbIwFxChKvd3vQ34HXrXW6HAqq87WB1XPZOimMbU4GOiNeKpWIlSwSl0Yph12vpA7TDuw3A0Fcg"
+                    />
+                  </div>
+                  <span
+                    class="font-label-sm text-[11px] text-on-surface-variant pl-2"
+                    >Uploaded on Oct 12, 2025</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Load More Reviews Button -->
+            <div class="flex justify-center mt-space-lg">
+              <button
+                class="px-space-xl py-3 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg font-semibold transition-colors flex items-center gap-2"
+                type="button"
+              >
+                <span>Read all 128 Renter Reviews</span>
+                <span class="material-symbols-outlined text-[18px]"
+                  >expand_more</span
+                >
+              </button>
+            </div>
+          </div>
+        </section>
+        <!-- Sticky Mobile Add to Cart Drawer Bar (sm screens only) -->
+        <div
+          class="lg:hidden fixed bottom-0 left-0 right-0 p-3 bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_24px_rgba(36,30,26,0.12)] z-40 flex items-center justify-between gap-3"
+        >
+          <div class="flex flex-col">
+            <div class="flex items-baseline gap-1.5">
+              <span
+                class="font-headline-sm text-headline-sm font-bold text-on-surface"
+                >$42</span
+              >
+              <span class="font-body-sm text-[12px] text-on-surface-variant"
+                >/ 4 days</span
+              >
+            </div>
+            <span class="font-label-sm text-[11px] text-primary font-medium"
+              >Free backup size included</span
+            >
+          </div>
+          <button
+            class="flex-1 max-w-[220px] h-11 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md font-bold shadow-md hover:bg-tertiary-container transition-colors flex items-center justify-center gap-1.5"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[18px]"
+              >calendar_today</span
+            >
+            <span>Reserve Oct 24–27</span>
+          </button>
+        </div>
+      </div>
+      <script>
+        // Simple interactive thumbnail switcher & pill selector micro-interactions
+        document.addEventListener("DOMContentLoaded", () => {
+          const thumbs = document.querySelectorAll(".gallery-thumb");
+          const mainImg = document.getElementById("main-stage-image");
+
+          thumbs.forEach((thumb) => {
+            thumb.addEventListener("click", () => {
+              thumbs.forEach((t) => {
+                t.classList.remove("bg-primary-container", "opacity-100");
+                t.classList.add("opacity-75", "bg-surface-container-low");
+              });
+              thumb.classList.remove("opacity-75", "bg-surface-container-low");
+              thumb.classList.add("bg-primary-container", "opacity-100");
+
+              const childImg = thumb.querySelector("img");
+              if (childImg && mainImg) {
+                mainImg.src = childImg.src;
+              }
+            });
+          });
+
+          // Duration toggles
+          const durationBtns = document.querySelectorAll(".duration-btn");
+          const priceDisplay = document.getElementById("display-price");
+          durationBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              durationBtns.forEach((b) => {
+                b.className =
+                  "duration-btn py-2.5 px-3 rounded-full font-label-md text-label-md font-medium bg-surface-container-low text-on-surface hover:bg-surface-container transition-all text-center";
+              });
+              btn.className =
+                "duration-btn py-2.5 px-3 rounded-full font-label-md text-label-md font-semibold bg-primary-container text-on-primary-container shadow-sm transition-all text-center";
+
+              if (btn.innerText.includes("8 Days")) {
+                if (priceDisplay) priceDisplay.innerText = "$60";
+              } else if (btn.innerText.includes("16 Days")) {
+                if (priceDisplay) priceDisplay.innerText = "$78";
+              } else {
+                if (priceDisplay) priceDisplay.innerText = "$42";
+              }
+            });
+          });
+
+          // Size toggles
+          const sizeBtns = document.querySelectorAll(".size-btn");
+          sizeBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              sizeBtns.forEach((s) => {
+                s.classList.remove("bg-on-surface", "text-on-primary");
+                s.classList.add("bg-surface-container-low", "text-on-surface");
+              });
+              btn.classList.remove(
+                "bg-surface-container-low",
+                "text-on-surface",
+              );
+              btn.classList.add("bg-on-surface", "text-on-primary");
+            });
+          });
+        });
+      </script>
+    </main>
+    <footer
+      class="w-full bg-surface-container-low text-on-surface-variant pt-space-xl pb-space-lg shadow-[0_-4px_24px_rgba(36,30,26,0.03)]"
+    >
+      <div class="max-w-[1360px] mx-auto px-margin-lg">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter-lg pb-space-xl">
+          <div
+            class="flex items-center gap-space-md p-space-lg bg-surface-container-lowest rounded-lg shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)]"
+          >
+            <div
+              class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container"
+            >
+              <span class="material-symbols-outlined text-[24px]"
+                >straighten</span
+              >
+            </div>
+            <div>
+              <h4 class="font-headline-sm text-headline-sm text-on-surface">
+                100% Guaranteed Fit
+              </h4>
+              <p
+                class="font-body-sm text-body-sm text-on-surface-variant mt-0.5"
+              >
+                Complimentary backup size with every rental
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex items-center gap-space-md p-space-lg bg-surface-container-lowest rounded-lg shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)]"
+          >
+            <div
+              class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container"
+            >
+              <span class="material-symbols-outlined text-[24px]"
+                >dry_cleaning</span
+              >
+            </div>
+            <div>
+              <h4 class="font-headline-sm text-headline-sm text-on-surface">
+                Complimentary Cleaning
+              </h4>
+              <p
+                class="font-body-sm text-body-sm text-on-surface-variant mt-0.5"
+              >
+                Eco-friendly post-wear garment care included
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex items-center gap-space-md p-space-lg bg-surface-container-lowest rounded-lg shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)]"
+          >
+            <div
+              class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container"
+            >
+              <span class="material-symbols-outlined text-[24px]"
+                >verified_user</span
+              >
+            </div>
+            <div>
+              <h4 class="font-headline-sm text-headline-sm text-on-surface">
+                Damage Insurance Included
+              </h4>
+              <p
+                class="font-body-sm text-body-sm text-on-surface-variant mt-0.5"
+              >
+                Minor spills and wear covered automatically
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg py-space-xl">
+          <div class="lg:col-span-4 flex flex-col gap-space-md">
+            <div class="flex items-center gap-space-sm">
+              <span
+                class="font-headline-md text-headline-md text-on-surface font-semibold"
+                >Rent-ish</span
+              ><span
+                class="px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm"
+                >Circular Atelier</span
+              >
+            </div>
+            <p
+              class="font-body-md text-body-md text-on-surface-variant leading-relaxed max-w-sm"
+            >
+              A conscious ecosystem delivering runaway couture and contemporary
+              essentials directly to your wardrobe. Effortless rotation, zero
+              permanence.
+            </p>
+            <div
+              class="flex items-center gap-space-xs text-on-tertiary-container bg-tertiary-container/40 p-space-md rounded-DEFAULT max-w-sm"
+            >
+              <span class="material-symbols-outlined text-[20px]">eco</span
+              ><span class="font-label-md text-label-md"
+                >100% Carbon-Neutral Doorstep Shipping</span
+              >
+            </div>
+          </div>
+          <div class="lg:col-span-2">
+            <h5
+              class="font-headline-sm text-headline-sm text-on-surface mb-space-md"
+            >
+              Discover
+            </h5>
+            <ul class="space-y-space-sm">
+              <li class="font-body-sm text-body-sm">
+                <a
+                  class="text-on-surface-variant hover:text-on-surface transition-colors"
+                  data-path="new-arrivals"
+                  href="#"
+                  >New Arrivals</a
+                >
+              </li>
+              <li class="font-body-sm text-body-sm">
+                <a
+                  class="text-on-surface-variant hover:text-on-surface transition-colors"
+                  data-path="dresses"
+                  href="#"
+                  >Cocktail &amp; Gala Dresses</a
+                >
+              </li>
+              <li class="font-body-sm text-body-sm">
+                <a
+                  class="text-on-surface-variant hover:text-on-surface transition-colors"
+                  data-path="occasions"
+                  href="#"
+                  >Bridal &amp; Weddings</a
+                >
+              </li>
+              <li class="font-body-sm text-body-sm">
+                <a
+                  class="text-on-surface-variant hover:text-on-surface transition-colors"
+                  data-path="rent-ish-pass"
+                  href="#"
+                  >Rent-ish Unlimited Pass</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="lg:col-span-3">
+            <h5
+              class="font-headline-sm text-headline-sm text-on-surface mb-space-md"
+            >
+              Concierge Showroom
+            </h5>
+            <p
+              class="font-body-sm text-body-sm text-on-surface-variant mb-space-xs"
+            >
+              442 SoHo Mercer St, Level 4<br />New York, NY 10013
+            </p>
+            <p
+              class="font-body-sm text-body-sm text-on-surface-variant mb-space-md"
+            >
+              Tues - Sun: 10:00 AM - 7:00 PM
+            </p>
+            <a
+              class="inline-flex items-center gap-space-xs font-label-md text-label-md text-primary font-semibold hover:text-on-surface transition-colors"
+              data-path="concierge-booking"
+              href="#"
+              ><span class="material-symbols-outlined text-[18px]"
+                >calendar_today</span
+              >Book 1-on-1 Styling Fitting</a
+            >
+          </div>
+          <div class="lg:col-span-3 flex flex-col gap-space-md">
+            <h5 class="font-headline-sm text-headline-sm text-on-surface">
+              The Wardrobe Note
+            </h5>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Exclusive drops, preview invites, and seasonal lookbooks directly
+              to your inbox.
+            </p>
+            <div class="flex items-center gap-space-xs">
+              <input
+                class="flex-1 h-12 px-space-md rounded-full bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-sm text-body-sm shadow-[0_2px_8px_rgba(36,30,26,0.04)] focus:outline-none focus:ring-2 focus:ring-primary-container"
+                placeholder="Enter your email"
+                type="email"
+              /><button
+                class="h-12 px-space-lg rounded-full bg-primary-container text-on-primary-container font-label-lg text-label-lg hover:bg-tertiary-container transition-colors shadow-[0_4px_12px_rgba(36,30,26,0.06)]"
+                type="button"
+              >
+                Join
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-lg text-on-surface-variant/80 font-label-md text-label-md"
+        >
+          <p>© 2025 Rent-ish Atelier Inc. All rights reserved.</p>
+          <div class="flex items-center gap-space-lg">
+            <a
+              class="hover:text-on-surface transition-colors"
+              data-path="sustainability-pledge"
+              href="#"
+              >Sustainability Pledge</a
+            ><a
+              class="hover:text-on-surface transition-colors"
+              data-path="terms-of-service"
+              href="#"
+              >Terms of Service</a
+            ><a
+              class="hover:text-on-surface transition-colors"
+              data-path="privacy-policy"
+              href="#"
+              >Privacy Policy</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
