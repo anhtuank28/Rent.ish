@@ -332,9 +332,9 @@ graph LR
 
 | Phase | Thời gian | Trạng thái |
 |-------|-----------|------------|
-| Phase 1: API Foundation & Seeding | 1-2 tuần | 🔜 Sắp bắt đầu |
-| Phase 2: Core Features (Catalog, Booking) | 2-3 tuần | ⏳ Chờ |
-| Phase 3: Security & Auth | 1 tuần | ⏳ Chờ |
+| Phase 1: API Foundation & Seeding | 1-2 tuần | ✅ Hoàn thành |
+| Phase 2: Core Features (Catalog, Booking) | 2-3 tuần | ✅ Hoàn thành |
+| Phase 3: Security & Auth | 1 tuần | 🔜 Sắp bắt đầu |
 | Phase 4: CI/CD & Deployment | 3-5 ngày | ⏳ Chờ |
 | Phase 5: Handover | 3-5 ngày | ⏳ Chờ |
 | **Tổng cộng** | **~6-8 tuần** | |
@@ -344,6 +344,6 @@ graph LR
 ## 🚀 Bắt Đầu
 
 > [!IMPORTANT]
-> Khi bạn đã sẵn sàng, hãy gõ **"READY"** để tôi hướng dẫn bạn viết code cho **Phase 1, Step 1.1** — Xây dựng kiến trúc thư mục Backend và các module nền tảng (PrismaClient singleton, Custom Error class, Global Error Handler).
+> Khi bạn đã sẵn sàng, hãy gõ **"READY"** để tôi hướng dẫn bạn viết code cho **Phase 3, Step 3.1** — Xây dựng Hệ thống Xác thực (Thêm model User, viết API Login/Register, cấu hình JWT middleware).
 
-CURRENT STATUS: Đang ở Phase 1 - Chuẩn bị làm Seed data cho CSDL.
+CURRENT STATUS: Đang ở Phase 3 - Security, Authentication & Validation.

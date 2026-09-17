@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { ProductController } from "../controllers/product.controller.js";
 import { BookingController } from "../controllers/booking.controller.js";
+import { authenticate } from "../middlewares/auth.middleware.js";
+import { authorize } from "../middlewares/role.middleware.js";
 
 const router = Router();
 
+// ─── Public Routes (Không cần đăng nhập) ──────────
 // Lấy danh sách sản phẩm
 router.get("/", ProductController.getAll);
 
@@ -13,16 +16,14 @@ router.get("/:id", ProductController.getById);
 // Kiểm tra tình trạng trống (availability) của sản phẩm
 router.get("/:id/availability", BookingController.checkAvailability);
 
-// Tạo sản phẩm mới (Admin)
-// TODO: Thêm middleware auth(ADMIN) và validate()
-router.post("/", ProductController.create);
+// ─── Admin Routes (Yêu cầu ADMIN role) ────────────
+// Tạo sản phẩm mới
+router.post("/", authenticate, authorize("ADMIN"), ProductController.create);
 
-// Cập nhật sản phẩm (Admin)
-// TODO: Thêm middleware auth(ADMIN) và validate()
-router.put("/:id", ProductController.update);
+// Cập nhật sản phẩm
+router.put("/:id", authenticate, authorize("ADMIN"), ProductController.update);
 
-// Xóa mềm sản phẩm (Admin)
-// TODO: Thêm middleware auth(ADMIN)
-router.delete("/:id", ProductController.delete);
+// Xóa mềm sản phẩm
+router.delete("/:id", authenticate, authorize("ADMIN"), ProductController.delete);
 
 export default router;

@@ -53,7 +53,7 @@ export function ProductCard({
 
         {/* Wishlist Button */}
         <button
-          aria-label="Save to Wishlist"
+          aria-label="Lưu vào danh sách yêu thích"
           className="absolute top-space-sm right-space-sm w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md text-on-surface flex items-center justify-center hover:bg-surface-container-lowest hover:text-primary transition-all shadow-sm"
         >
           <span className="material-symbols-outlined text-[1.1em]">favorite</span>
@@ -63,36 +63,38 @@ export function ProductCard({
         <div className="absolute inset-x-space-sm bottom-space-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button className="w-full bg-on-secondary-fixed text-surface-container-lowest font-label-md text-label-md py-2 rounded-full shadow-lg hover:bg-primary transition-colors flex items-center justify-center gap-1">
             <span className="material-symbols-outlined text-[1.1em]">bolt</span>
-            <span>Quick Reserve ({sizes.join(', ')})</span>
+            <span>Đặt Nhanh ({sizes.join(', ')})</span>
           </button>
         </div>
       </div>
 
       {/* Meta details */}
-      <div className="space-y-1 px-1 pb-1">
-        <div className="font-label-sm text-label-sm text-primary uppercase tracking-widest font-bold">
-          {brand}
-        </div>
-        <Link href={`/dresses/${id}`}>
-          <h2 className="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors font-semibold truncate">
-            {title}
-          </h2>
-        </Link>
-        <div className="font-body-sm text-body-sm text-outline">
-          Sizes: {sizes.join(', ')} {material ? `• ${material}` : ''}
+      <div className="space-y-1 px-1 pb-1 flex-grow flex flex-col justify-between">
+        <div>
+          <div className="font-label-sm text-label-sm text-primary uppercase tracking-widest font-bold">
+            {brand}
+          </div>
+          <Link href={`/dresses/${id}`}>
+            <h2 className="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors font-semibold truncate line-clamp-1">
+              {title}
+            </h2>
+          </Link>
+          <div className="font-body-sm text-body-sm text-outline mt-1">
+            Size: {sizes.join(', ')} {material ? `• ${material}` : ''}
+          </div>
         </div>
         
-        <div className="pt-1 flex items-baseline justify-between">
+        <div className="pt-2 flex items-baseline justify-between mt-auto border-t border-surface-container-high">
           <div>
             <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
-              ${price}
+              {price}K
             </span>
             <span className="font-body-sm text-body-sm text-on-surface-variant">
-              {' '}/ 4-day rental
+              {' '}/ 4 ngày
             </span>
           </div>
           <div className="font-label-sm text-label-sm text-emerald-800 bg-emerald-100/70 px-1.5 py-0.5 rounded">
-            Retail ${retailPrice} (Save {savePercentage}%)
+            Tiết kiệm {savePercentage}%
           </div>
         </div>
       </div>

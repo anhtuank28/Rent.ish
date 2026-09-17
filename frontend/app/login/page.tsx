@@ -3,9 +3,48 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // BẮT BUỘC: Gửi/nhận httpOnly cookie cross-origin
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
+        return;
+      }
+
+      // Token đã được lưu an toàn trong httpOnly cookie bởi server.
+      // JavaScript KHÔNG CẦN và KHÔNG THỂ truy cập token.
+      // Chuyển hướng về trang chủ.
+      router.push('/');
+    } catch {
+      setError('Không thể kết nối đến server. Vui lòng thử lại sau.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="w-full min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-6 lg:p-12">
@@ -73,21 +112,31 @@ export default function LoginPage() {
           </span>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-error-container/20 border border-error/30 text-error font-body-sm text-body-sm flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+            <span className="material-symbols-outlined text-[18px]">error</span>
+            <span>{error}</span>
+          </div>
+        )}
+
         {/* Form 1: SIGN IN PANEL */}
         <div className="w-full animate-in fade-in">
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-1.5">
               <label className="block font-label-md text-label-md text-on-surface" htmlFor="signin-email">
                 Địa chỉ Email
               </label>
               <div className="relative flex items-center">
-                <span className="material-symbols-outlined absolute left-4 text-secondary text-[20px] pointer-events-none">mail</span>
+                <span className="material-symbols-outlined absolute left-4 text-secondary text-[20px] pointer-events-none">email</span>
                 <input
                   className="w-full h-12 pl-11 pr-4 bg-surface-container-low focus:bg-surface-container-lowest rounded-DEFAULT text-on-surface font-body-md text-body-md placeholder:text-outline/60 outline-none transition-all duration-200 focus:shadow-[0_0_0_2px_#dfc1aa]"
                   id="signin-email"
                   placeholder="name@example.com"
                   required
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -103,6 +152,8 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   required
                   type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   className="absolute right-3.5 text-secondary hover:text-on-surface p-1 rounded-full transition-colors"
@@ -125,11 +176,21 @@ export default function LoginPage() {
             </div>
             
             <button
-              className="w-full h-12 rounded-full bg-primary-container hover:bg-inverse-primary text-on-primary-fixed font-label-lg text-label-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 mt-4 active:scale-[0.99]"
+              className="w-full h-12 rounded-full bg-primary-container hover:bg-inverse-primary text-on-primary-fixed font-label-lg text-label-lg transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 mt-4 active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
               type="submit"
+              disabled={isLoading}
             >
-              <span>Đăng Nhập</span>
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              {isLoading ? (
+                <>
+                  <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+                  <span>Đang xử lý...</span>
+                </>
+              ) : (
+                <>
+                  <span>Đăng Nhập</span>
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </>
+              )}
             </button>
           </form>
         </div>
