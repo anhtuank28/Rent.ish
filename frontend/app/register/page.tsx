@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+// Dùng đường dẫn tương đối để đi qua Cổng Proxy của Next.js (next.config.ts)
+const API_URL = '';
 
 export default function RegisterPage() {
   const router = useRouter();
