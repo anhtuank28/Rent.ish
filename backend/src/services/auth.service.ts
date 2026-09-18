@@ -35,15 +35,15 @@ const IS_PRODUCTION = process.env['NODE_ENV'] === 'production';
 export const COOKIE_OPTIONS = {
   accessToken: {
     httpOnly: true,
-    secure: IS_PRODUCTION,
-    sameSite: 'lax' as const,
+    secure: true,
+    sameSite: 'none' as const,
     maxAge: 15 * 60 * 1000,        // 15 phút
     path: '/',
   },
   refreshToken: {
     httpOnly: true,
-    secure: IS_PRODUCTION,
-    sameSite: 'lax' as const,
+    secure: true,
+    sameSite: 'none' as const,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
     path: '/api/auth',               // Chỉ gửi kèm request đến auth routes
   },
