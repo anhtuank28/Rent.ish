@@ -30,12 +30,14 @@ export class BookingController {
 
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      // data mong đợi: { userId, totalPrice, items: [{inventoryUnitId, startDate, endDate}] }
-      const booking = await BookingService.createBooking(req.body);
+      const userId = req.user!.userId;
+      const { address, paymentMethod } = req.body;
+      
+      const booking = await BookingService.checkoutCart(userId, address, paymentMethod);
       
       res.status(201).json({
         success: true,
-        message: "Tạo đơn đặt thành công",
+        message: "Đặt thuê thành công",
         data: booking,
       });
     } catch (error) {

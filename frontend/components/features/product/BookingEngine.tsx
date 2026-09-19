@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCartStore } from '../../../store/cartStore';
 
 interface BookingEngineProps {
   price: number;
@@ -11,10 +13,49 @@ interface BookingEngineProps {
 export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps) {
   const [duration, setDuration] = useState<4 | 8 | 16>(4);
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || 'M');
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { addItem } = useCartStore();
 
   const basePrice = price;
   const currentPrice = duration === 4 ? basePrice : duration === 8 ? basePrice + 18 : basePrice + 36;
   const savePercentage = Math.round(((retailPrice - currentPrice) / retailPrice) * 100);
+
+  const handleAddToCart = async () => {
+    setIsLoading(true);
+    try {
+      // Lấy 1 variant ID thật từ DB để pass validation của Backend khi Checkout
+      const res = await fetch('/api/products?limit=1');
+      const data = await res.json();
+      const realVariantId = data.data.products[0]?.variants[0]?.id || '123e4567-e89b-12d3-a456-426614174000';
+
+      const startDate = new Date();
+      const endDate = new Date();
+      endDate.setDate(startDate.getDate() + duration);
+
+      addItem({
+        id: crypto.randomUUID(),
+        variantId: realVariantId,
+        rentalStartDate: startDate.toISOString(),
+        rentalEndDate: endDate.toISOString(),
+        product: {
+          id: 'd1',
+          name: 'Đầm Dạ Hội Hở Lưng Eliana Xẻ Đùi',
+          brand: 'AURA STUDIO',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBC2bJXYmJ22u37qN0Wb2aWqJk_2rQ1XF8fN2-1bN5eP34yY12Z83b5pXm0m-0J6K7-PZ4O6M3w5m0T-xM4lT9_a9z2e7bY3vF7dY8T2N1K8O3G4J7Z1wT9m3n8Y4jH9fQ7F4lP2_3-5z3j8h9d0X3T9xM2R1K3X5dZ9F2vL4jP6T9wZ4fD1w8B7G5cZ1M2X3',
+          price: currentPrice,
+          retailPrice,
+          size: selectedSize
+        }
+      });
+      
+      router.push('/cart');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-xl shadow-[0_12px_36px_-6px_rgba(36,30,26,0.08)] flex flex-col gap-space-lg">
@@ -164,11 +205,13 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
       {/* CTAs */}
       <div className="space-y-2.5 pt-1">
         <button
-          className="w-full h-12 rounded-full bg-primary-container hover:bg-tertiary-container text-on-primary-container font-label-lg text-label-lg font-bold shadow-[0_6px_20px_rgba(36,30,26,0.12)] hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+          onClick={handleAddToCart}
+          disabled={isLoading}
+          className="w-full h-12 rounded-full bg-primary-container hover:bg-tertiary-container text-on-primary-container font-label-lg text-label-lg font-bold shadow-[0_6px_20px_rgba(36,30,26,0.12)] hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
           type="button"
         >
-          <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
-          <span>Đặt Thuê Ngay • {currentPrice}K</span>
+          <span className="material-symbols-outlined text-[20px]">{isLoading ? 'progress_activity' : 'shopping_bag'}</span>
+          <span>{isLoading ? 'Đang thêm...' : `Thêm Vào Giỏ • ${currentPrice}K`}</span>
         </button>
         <div className="flex items-center gap-2">
           <button

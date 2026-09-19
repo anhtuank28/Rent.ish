@@ -147,4 +147,116 @@ export class BookingService {
       data: { status },
     });
   }
+
+  /**
+   * 5. Checkout từ Giỏ hàng (Cart)
+   */
+  static async checkoutCart(userId: string, addressData: any, paymentMethod: string) {
+    return await prisma.$transaction(async (tx) => {
+      // 1. Get cart
+      const cart = await tx.cart.findUnique({
+        where: { user_id: userId },
+        include: { items: { include: { variant: { include: { product: true } } } } }
+      });
+
+      if (!cart || cart.items.length === 0) {
+        throw ApiError.badRequest("Giỏ hàng của bạn đang trống!");
+      }
+
+      // 2. Create Address
+      const address = await tx.address.create({
+        data: {
+          user_id: userId,
+          full_name: addressData.fullName,
+          phone: addressData.phone,
+          street: addressData.street,
+          city: addressData.city,
+          district: addressData.district,
+          ward: addressData.ward,
+        }
+      });
+
+      // 3. Calculate total price
+      let totalPrice = 0;
+      for (const item of cart.items) {
+        const durationDays = Math.ceil((item.rental_end_date.getTime() - item.rental_start_date.getTime()) / (1000 * 3600 * 24));
+        totalPrice += Number(item.variant.product.rental_price) * (durationDays || 1);
+      }
+      
+      const shippingFee = 30; // 30K phí ship giả định
+      totalPrice += shippingFee;
+
+      // 4. Create Booking
+      const booking = await tx.booking.create({
+        data: {
+          user_id: userId,
+          total_price: totalPrice,
+          shipping_fee: shippingFee,
+          status: "PENDING",
+          shipping_address_id: address.id
+        }
+      });
+
+      // 5. Create PaymentTransaction
+      await tx.paymentTransaction.create({
+        data: {
+          booking_id: booking.id,
+          amount: totalPrice,
+          provider: paymentMethod || "COD",
+          status: "PENDING"
+        }
+      });
+
+      // 6. Assign Inventory Units & Create BookingItems
+      for (const item of cart.items) {
+        const startStr = item.rental_start_date.toISOString().split('T')[0];
+        const endStr = item.rental_end_date.toISOString().split('T')[0];
+
+        const availableUnits = await tx.$queryRaw<AvailableUnit[]>`
+          SELECT iu.id as inventory_unit_id
+          FROM "InventoryUnit" iu
+          WHERE iu.variant_id = ${item.variant_id}::uuid
+          AND iu.status = 'AVAILABLE'
+          AND NOT EXISTS (
+            SELECT 1 FROM "BookingItem" bi 
+            WHERE bi.inventory_unit_id = iu.id
+            AND bi.rental_period && daterange(${startStr}::date, ${endStr}::date, '[]')
+          )
+          LIMIT 1
+        `;
+
+        if (availableUnits.length === 0) {
+          throw ApiError.conflict(`Sản phẩm ${item.variant.product.name} (Size: ${item.variant.size}) đã hết hàng trong khoảng thời gian bạn chọn.`);
+        }
+
+        const unitId = availableUnits[0].inventory_unit_id;
+        const itemId = crypto.randomUUID();
+
+        try {
+          await tx.$executeRaw`
+            INSERT INTO "BookingItem" (id, booking_id, inventory_unit_id, item_type, rental_period)
+            VALUES (
+              ${itemId}::uuid, 
+              ${booking.id}::uuid, 
+              ${unitId}::uuid, 
+              'PRIMARY', 
+              daterange(${startStr}::date, ${endStr}::date, '[]')
+            )
+          `;
+        } catch (error: any) {
+          if (error.code === "P2010" || (error.message && error.message.includes("conflicting key value"))) {
+            throw ApiError.conflict(`Lỗi xung đột ngày thuê cho sản phẩm ${item.variant.product.name}.`);
+          }
+          throw error;
+        }
+      }
+
+      // 7. Clear Cart
+      await tx.cartItem.deleteMany({
+        where: { cart_id: cart.id }
+      });
+
+      return booking;
+    });
+  }
 }

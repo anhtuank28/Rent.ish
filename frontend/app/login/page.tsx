@@ -36,8 +36,25 @@ export default function LoginPage() {
         return;
       }
 
-      // Token đã được lưu an toàn trong httpOnly cookie bởi server.
-      // JavaScript KHÔNG CẦN và KHÔNG THỂ truy cập token.
+      // Login thành công. Merge giỏ hàng LocalStorage vào Database
+      const localCart = JSON.parse(localStorage.getItem('rent-ish-cart') || '{}');
+      const itemsToMerge = localCart?.state?.items || [];
+      
+      if (itemsToMerge.length > 0) {
+        try {
+          await fetch(`${API_URL}/api/cart/merge`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ localItems: itemsToMerge }),
+          });
+          // Merge thành công, dọn dẹp LocalStorage để dùng DB (sẽ tự tải khi load trang mới)
+          localStorage.removeItem('rent-ish-cart');
+        } catch (e) {
+          console.error("Lỗi đồng bộ giỏ hàng", e);
+        }
+      }
+
       // Chuyển hướng về trang chủ.
       router.push('/');
     } catch {

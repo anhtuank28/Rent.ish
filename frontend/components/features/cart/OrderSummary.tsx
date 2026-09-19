@@ -87,7 +87,7 @@ export function OrderSummary({ itemCount, subtotal, careProtectionPrice, hasCare
       
       <Link
         className="w-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container h-12 rounded-full flex items-center justify-center gap-2 font-headline-sm text-[16px] font-semibold shadow-sm transition-all transform active:scale-[0.99] text-center"
-        href="#"
+        href="/checkout"
       >
         <span>Tiến hành thanh toán</span>
         <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

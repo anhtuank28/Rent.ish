@@ -20,18 +20,15 @@ export const checkAvailabilitySchema = z.object({
 
 export const createBookingSchema = z.object({
   body: z.object({
-    userId: z.string().uuid("ID người dùng không hợp lệ").optional(),
-    totalPrice: z.number().positive("Tổng giá phải lớn hơn 0"),
-    items: z.array(
-      z.object({
-        inventoryUnitId: z.string().uuid("inventoryUnitId không hợp lệ"),
-        startDate: dateSchema,
-        endDate: dateSchema
-      }).refine(item => new Date(item.startDate) <= new Date(item.endDate), {
-        message: "startDate phải trước hoặc bằng endDate",
-        path: ["endDate"]
-      })
-    ).min(1, "Đơn đặt phải có ít nhất 1 sản phẩm")
+    address: z.object({
+      fullName: z.string().min(1, "Vui lòng nhập họ tên"),
+      phone: z.string().min(1, "Vui lòng nhập số điện thoại"),
+      street: z.string().min(1, "Vui lòng nhập địa chỉ cụ thể"),
+      city: z.string().min(1, "Vui lòng nhập Tỉnh/Thành phố"),
+      district: z.string().min(1, "Vui lòng nhập Quận/Huyện"),
+      ward: z.string().min(1, "Vui lòng nhập Phường/Xã"),
+    }),
+    paymentMethod: z.string().optional()
   })
 });
 
