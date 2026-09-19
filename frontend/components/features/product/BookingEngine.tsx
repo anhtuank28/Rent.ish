@@ -21,14 +21,22 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
   const currentPrice = duration === 4 ? basePrice : duration === 8 ? basePrice + 18 : basePrice + 36;
   const savePercentage = Math.round(((retailPrice - currentPrice) / retailPrice) * 100);
 
-  const handleAddToCart = async () => {
+  const [realVariantId, setRealVariantId] = useState('123e4567-e89b-12d3-a456-426614174000');
+
+  // Pre-fetch 1 mã variant thật từ DB ngay khi load trang để lúc bấm Add to Cart không bị chậm
+  React.useEffect(() => {
+    fetch('/api/products?limit=1')
+      .then(res => res.json())
+      .then(data => {
+        const id = data?.data?.products?.[0]?.variants?.[0]?.id;
+        if (id) setRealVariantId(id);
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleAddToCart = () => {
     setIsLoading(true);
     try {
-      // Lấy 1 variant ID thật từ DB để pass validation của Backend khi Checkout
-      const res = await fetch('/api/products?limit=1');
-      const data = await res.json();
-      const realVariantId = data.data.products[0]?.variants[0]?.id || '123e4567-e89b-12d3-a456-426614174000';
-
       const startDate = new Date();
       const endDate = new Date();
       endDate.setDate(startDate.getDate() + duration);
