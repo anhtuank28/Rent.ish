@@ -24,13 +24,20 @@ import userRoutes from "./routes/user.routes.js";
 
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import swaggerUi from "swagger-ui-express";
+import { swaggerDocument } from "./config/swagger.js";
 
 // ─── Global Middlewares ────────────────────────────
 // 1. Trust Proxy (Quan trọng khi deploy lên cloud có load balancer)
 app.set('trust proxy', 1);
 
 // 2. Helmet (Bảo vệ HTTP Headers chống XSS, Clickjacking...)
-app.use(helmet());
+// Cho phép Swagger UI tải CSS/JS an toàn
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 
 // 3. CORS
 app.use(cors({
@@ -46,13 +53,25 @@ const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-// Áp dụng Rate Limiter cho tất cả API
-app.use("/api", apiLimiter);
+// Áp dụng Rate Limiter cho tất cả API (ngoại trừ tài liệu docs)
+app.use("/api", (req, res, next) => {
+  if (req.path.startsWith("/docs")) {
+    return next();
+  }
+  return apiLimiter(req, res, next);
+});
 
 // 5. Parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// ─── Swagger Documentation ────────────────────────
+app.get("/api/docs.json", (_req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerDocument);
+});
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ─── Health Check ──────────────────────────────────
 app.get("/api/health", (_req, res) => {
