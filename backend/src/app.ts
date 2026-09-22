@@ -20,6 +20,7 @@ import productRoutes from "./routes/product.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -67,6 +68,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/users", userRoutes);
 
 // ─── Global Error Handler (PHẢI ĐẶT CUỐI CÙNG) ───
 app.use(errorHandler);
