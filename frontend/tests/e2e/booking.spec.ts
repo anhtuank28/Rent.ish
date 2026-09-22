@@ -6,7 +6,7 @@ test.describe('Booking Flow', () => {
     await page.goto('/');
 
     // 2. Kiểm tra có hiển thị điều hướng "Trang Phục"
-    await expect(page.locator('text=Trang Phục')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Trang Phục' }).first()).toBeVisible();
 
     // 3. Kiểm tra danh sách sản phẩm nổi bật
     const productCard = page.locator('text=Thuê Ngay').first();

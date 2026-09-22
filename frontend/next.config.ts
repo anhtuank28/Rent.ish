@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.supabase.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.vietqr.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.vietqr.io',
+      },
     ],
   },
   async rewrites() {

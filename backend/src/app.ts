@@ -23,6 +23,7 @@ import authRoutes from "./routes/auth.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
 
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -50,7 +51,7 @@ app.use(cors({
 // 4. Rate Limiter (Chống DDoS và Brute Force cơ bản)
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phút
-  max: 100, // Giới hạn mỗi IP tối đa 100 request / 15 phút
+  max: process.env.NODE_ENV === "production" ? 100 : 5000,
   message: { success: false, message: "Quá nhiều yêu cầu từ IP của bạn, vui lòng thử lại sau 15 phút." },
   standardHeaders: true,
   legacyHeaders: false,
@@ -94,6 +95,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // ─── Global Error Handler (PHẢI ĐẶT CUỐI CÙNG) ───
 app.use(errorHandler);

@@ -38,6 +38,7 @@
 | **Hệ thống Wishlist & Giao diện /wishlist** | ✅ Hoàn thành |
 | **Quản lý nhiều ảnh & đổi thứ tự ảnh đại diện (Admin & Catalog)** | ✅ Hoàn thành |
 | **Hệ thống Upload ảnh Cloud (Supabase Storage + Drag & Drop UI)** | ✅ Hoàn thành |
+| **Cổng thanh toán Ngân hàng VietQR (PayOS SDK + Webhook IPN + Mock Sandbox)** | ✅ Hoàn thành |
 
 ## 5. Sprint Plan (Thứ tự triển khai)
 

@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration -c vitest.integration.config.ts",
-    "test": "vitest run",
+    "test": "node --env-file=.env node_modules/.bin/vitest run",
     "postinstall": "prisma skills sync || exit 0",
     "seed": "tsx prisma/seed.ts"
   },
@@ -18,6 +18,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@payos/node": "^2.0.5",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "@supabase/supabase-js": "^2.116.0",

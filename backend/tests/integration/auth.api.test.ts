@@ -4,13 +4,13 @@ import app from '../../src/app.js';
 import { prisma } from '../../src/config/prisma.js';
 
 describe('Auth API Integration Tests', () => {
-  // Dọn dẹp DB trước khi chạy tất cả test trong file này
+  // Dọn dẹp test user trước và sau khi chạy test
   beforeAll(async () => {
-    await prisma.user.deleteMany();
+    await prisma.user.deleteMany({ where: { email: { contains: 'integration' } } });
   });
 
   afterAll(async () => {
-    await prisma.user.deleteMany();
+    await prisma.user.deleteMany({ where: { email: { contains: 'integration' } } });
   });
 
   describe('POST /api/auth/register', () => {

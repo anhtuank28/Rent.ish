@@ -282,7 +282,8 @@ export class BookingService {
         totalPrice += Number(item.variant.product.rental_price) * (durationDays || 1);
       }
       
-      const shippingFee = 30; // 30K phí ship giả định
+      const isFullVnd = cart.items.some(i => Number(i.variant.product.rental_price) >= 1000);
+      const shippingFee = isFullVnd ? 30000 : 30; // 30K phí ship
       totalPrice += shippingFee;
 
       // 4. Create Booking

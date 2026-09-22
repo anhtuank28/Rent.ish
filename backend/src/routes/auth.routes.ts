@@ -10,7 +10,7 @@ const router = Router();
 // Strict Rate Limiter cho Auth (Chống dò mật khẩu/Brute-force)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phút
-  max: 10, // Tối đa 10 lần gọi API auth từ 1 IP trong 15 phút
+  max: process.env.NODE_ENV === "production" ? 10 : 500,
   message: { success: false, message: "Quá nhiều lần thử đăng nhập/đăng ký. Vui lòng thử lại sau 15 phút." },
   standardHeaders: true,
   legacyHeaders: false,
