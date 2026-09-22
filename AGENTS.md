@@ -34,7 +34,7 @@
 | **Trang /admin (Dashboard chủ shop)** | ✅ Hoàn thành |
 | **Bộ lọc sản phẩm (Filter/Search)** | ✅ Hoàn thành |
 | **Date Picker thật trong BookingEngine** | ✅ Hoàn thành |
-| **Swagger API Docs** | ❌ Chưa làm (Sprint 5) |
+| **Swagger API Docs & Handover** | ✅ Hoàn thành |
 
 ## 5. Sprint Plan (Thứ tự triển khai)
 
