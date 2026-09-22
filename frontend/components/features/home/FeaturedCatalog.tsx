@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { WishlistButton } from '../wishlist/WishlistButton';
 
 /* ─── Types ─── */
 
@@ -40,13 +41,19 @@ function FeaturedProductCard({ product }: { product: FeaturedProduct }) {
         </span>
 
         {/* Wishlist */}
-        <button
-          aria-label="Lưu vào danh sách yêu thích"
-          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-primary transition-colors"
-          type="button"
-        >
-          <span className="material-symbols-outlined text-body-md">favorite</span>
-        </button>
+        <div className="absolute top-3 right-3 z-10">
+          <WishlistButton
+            item={{
+              id: product.id,
+              title: product.title,
+              brand: product.brand,
+              price: product.price,
+              retailPrice: product.retailPrice,
+              imageUrl: product.imageUrl,
+              sizes: ['S', 'M'],
+            }}
+          />
+        </div>
 
         {/* Hover note */}
         <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

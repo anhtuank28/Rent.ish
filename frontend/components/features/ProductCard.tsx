@@ -1,5 +1,8 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
+import { WishlistButton } from './wishlist/WishlistButton';
 
 export interface ProductCardProps {
   id: string | number;
@@ -54,12 +57,20 @@ export function ProductCard({
         )}
 
         {/* Wishlist Button */}
-        <button
-          aria-label="Lưu vào danh sách yêu thích"
-          className="absolute top-space-sm right-space-sm w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md text-on-surface flex items-center justify-center hover:bg-surface-container-lowest hover:text-primary transition-all shadow-sm"
-        >
-          <span className="material-symbols-outlined text-[1.1em]">favorite</span>
-        </button>
+        <div className="absolute top-space-sm right-space-sm z-10">
+          <WishlistButton
+            item={{
+              id,
+              title,
+              brand,
+              price,
+              retailPrice,
+              imageUrl,
+              sizes,
+              material,
+            }}
+          />
+        </div>
 
         {/* Hover Quick Rent Pill */}
         <div className="absolute inset-x-space-sm bottom-space-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">

@@ -87,7 +87,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           
           {/* Left Column: Gallery */}
           <div className="lg:col-span-7">
-            <ProductGallery images={product.images} />
+            <ProductGallery images={product.images} product={product} />
           </div>
 
           {/* Right Column: Booking Engine (Sticky) */}

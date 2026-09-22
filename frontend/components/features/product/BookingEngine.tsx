@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '../../../store/cartStore';
+import { WishlistButton } from '../wishlist/WishlistButton';
 
 interface BookingEngineProps {
   product: {
@@ -408,13 +409,18 @@ export function BookingEngine({ product }: BookingEngineProps) {
           </span>
         </button>
         <div className="flex items-center gap-2">
-          <button
-            className="flex-1 h-11 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
-            type="button"
-          >
-            <span className="material-symbols-outlined text-[18px]">favorite</span>
-            <span>Thêm vào Yêu thích</span>
-          </button>
+          <WishlistButton
+            variant="button"
+            item={{
+              id: product.id,
+              title: product.name,
+              brand: product.brand,
+              price: product.price,
+              retailPrice: product.retailPrice,
+              imageUrl: product.image,
+              sizes: product.sizes.map((s) => s.size),
+            }}
+          />
         </div>
       </div>
 

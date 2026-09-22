@@ -1,13 +1,22 @@
 "use client";
 
 import React, { useState } from 'react';
-
+import { WishlistButton } from '../wishlist/WishlistButton';
 
 interface ProductGalleryProps {
   images: string[];
+  product?: {
+    id: string;
+    name: string;
+    brand: string;
+    price: number;
+    retailPrice: number;
+    image: string;
+    sizes: { size: string; variantId: string }[];
+  };
 }
 
-export function ProductGallery({ images }: ProductGalleryProps) {
+export function ProductGallery({ images, product }: ProductGalleryProps) {
   const [mainImage, setMainImage] = useState(images[0] || '');
 
   return (
@@ -38,13 +47,20 @@ export function ProductGallery({ images }: ProductGalleryProps) {
 
           {/* Floating Top Right Actions */}
           <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
-            <button
-              aria-label="Toggle favorite"
-              className="w-11 h-11 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md hover:bg-surface-container-lowest transition-transform active:scale-95"
-              type="button"
-            >
-              <span className="material-symbols-outlined text-[22px] text-primary">favorite</span>
-            </button>
+            {product && (
+              <WishlistButton
+                variant="pill"
+                item={{
+                  id: product.id,
+                  title: product.name,
+                  brand: product.brand,
+                  price: product.price,
+                  retailPrice: product.retailPrice,
+                  imageUrl: product.image,
+                  sizes: product.sizes.map((s) => s.size),
+                }}
+              />
+            )}
             <button
               aria-label="Zoom photo"
               className="w-11 h-11 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md hover:bg-surface-container-lowest transition-transform active:scale-95"
