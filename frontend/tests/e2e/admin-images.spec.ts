@@ -34,9 +34,10 @@ test.describe('Admin Product Multi-Image & Reorder E2E Test', () => {
     // 5. Thêm một ảnh mới với timestamp để đảm bảo độc nhất
     const uniqueTime = Date.now();
     const testNewImageUrl = `https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=${uniqueTime}`;
+    await page.locator('button:has-text("Dán link")').click();
     const imageInput = page.locator('input[placeholder*="Dán đường dẫn ảnh"]');
     await imageInput.fill(testNewImageUrl);
-    await page.locator('button:has-text("Thêm ảnh")').click();
+    await page.getByRole('button', { name: 'add_link Thêm' }).click();
 
     // Xác nhận ảnh mới đã xuất hiện trong danh sách thumbnails (phần tử cuối cùng vừa thêm)
     const galleryCards = page.locator('.grid.grid-cols-2.sm\\:grid-cols-4 > div');

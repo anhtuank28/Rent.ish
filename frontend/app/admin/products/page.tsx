@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import ProductGalleryManager from '@/components/features/admin/ProductGalleryManager';
 
 interface ProductVariant {
   id: string;
@@ -28,6 +29,7 @@ export default function AdminProductsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -36,7 +38,6 @@ export default function AdminProductsPage() {
     name: '',
     description: '',
     images: ['https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800'],
-    newImageUrl: '',
     rental_price: 350000,
     retail_price: 2500000,
     size: 'Freesize',
@@ -49,7 +50,6 @@ export default function AdminProductsPage() {
     name: '',
     description: '',
     images: [] as string[],
-    newImageUrl: '',
     rental_price: 0,
     retail_price: 0
   });
@@ -72,45 +72,6 @@ export default function AdminProductsPage() {
   useEffect(() => {
     fetchProducts();
   }, []);
-
-  // ─── Image Reorder Helpers ───
-  const moveImage = (
-    images: string[],
-    fromIndex: number,
-    toIndex: number,
-    setter: (newImgs: string[]) => void
-  ) => {
-    if (toIndex < 0 || toIndex >= images.length) return;
-    const updated = [...images];
-    const [moved] = updated.splice(fromIndex, 1);
-    updated.splice(toIndex, 0, moved);
-    setter(updated);
-  };
-
-  const setAsPrimary = (
-    images: string[],
-    index: number,
-    setter: (newImgs: string[]) => void
-  ) => {
-    if (index === 0) return;
-    const updated = [...images];
-    const [selected] = updated.splice(index, 1);
-    updated.unshift(selected);
-    setter(updated);
-  };
-
-  const removeImage = (
-    images: string[],
-    index: number,
-    setter: (newImgs: string[]) => void
-  ) => {
-    if (images.length <= 1) {
-      alert("Sản phẩm cần tối thiểu 1 hình ảnh.");
-      return;
-    }
-    const updated = images.filter((_, i) => i !== index);
-    setter(updated);
-  };
 
   // ─── Create Product ───
   const handleCreateProduct = async (e: React.FormEvent) => {
@@ -153,7 +114,6 @@ export default function AdminProductsPage() {
           name: '',
           description: '',
           images: ['https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800'],
-          newImageUrl: '',
           rental_price: 350000,
           retail_price: 2500000,
           size: 'Freesize',
@@ -182,7 +142,6 @@ export default function AdminProductsPage() {
       name: p.name,
       description: p.description || '',
       images: existingImages,
-      newImageUrl: '',
       rental_price: Number(p.rental_price),
       retail_price: Number(p.retail_price)
     });
@@ -471,121 +430,13 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              {/* ─── Quản lý nhiều ảnh & Sắp xếp thứ tự ─── */}
-              <div className="p-4 bg-surface-container-low/60 rounded-2xl border border-surface-container space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <label className="block text-label-md font-bold text-on-surface">
-                      Bộ Sưu Tập Hình Ảnh ({editFormData.images.length} ảnh)
-                    </label>
-                    <p className="text-xs text-on-surface-variant">
-                      Ảnh ở vị trí <strong>#1 (Đầu tiên)</strong> sẽ là <strong>ảnh đại diện</strong> ngoài trang danh mục (/dresses).
-                    </p>
-                  </div>
-                </div>
-
-                {/* Ô thêm ảnh mới */}
-                <div className="flex gap-2">
-                  <input
-                    type="url"
-                    placeholder="Dán đường dẫn ảnh mới (https://...)"
-                    value={editFormData.newImageUrl}
-                    onChange={e => setEditFormData({ ...editFormData, newImageUrl: e.target.value })}
-                    className="flex-1 h-10 px-3 bg-surface-container-lowest rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-xs text-on-surface border border-surface-container"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (editFormData.newImageUrl.trim()) {
-                        setEditFormData({
-                          ...editFormData,
-                          images: [...editFormData.images, editFormData.newImageUrl.trim()],
-                          newImageUrl: ''
-                        });
-                      }
-                    }}
-                    className="px-4 h-10 bg-secondary text-on-secondary rounded-xl text-xs font-semibold hover:bg-secondary/90 transition-colors flex items-center gap-1 shrink-0"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">add_photo_alternate</span>
-                    <span>Thêm ảnh</span>
-                  </button>
-                </div>
-
-                {/* Danh sách ảnh thumbnails với các nút sắp xếp thứ tự */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                  {editFormData.images.map((url, idx) => (
-                    <div
-                      key={idx}
-                      className={`relative group rounded-xl overflow-hidden border-2 bg-surface-container-lowest flex flex-col justify-between ${
-                        idx === 0 ? 'border-primary ring-2 ring-primary/20 shadow-md' : 'border-surface-container'
-                      }`}
-                    >
-                      {/* Badge vị trí */}
-                      <div className="absolute top-1.5 left-1.5 z-10">
-                        {idx === 0 ? (
-                          <span className="bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-0.5">
-                            <span className="material-symbols-outlined text-[11px]">star</span>
-                            <span>#1 Chính</span>
-                          </span>
-                        ) : (
-                          <span className="bg-black/60 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
-                            #{idx + 1}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Nút xóa ảnh */}
-                      <button
-                        type="button"
-                        onClick={() => removeImage(editFormData.images, idx, newImgs => setEditFormData({ ...editFormData, images: newImgs }))}
-                        className="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full bg-black/60 hover:bg-rose-600 text-white flex items-center justify-center transition-colors shadow-sm"
-                        title="Xóa ảnh này"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">close</span>
-                      </button>
-
-                      {/* Ảnh xem trước */}
-                      <div className="w-full aspect-[3/4] bg-surface-container overflow-hidden">
-                        <img src={url} alt={`Ảnh ${idx + 1}`} className="w-full h-full object-cover" />
-                      </div>
-
-                      {/* Thanh công cụ điều khiển vị trí */}
-                      <div className="p-1.5 bg-surface-container-lowest border-t border-surface-container flex items-center justify-between gap-1">
-                        <button
-                          type="button"
-                          disabled={idx === 0}
-                          onClick={() => moveImage(editFormData.images, idx, idx - 1, newImgs => setEditFormData({ ...editFormData, images: newImgs }))}
-                          className="flex-1 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface disabled:opacity-30 text-[11px] font-bold transition-colors flex items-center justify-center"
-                          title="Di chuyển sang trước"
-                        >
-                          <span className="material-symbols-outlined text-[14px]">arrow_back</span>
-                        </button>
-
-                        {idx !== 0 && (
-                          <button
-                            type="button"
-                            onClick={() => setAsPrimary(editFormData.images, idx, newImgs => setEditFormData({ ...editFormData, images: newImgs }))}
-                            className="px-2 py-1 rounded bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-bold transition-colors"
-                            title="Đặt làm ảnh đại diện chính"
-                          >
-                            Lên đầu
-                          </button>
-                        )}
-
-                        <button
-                          type="button"
-                          disabled={idx === editFormData.images.length - 1}
-                          onClick={() => moveImage(editFormData.images, idx, idx + 1, newImgs => setEditFormData({ ...editFormData, images: newImgs }))}
-                          className="flex-1 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface disabled:opacity-30 text-[11px] font-bold transition-colors flex items-center justify-center"
-                          title="Di chuyển sang sau"
-                        >
-                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* ─── Quản lý nhiều ảnh & Tải lên với Drag & Drop ─── */}
+              <ProductGalleryManager
+                images={editFormData.images}
+                onChange={newImgs => setEditFormData({ ...editFormData, images: newImgs })}
+                isUploading={isUploading}
+                setIsUploading={setIsUploading}
+              />
 
               <div className="flex justify-end gap-3 pt-4 border-t border-surface-container-low mt-5">
                 <button
@@ -597,11 +448,11 @@ export default function AdminProductsPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isUploading}
                   className="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-label-md hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-[18px]">save</span>
-                  <span>{isSubmitting ? 'Đang lưu...' : 'Lưu Thay Đổi'}</span>
+                  <span>{isUploading ? 'Đang tải ảnh...' : isSubmitting ? 'Đang lưu...' : 'Lưu Thay Đổi'}</span>
                 </button>
               </div>
             </form>
@@ -653,108 +504,13 @@ export default function AdminProductsPage() {
                 />
               </div>
 
-              {/* ─── Quản lý nhiều ảnh trong Thêm mới ─── */}
-              <div className="p-4 bg-surface-container-low/60 rounded-2xl border border-surface-container space-y-3">
-                <div>
-                  <label className="block text-label-md font-bold text-on-surface">
-                    Bộ Sưu Tập Hình Ảnh ({formData.images.length} ảnh)
-                  </label>
-                  <p className="text-xs text-on-surface-variant">
-                    Ảnh ở vị trí <strong>#1 (Đầu tiên)</strong> sẽ là <strong>ảnh đại diện</strong> ngoài trang danh mục (/dresses).
-                  </p>
-                </div>
-
-                <div className="flex gap-2">
-                  <input
-                    type="url"
-                    placeholder="Dán đường dẫn ảnh (https://...)"
-                    value={formData.newImageUrl}
-                    onChange={e => setFormData({ ...formData, newImageUrl: e.target.value })}
-                    className="flex-1 h-10 px-3 bg-surface-container-lowest rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-xs text-on-surface border border-surface-container"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (formData.newImageUrl.trim()) {
-                        setFormData({
-                          ...formData,
-                          images: [...formData.images, formData.newImageUrl.trim()],
-                          newImageUrl: ''
-                        });
-                      }
-                    }}
-                    className="px-4 h-10 bg-secondary text-on-secondary rounded-xl text-xs font-semibold hover:bg-secondary/90 transition-colors flex items-center gap-1 shrink-0"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">add_photo_alternate</span>
-                    <span>Thêm ảnh</span>
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                  {formData.images.map((url, idx) => (
-                    <div
-                      key={idx}
-                      className={`relative group rounded-xl overflow-hidden border-2 bg-surface-container-lowest flex flex-col justify-between ${
-                        idx === 0 ? 'border-primary ring-2 ring-primary/20 shadow-md' : 'border-surface-container'
-                      }`}
-                    >
-                      <div className="absolute top-1.5 left-1.5 z-10">
-                        {idx === 0 ? (
-                          <span className="bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-0.5">
-                            <span className="material-symbols-outlined text-[11px]">star</span>
-                            <span>#1 Chính</span>
-                          </span>
-                        ) : (
-                          <span className="bg-black/60 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
-                            #{idx + 1}
-                          </span>
-                        )}
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => removeImage(formData.images, idx, newImgs => setFormData({ ...formData, images: newImgs }))}
-                        className="absolute top-1.5 right-1.5 z-10 w-6 h-6 rounded-full bg-black/60 hover:bg-rose-600 text-white flex items-center justify-center transition-colors shadow-sm"
-                        title="Xóa ảnh này"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">close</span>
-                      </button>
-
-                      <div className="w-full aspect-[3/4] bg-surface-container overflow-hidden">
-                        <img src={url} alt={`Ảnh ${idx + 1}`} className="w-full h-full object-cover" />
-                      </div>
-
-                      <div className="p-1.5 bg-surface-container-lowest border-t border-surface-container flex items-center justify-between gap-1">
-                        <button
-                          type="button"
-                          disabled={idx === 0}
-                          onClick={() => moveImage(formData.images, idx, idx - 1, newImgs => setFormData({ ...formData, images: newImgs }))}
-                          className="flex-1 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface disabled:opacity-30 text-[11px] font-bold transition-colors flex items-center justify-center"
-                        >
-                          <span className="material-symbols-outlined text-[14px]">arrow_back</span>
-                        </button>
-                        {idx !== 0 && (
-                          <button
-                            type="button"
-                            onClick={() => setAsPrimary(formData.images, idx, newImgs => setFormData({ ...formData, images: newImgs }))}
-                            className="px-2 py-1 rounded bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-bold transition-colors"
-                          >
-                            Lên đầu
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          disabled={idx === formData.images.length - 1}
-                          onClick={() => moveImage(formData.images, idx, idx + 1, newImgs => setFormData({ ...formData, images: newImgs }))}
-                          className="flex-1 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface disabled:opacity-30 text-[11px] font-bold transition-colors flex items-center justify-center"
-                        >
-                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* ─── Quản lý nhiều ảnh & Tải lên với Drag & Drop ─── */}
+              <ProductGalleryManager
+                images={formData.images}
+                onChange={newImgs => setFormData({ ...formData, images: newImgs })}
+                isUploading={isUploading}
+                setIsUploading={setIsUploading}
+              />
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -820,10 +576,10 @@ export default function AdminProductsPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isUploading}
                   className="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-label-md hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Đang lưu...' : 'Lưu Trang Phục'}
+                  {isUploading ? 'Đang tải ảnh...' : isSubmitting ? 'Đang lưu...' : 'Lưu Trang Phục'}
                 </button>
               </div>
             </form>

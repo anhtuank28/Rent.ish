@@ -36,3 +36,5 @@ next-env.d.ts
 *.swo
 .tempmediaStorage/
 ai-templates/
+uploads/
+backend/uploads/

@@ -37,6 +37,7 @@
 | **Swagger API Docs & Handover** | ✅ Hoàn thành |
 | **Hệ thống Wishlist & Giao diện /wishlist** | ✅ Hoàn thành |
 | **Quản lý nhiều ảnh & đổi thứ tự ảnh đại diện (Admin & Catalog)** | ✅ Hoàn thành |
+| **Hệ thống Upload ảnh Cloud (Supabase Storage + Drag & Drop UI)** | ✅ Hoàn thành |
 
 ## 5. Sprint Plan (Thứ tự triển khai)
 

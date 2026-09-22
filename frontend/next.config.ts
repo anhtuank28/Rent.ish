@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
       },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
     ],
   },
   async rewrites() {
@@ -20,6 +24,11 @@ const nextConfig: NextConfig = {
         source: '/api/:path*',
         // Lén đẩy sang Render (hoặc localhost khi code offline)
         destination: `${process.env.BACKEND_URL || 'http://localhost:3001'}/api/:path*`,
+      },
+      {
+        // Nhận ảnh từ thư mục uploads khi chạy local fallback
+        source: '/uploads/:path*',
+        destination: `${process.env.BACKEND_URL || 'http://localhost:3001'}/uploads/:path*`,
       },
     ];
   },
