@@ -35,6 +35,7 @@
 | **Bộ lọc sản phẩm (Filter/Search)** | ✅ Hoàn thành |
 | **Date Picker thật trong BookingEngine** | ✅ Hoàn thành |
 | **Swagger API Docs & Handover** | ✅ Hoàn thành |
+| **Hệ thống Wishlist & Giao diện /wishlist** | ✅ Hoàn thành |
 
 ## 5. Sprint Plan (Thứ tự triển khai)
 

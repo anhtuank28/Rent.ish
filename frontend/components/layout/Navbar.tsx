@@ -5,18 +5,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
+import { useWishlistStore } from '../../store/wishlistStore';
 
 export function Navbar() {
   const { user, isAuthenticated, isLoading, checkAuth, logout } = useAuthStore();
   const { items } = useCartStore();
+  const { items: wishlistItems, isHydrated: isWishlistHydrated } = useWishlistStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  // Calculate total items in cart
+  // Calculate total items in cart and wishlist
   const cartItemCount = items.length;
+  const wishlistItemCount = isWishlistHydrated ? wishlistItems.length : 0;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -76,6 +79,11 @@ export function Navbar() {
             
             <Link href="/wishlist" aria-label="Yêu thích" className="relative p-2 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
               <span className="material-symbols-outlined">favorite</span>
+              {wishlistItemCount > 0 && (
+                <span className="absolute top-0 right-0 w-4 h-4 rounded-full bg-rose-500 text-white font-label-sm text-[10px] flex items-center justify-center scale-90 animate-in zoom-in duration-200">
+                  {wishlistItemCount}
+                </span>
+              )}
             </Link>
             
             <Link href="/cart" aria-label="Giỏ hàng" className="relative p-2 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors">
