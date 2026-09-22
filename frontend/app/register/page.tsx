@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 // Dùng đường dẫn tương đối để đi qua Cổng Proxy của Next.js (next.config.ts)
 const API_URL = '';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirect') || '';
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [fullName, setFullName] = useState('');
@@ -63,7 +65,7 @@ export default function RegisterPage() {
       }
 
       // Đăng ký thành công → Chuyển sang trang Login
-      router.push('/login?registered=true');
+      router.push(`/login?registered=true${redirectUrl ? `&redirect=${encodeURIComponent(redirectUrl)}` : ''}`);
     } catch {
       setError('Không thể kết nối đến server. Vui lòng thử lại sau.');
     } finally {
@@ -98,7 +100,7 @@ export default function RegisterPage() {
         {/* Tab Switcher (Navigation instead of state) */}
         <div className="p-1 bg-surface-container rounded-full flex items-center mb-7 w-full">
           <Link
-            href="/login"
+            href={`/login${redirectUrl ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`}
             className="flex-1 py-2.5 px-4 rounded-full font-label-lg text-label-lg text-center text-secondary hover:text-on-surface transition-colors"
           >
             Đăng Nhập
@@ -286,3 +288,16 @@ export default function RegisterPage() {
     </main>
   );
 }
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <RegisterForm />
+    </Suspense>
+  );
+}
+

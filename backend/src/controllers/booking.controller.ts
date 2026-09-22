@@ -31,14 +31,40 @@ export class BookingController {
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.userId;
-      const { address, paymentMethod } = req.body;
+      const { address, paymentMethod, items } = req.body;
       
-      const booking = await BookingService.checkoutCart(userId, address, paymentMethod);
+      const booking = await BookingService.checkoutCart(userId, address, paymentMethod, items);
       
       res.status(201).json({
         success: true,
         message: "Đặt thuê thành công",
         data: booking,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getMyOrders(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.userId;
+      const orders = await BookingService.getMyOrders(userId);
+      
+      res.status(200).json({
+        success: true,
+        data: orders,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orders = await BookingService.getAllBookings();
+      res.status(200).json({
+        success: true,
+        data: orders,
       });
     } catch (error) {
       next(error);

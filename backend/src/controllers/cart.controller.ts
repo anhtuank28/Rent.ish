@@ -27,7 +27,7 @@ export class CartController {
     try {
       const userId = req.user!.userId;
       const { itemId } = req.params;
-      const cart = await cartService.removeItem(userId, itemId);
+      const cart = await cartService.removeItem(userId, itemId as string);
       res.status(200).json({ success: true, data: cart });
     } catch (error) {
       next(error);

@@ -28,7 +28,8 @@ export const createBookingSchema = z.object({
       district: z.string().min(1, "Vui lòng nhập Quận/Huyện"),
       ward: z.string().min(1, "Vui lòng nhập Phường/Xã"),
     }),
-    paymentMethod: z.string().optional()
+    paymentMethod: z.string().optional(),
+    items: z.array(z.any()).optional()
   })
 });
 

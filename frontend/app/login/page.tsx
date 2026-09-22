@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuthStore } from '../../store/authStore';
 
 // Dùng đường dẫn tương đối để đi qua Cổng Proxy của Next.js (next.config.ts)
 const API_URL = '';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirect') || '/';
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -48,15 +52,17 @@ export default function LoginPage() {
             credentials: 'include',
             body: JSON.stringify({ localItems: itemsToMerge }),
           });
-          // Merge thành công, dọn dẹp LocalStorage để dùng DB (sẽ tự tải khi load trang mới)
-          localStorage.removeItem('rent-ish-cart');
+          // Lưu ý: Giữ nguyên items trong localStorage/Zustand để checkout hiển thị ngay lập tức
         } catch (e) {
           console.error("Lỗi đồng bộ giỏ hàng", e);
         }
       }
 
-      // Chuyển hướng về trang chủ.
-      router.push('/');
+      // Cập nhật trạng thái đăng nhập
+      await useAuthStore.getState().checkAuth();
+
+      // Chuyển hướng về trang redirect (ví dụ: /checkout)
+      router.push(redirectUrl);
     } catch {
       setError('Không thể kết nối đến server. Vui lòng thử lại sau.');
     } finally {
@@ -88,13 +94,21 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* Tab Switcher (Navigation instead of state) */}
+        {/* Thông báo nếu redirect từ trang thanh toán */}
+        {redirectUrl.includes('/checkout') && (
+          <div className="mb-6 p-3.5 bg-primary/10 border border-primary/20 text-primary rounded-xl text-sm flex items-center gap-2 animate-in fade-in">
+            <span className="material-symbols-outlined text-[20px] shrink-0">info</span>
+            <span>Vui lòng đăng nhập để hoàn tất đơn đặt thuê của bạn.</span>
+          </div>
+        )}
+
+        {/* Tab Switcher */}
         <div className="p-1 bg-surface-container rounded-full flex items-center mb-7 w-full">
           <div className="flex-1 py-2.5 px-4 rounded-full font-label-lg text-label-lg text-center bg-primary-container text-on-primary-container shadow-sm">
             Đăng Nhập
           </div>
           <Link
-            href="/register"
+            href={`/register${redirectUrl !== '/' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`}
             className="flex-1 py-2.5 px-4 rounded-full font-label-lg text-label-lg text-center text-secondary hover:text-on-surface transition-colors"
           >
             Đăng Ký
@@ -236,5 +250,17 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

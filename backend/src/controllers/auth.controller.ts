@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { authService, COOKIE_OPTIONS } from '../services/auth.service.js';
+import { prisma } from '../config/prisma.js';
+import { ApiError } from '../utils/ApiError.js';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -65,15 +67,40 @@ export const logout = async (_req: Request, res: Response, next: NextFunction) =
   }
 };
 
+
+
 /**
  * GET /api/auth/me — Trả thông tin user hiện tại từ token trong cookie.
  * Frontend dùng API này thay cho việc đọc localStorage.
  */
 export const me = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const userId = req.user!.userId;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        role: true,
+      }
+    });
+
+    if (!user) {
+      throw ApiError.notFound('User not found');
+    }
+
+    const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'User';
+
     res.status(200).json({
       success: true,
-      data: req.user,
+      data: {
+        id: user.id,
+        email: user.email,
+        fullName,
+        role: user.role
+      },
     });
   } catch (error) {
     next(error);

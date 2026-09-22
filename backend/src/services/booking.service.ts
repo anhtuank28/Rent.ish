@@ -149,15 +149,73 @@ export class BookingService {
   }
 
   /**
+   * 4. Lấy danh sách lịch sử đơn hàng của user
+   */
+  static async getMyOrders(userId: string) {
+    return prisma.booking.findMany({
+      where: {
+        user_id: userId,
+      },
+      include: {
+        items: {
+          include: {
+            inventory_unit: {
+              include: {
+                variant: {
+                  include: {
+                    product: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payment_transaction: true,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+  }
+
+  /**
    * 5. Checkout từ Giỏ hàng (Cart)
    */
-  static async checkoutCart(userId: string, addressData: any, paymentMethod: string) {
+  static async checkoutCart(userId: string, addressData: any, paymentMethod: string, localItems?: any[]) {
     return await prisma.$transaction(async (tx) => {
       // 1. Get cart
-      const cart = await tx.cart.findUnique({
+      let cart = await tx.cart.findUnique({
         where: { user_id: userId },
         include: { items: { include: { variant: { include: { product: true } } } } }
       });
+
+      if (!cart) {
+        cart = await tx.cart.create({
+          data: { user_id: userId },
+          include: { items: { include: { variant: { include: { product: true } } } } }
+        });
+      }
+
+      // Fallback: nếu giỏ hàng trong DB trống nhưng client có gửi kèm localItems, tự động lưu vào DB
+      if (cart.items.length === 0 && localItems && localItems.length > 0) {
+        for (const item of localItems) {
+          if (item.variantId) {
+            await tx.cartItem.create({
+              data: {
+                cart_id: cart.id,
+                variant_id: item.variantId,
+                rental_start_date: new Date(item.rentalStartDate),
+                rental_end_date: new Date(item.rentalEndDate)
+              }
+            });
+          }
+        }
+
+        cart = await tx.cart.findUnique({
+          where: { user_id: userId },
+          include: { items: { include: { variant: { include: { product: true } } } } }
+        });
+      }
 
       if (!cart || cart.items.length === 0) {
         throw ApiError.badRequest("Giỏ hàng của bạn đang trống!");
@@ -229,7 +287,7 @@ export class BookingService {
           throw ApiError.conflict(`Sản phẩm ${item.variant.product.name} (Size: ${item.variant.size}) đã hết hàng trong khoảng thời gian bạn chọn.`);
         }
 
-        const unitId = availableUnits[0].inventory_unit_id;
+        const unitId = availableUnits[0]!.inventory_unit_id;
         const itemId = crypto.randomUUID();
 
         try {
@@ -257,6 +315,42 @@ export class BookingService {
       });
 
       return booking;
+    });
+  }
+
+  /**
+   * 6. Lấy TẤT CẢ đơn hàng toàn hệ thống (Admin only)
+   */
+  static async getAllBookings() {
+    return prisma.booking.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            first_name: true,
+            last_name: true,
+          }
+        },
+        shipping_address: true,
+        items: {
+          include: {
+            inventory_unit: {
+              include: {
+                variant: {
+                  include: {
+                    product: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payment_transaction: true,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
     });
   }
 }

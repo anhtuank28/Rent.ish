@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '../../store/cartStore';
+import { useAuthStore } from '../../store/authStore';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, isHydrated, clearCart } = useCartStore();
+  const { user, isAuthenticated, isLoading: authLoading, checkAuth } = useAuthStore();
   
   const [address, setAddress] = useState({
     fullName: '',
@@ -18,6 +20,25 @@ export default function CheckoutPage() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login?redirect=/checkout');
+    }
+  }, [authLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (user && !address.fullName) {
+      setAddress(prev => ({
+        ...prev,
+        fullName: user.fullName || prev.fullName
+      }));
+    }
+  }, [user]);
 
   const subtotal = items.reduce((sum, item) => {
     const price = item?.product?.price || 0;
@@ -35,13 +56,28 @@ export default function CheckoutPage() {
     setError('');
 
     try {
+      // 1. Đồng bộ giỏ hàng LocalStorage lên Backend Database
+      const syncRes = await fetch('/api/cart/merge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ localItems: items })
+      });
+
+      if (syncRes.status === 401) {
+        router.push('/login?redirect=/checkout');
+        return;
+      }
+
+      // 2. Gửi request tạo đơn đặt thuê kèm fallback items
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           address,
-          paymentMethod: 'COD'
+          paymentMethod: 'COD',
+          items
         })
       });
 
@@ -54,14 +90,14 @@ export default function CheckoutPage() {
       // Xóa giỏ hàng local và chuyển sang trang thành công
       clearCart();
       router.push('/checkout/success');
-    } catch (e) {
+    } catch {
       setError('Lỗi kết nối. Vui lòng thử lại sau.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (!isHydrated) {
+  if (!isHydrated || authLoading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
