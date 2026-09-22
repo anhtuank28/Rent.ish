@@ -7,7 +7,9 @@ import { useAuthStore } from '../../store/authStore';
 
 interface Order {
   id: string;
-  total_amount: string;
+  total_price?: string | number;
+  total_amount?: string | number;
+  shipping_fee?: string | number;
   status: string;
   created_at: string;
   items: {
@@ -16,14 +18,17 @@ interface Order {
         product: {
           name: string;
           image_url: string;
+          rental_price?: string | number;
         };
         size: string;
         color: string;
       };
     };
-    rental_start_date: string;
-    rental_end_date: string;
-    price: string;
+    rental_start_date?: string | null;
+    rental_end_date?: string | null;
+    start_date?: string | null;
+    end_date?: string | null;
+    price?: string | number;
   }[];
 }
 
@@ -136,7 +141,14 @@ export default function OrdersPage() {
                       </div>
                       <div>
                         <p className="text-xs text-on-surface-variant uppercase font-semibold mb-1">Tổng tiền</p>
-                        <p className="text-sm font-bold text-primary">{(Number(order.total_amount) / 1000).toLocaleString('vi-VN')}K</p>
+                        <p className="text-sm font-bold text-primary">
+                          {(() => {
+                            const raw = order.total_price ?? order.total_amount;
+                            const num = Number(raw);
+                            if (isNaN(num) || num <= 0) return '0đ';
+                            return num >= 1000 ? `${(num / 1000).toLocaleString('vi-VN')}K` : `${num.toLocaleString('vi-VN')}đ`;
+                          })()}
+                        </p>
                       </div>
                     </div>
                     <div>
@@ -166,11 +178,27 @@ export default function OrdersPage() {
                                 <p className="text-sm text-on-surface-variant mb-2">Size: {variant.size} | Màu: {variant.color}</p>
                                 <div className="flex items-center gap-2 text-xs bg-surface-container-low w-fit px-2 py-1 rounded text-on-surface-variant">
                                   <span className="material-symbols-outlined text-[14px]">calendar_month</span>
-                                  <span>{new Date(item.rental_start_date).toLocaleDateString('vi-VN')} - {new Date(item.rental_end_date).toLocaleDateString('vi-VN')}</span>
+                                  <span>
+                                    {(() => {
+                                      const start = item.rental_start_date || item.start_date;
+                                      const end = item.rental_end_date || item.end_date;
+                                      const validStart = start && !isNaN(new Date(start).getTime());
+                                      const validEnd = end && !isNaN(new Date(end).getTime());
+                                      if (validStart && validEnd) {
+                                        return `${new Date(start!).toLocaleDateString('vi-VN')} - ${new Date(end!).toLocaleDateString('vi-VN')}`;
+                                      }
+                                      return 'Gói thuê 4 ngày tiêu chuẩn';
+                                    })()}
+                                  </span>
                                 </div>
                               </div>
                               <div className="mt-4 sm:mt-0 font-semibold text-on-surface">
-                                {(Number(item.price) / 1000).toLocaleString('vi-VN')}K / kỳ thuê
+                                {(() => {
+                                  const rawPrice = item.price ?? product.rental_price;
+                                  const numPrice = Number(rawPrice);
+                                  if (isNaN(numPrice) || numPrice <= 0) return '0đ / kỳ thuê';
+                                  return numPrice >= 1000 ? `${(numPrice / 1000).toLocaleString('vi-VN')}K / kỳ thuê` : `${numPrice.toLocaleString('vi-VN')}đ / kỳ thuê`;
+                                })()}
                               </div>
                             </div>
                           </li>

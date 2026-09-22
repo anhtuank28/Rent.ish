@@ -152,7 +152,7 @@ export class BookingService {
    * 4. Lấy danh sách lịch sử đơn hàng của user
    */
   static async getMyOrders(userId: string) {
-    return prisma.booking.findMany({
+    const bookings = await prisma.booking.findMany({
       where: {
         user_id: userId,
       },
@@ -176,6 +176,47 @@ export class BookingService {
         created_at: "desc",
       },
     });
+
+    if (bookings.length === 0) {
+      return [];
+    }
+
+    // Lấy ngày thuê từ daterange của PostgreSQL cho các BookingItem
+    const bookingIds = bookings.map((b) => b.id);
+    const rawItems = await prisma.$queryRaw<
+      Array<{
+        id: string;
+        booking_id: string;
+        start_date: string | null;
+        end_date: string | null;
+      }>
+    >`
+      SELECT id, booking_id, 
+             lower(rental_period)::text as start_date, 
+             (upper(rental_period) - INTERVAL '1 day')::date::text as end_date 
+      FROM "BookingItem" 
+      WHERE booking_id::text = ANY(${bookingIds})
+    `;
+
+    const rawMap = new Map(rawItems.map((r) => [r.id, r]));
+
+    return bookings.map((b) => ({
+      ...b,
+      total_price: b.total_price.toString(),
+      total_amount: b.total_price.toString(),
+      items: b.items.map((item) => {
+        const raw = rawMap.get(item.id);
+        const prodPrice = item.inventory_unit?.variant?.product?.rental_price;
+        return {
+          ...item,
+          rental_start_date: raw?.start_date || null,
+          rental_end_date: raw?.end_date || null,
+          start_date: raw?.start_date || null,
+          end_date: raw?.end_date || null,
+          price: prodPrice ? prodPrice.toString() : "0",
+        };
+      }),
+    }));
   }
 
   /**
