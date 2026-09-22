@@ -1,61 +1,162 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '../../../store/cartStore';
 
 interface BookingEngineProps {
-  price: number;
-  retailPrice: number;
-  sizes: string[];
+  product: {
+    id: string;
+    name: string;
+    brand: string;
+    image: string;
+    price: number;
+    retailPrice: number;
+    sizes: { size: string, variantId: string }[];
+  }
 }
 
-export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps) {
+export function BookingEngine({ product }: BookingEngineProps) {
+  // Helper tính ngày mai dạng YYYY-MM-DD
+  const getTomorrowDateString = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split('T')[0];
+  };
+
+  const minDateStr = getTomorrowDateString();
+
+  const [startDateStr, setStartDateStr] = useState<string>(minDateStr);
   const [duration, setDuration] = useState<4 | 8 | 16>(4);
-  const [selectedSize, setSelectedSize] = useState<string>(sizes[0] || 'M');
+  const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]?.size || 'M');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Trạng thái kiểm tra trống lịch (Real-time Availability)
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+  const [isAvailable, setIsAvailable] = useState<boolean>(true);
+  const [availableCount, setAvailableCount] = useState<number>(1);
+
   const router = useRouter();
   const { addItem } = useCartStore();
 
-  const basePrice = price;
+  const basePrice = product.price;
   const currentPrice = duration === 4 ? basePrice : duration === 8 ? basePrice + 18 : basePrice + 36;
-  const savePercentage = Math.round(((retailPrice - currentPrice) / retailPrice) * 100);
+  const savePercentage = Math.round(((product.retailPrice - currentPrice) / product.retailPrice) * 100);
 
-  const [realVariantId, setRealVariantId] = useState('123e4567-e89b-12d3-a456-426614174000');
+  const selectedVariantId = product.sizes.find(s => s.size === selectedSize)?.variantId || product.sizes[0]?.variantId || '';
 
-  // Pre-fetch 1 mã variant thật từ DB ngay khi load trang để lúc bấm Add to Cart không bị chậm
-  React.useEffect(() => {
-    fetch('/api/products?limit=1')
-      .then(res => res.json())
-      .then(data => {
-        const id = data?.data?.products?.[0]?.variants?.[0]?.id;
-        if (id) setRealVariantId(id);
-      })
-      .catch(console.error);
-  }, []);
+  // Tính ngày kết thúc dựa trên ngày bắt đầu và gói ngày
+  const getEndDateStr = (start: string, days: number) => {
+    try {
+      const d = new Date(start);
+      if (isNaN(d.getTime())) return '';
+      d.setDate(d.getDate() + days);
+      return d.toISOString().split('T')[0];
+    } catch {
+      return '';
+    }
+  };
 
-  const handleAddToCart = () => {
+  const endDateStr = getEndDateStr(startDateStr, duration);
+
+  const formatDateDisplay = (dateStr: string) => {
+    if (!dateStr) return '';
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+      return dateStr;
+    } catch {
+      return dateStr;
+    }
+  };
+
+  // Gọi API kiểm tra lịch trống (Availability)
+  useEffect(() => {
+    if (!startDateStr || !endDateStr || !product.id) return;
+
+    let isMounted = true;
+    const checkAvailability = async () => {
+      setIsCheckingAvailability(true);
+      try {
+        const res = await fetch(`/api/products/${product.id}/availability?startDate=${startDateStr}&endDate=${endDateStr}`);
+        const json = await res.json();
+        if (isMounted && json.success) {
+          const units: any[] = json.data || [];
+          // Kiểm tra xem có unit nào thuộc size đã chọn hay không (hoặc freesize)
+          const matchingUnits = units.filter(u => 
+            !selectedSize || !u.size || 
+            u.size.toLowerCase() === selectedSize.toLowerCase() || 
+            u.size.toLowerCase() === 'freesize'
+          );
+
+          if (matchingUnits.length > 0) {
+            setIsAvailable(true);
+            setAvailableCount(matchingUnits.length);
+          } else {
+            setIsAvailable(false);
+            setAvailableCount(0);
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi khi kiểm tra lịch trống:", err);
+      } finally {
+        if (isMounted) setIsCheckingAvailability(false);
+      }
+    };
+
+    const timer = setTimeout(checkAvailability, 200);
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [product.id, startDateStr, endDateStr, selectedSize]);
+
+  // Đặt nhanh ngày
+  const handleQuickDateSelect = (daysFromNow: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() + daysFromNow);
+    setStartDateStr(d.toISOString().split('T')[0]);
+  };
+
+  const handleAddToCart = async () => {
+    if (!isAvailable) return;
     setIsLoading(true);
     try {
-      const startDate = new Date();
-      const endDate = new Date();
+      const startDate = new Date(startDateStr);
+      const endDate = new Date(startDateStr);
       endDate.setDate(startDate.getDate() + duration);
 
-      addItem({
+      const newItem = {
         id: crypto.randomUUID(),
-        variantId: realVariantId,
+        variantId: selectedVariantId,
         rentalStartDate: startDate.toISOString(),
         rentalEndDate: endDate.toISOString(),
         product: {
-          id: 'd1',
-          name: 'Đầm Dạ Hội Hở Lưng Eliana Xẻ Đùi',
-          brand: 'AURA STUDIO',
-          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBC2bJXYmJ22u37qN0Wb2aWqJk_2rQ1XF8fN2-1bN5eP34yY12Z83b5pXm0m-0J6K7-PZ4O6M3w5m0T-xM4lT9_a9z2e7bY3vF7dY8T2N1K8O3G4J7Z1wT9m3n8Y4jH9fQ7F4lP2_3-5z3j8h9d0X3T9xM2R1K3X5dZ9F2vL4jP6T9wZ4fD1w8B7G5cZ1M2X3',
+          id: product.id,
+          name: product.name,
+          brand: product.brand,
+          image: product.image,
           price: currentPrice,
-          retailPrice,
+          retailPrice: product.retailPrice,
           size: selectedSize
         }
-      });
+      };
+
+      addItem(newItem);
+      
+      // Đồng bộ ngầm lên database nếu người dùng đã đăng nhập
+      try {
+        await fetch('/api/cart/merge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ localItems: [newItem] })
+        });
+      } catch {
+        // Khách vãng lai (chưa đăng nhập) -> bỏ qua, dữ liệu đã lưu trong LocalStorage
+      }
       
       router.push('/cart');
     } catch (e) {
@@ -66,20 +167,20 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
   };
 
   return (
-    <div className="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-xl shadow-[0_12px_36px_-6px_rgba(36,30,26,0.08)] flex flex-col gap-space-lg">
+    <div className="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-[0_12px_36px_-6px_rgba(36,30,26,0.08)] flex flex-col gap-space-lg border border-surface-container/60">
       
       {/* Heading & Designer Meta */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
           <span className="font-label-md text-label-md tracking-widest uppercase font-semibold text-primary">
-            AURA STUDIO
+            {product.brand || 'RENT-ISH EXCLUSIVE'}
           </span>
           <span className="px-2.5 py-0.5 rounded-full bg-tertiary-container/60 text-on-tertiary-container font-label-sm text-label-sm font-medium">
             Hàng chính hãng
           </span>
         </div>
-        <h1 className="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-snug">
-          Đầm Dạ Hội Hở Lưng Eliana Xẻ Đùi
+        <h1 className="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-snug font-bold">
+          {product.name}
         </h1>
         <div className="flex items-center gap-2 pt-1">
           <div className="flex items-center text-[#d48c3b]">
@@ -97,10 +198,10 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
       </div>
 
       {/* Pricing Block */}
-      <div className="p-space-md rounded-DEFAULT bg-surface-container-low flex flex-col gap-2">
+      <div className="p-space-md rounded-2xl bg-surface-container-low flex flex-col gap-2">
         <div className="flex items-baseline justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="font-headline-lg text-headline-lg font-semibold text-on-surface">
+            <span className="font-headline-lg text-headline-lg font-bold text-on-surface">
               {currentPrice}K
             </span>
             <span className="font-body-sm text-body-sm text-on-surface-variant">
@@ -109,7 +210,7 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
           </div>
           <div className="text-right">
             <span className="font-body-sm text-body-sm text-outline line-through">
-              Giá gốc {retailPrice}K
+              Giá gốc {product.retailPrice}K
             </span>
             <span className="block font-label-sm text-label-sm text-primary font-semibold">
               Tiết kiệm {savePercentage}%
@@ -133,7 +234,7 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
           ].map((d) => (
             <button
               key={d.days}
-              className={`py-2.5 px-3 rounded-full font-label-md text-label-md transition-all text-center ${
+              className={`py-2.5 px-3 rounded-xl font-label-md text-label-md transition-all text-center cursor-pointer ${
                 duration === d.days
                   ? 'font-semibold bg-primary-container text-on-primary-container shadow-sm'
                   : 'font-medium bg-surface-container-low text-on-surface hover:bg-surface-container'
@@ -147,19 +248,92 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
         </div>
       </div>
 
-      {/* Date Picker (Mock) */}
+      {/* Real Date Picker & Timeline */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <label className="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">
-            Chọn ngày thuê
+            Chọn Ngày Nhận Đồ
           </label>
-          <span className="font-label-sm text-label-sm text-primary font-semibold flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">calendar_month</span>
-            Tháng 10, 2026
-          </span>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => handleQuickDateSelect(1)}
+              className="text-xs px-2 py-0.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors cursor-pointer"
+            >
+              Ngày mai
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickDateSelect(3)}
+              className="text-xs px-2 py-0.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-colors cursor-pointer"
+            >
+              +3 ngày
+            </button>
+          </div>
         </div>
-        <div className="p-3.5 rounded-DEFAULT bg-surface-container-low text-center font-body-sm text-on-surface-variant">
-          [Lịch tương tác sẽ được tích hợp ở Phase 2 cùng API]
+
+        {/* Interactive Date Input */}
+        <div className="relative">
+          <input
+            type="date"
+            min={minDateStr}
+            value={startDateStr}
+            onChange={(e) => setStartDateStr(e.target.value)}
+            className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-container text-on-surface font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer shadow-inner"
+          />
+        </div>
+
+        {/* Timeline Visual Card */}
+        <div className="p-3.5 rounded-xl bg-surface-container-low/80 border border-surface-container/60 space-y-2">
+          <div className="flex items-center justify-between text-xs">
+            <div className="space-y-0.5">
+              <span className="text-on-surface-variant flex items-center gap-1 font-medium">
+                <span className="material-symbols-outlined text-[15px] text-primary">local_shipping</span>
+                Ngày nhận đồ:
+              </span>
+              <span className="font-semibold text-on-surface block text-sm">
+                {formatDateDisplay(startDateStr)}
+              </span>
+            </div>
+
+            <div className="flex flex-col items-center px-2">
+              <span className="text-[10px] uppercase font-bold text-primary tracking-wider bg-primary-container/40 px-2 py-0.5 rounded-full">
+                {duration} Ngày
+              </span>
+              <span className="text-outline text-xs">➔</span>
+            </div>
+
+            <div className="space-y-0.5 text-right">
+              <span className="text-on-surface-variant flex items-center justify-end gap-1 font-medium">
+                <span className="material-symbols-outlined text-[15px] text-emerald-600">assignment_return</span>
+                Ngày trả đồ:
+              </span>
+              <span className="font-semibold text-on-surface block text-sm">
+                {formatDateDisplay(endDateStr)}
+              </span>
+            </div>
+          </div>
+
+          {/* Availability Status Badge */}
+          <div className="pt-2 border-t border-surface-container/60 flex items-center justify-between text-xs">
+            {isCheckingAvailability ? (
+              <span className="flex items-center gap-1.5 text-on-surface-variant italic">
+                <span className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                Đang kiểm tra tình trạng đồ...
+              </span>
+            ) : isAvailable ? (
+              <span className="flex items-center gap-1 text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                <span className="material-symbols-outlined text-[15px] text-emerald-600">check_circle</span>
+                Còn {availableCount} sản phẩm sẵn sàng giao
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-rose-700 font-semibold bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200">
+                <span className="material-symbols-outlined text-[15px] text-rose-600">error</span>
+                Đã kín lịch trong khoảng ngày này
+              </span>
+            )}
+            <span className="text-outline text-[11px]">Chống trùng lịch tự động</span>
+          </div>
         </div>
       </div>
 
@@ -169,30 +343,30 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
           <label className="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">
             Chọn Size
           </label>
-          <button className="font-label-sm text-label-sm text-primary font-semibold hover:underline flex items-center gap-0.5" type="button">
+          <button className="font-label-sm text-label-sm text-primary font-semibold hover:underline flex items-center gap-0.5 cursor-pointer" type="button">
             <span className="material-symbols-outlined text-[15px]">straighten</span>
             <span>Hướng dẫn chọn size</span>
           </button>
         </div>
-        <div className="grid grid-cols-5 gap-2">
-          {sizes.map((s) => (
+        <div className="grid grid-cols-4 gap-2">
+          {product.sizes.map((s) => (
             <button
-              key={s}
-              className={`py-2.5 rounded-full font-label-md text-label-md font-semibold text-center transition-all ${
-                selectedSize === s 
+              key={s.size}
+              className={`py-2.5 rounded-xl font-label-md text-label-md font-semibold text-center transition-all cursor-pointer ${
+                selectedSize === s.size 
                   ? 'bg-on-surface text-on-primary shadow-sm' 
                   : 'bg-surface-container-low text-on-surface hover:bg-surface-container'
               }`}
-              onClick={() => setSelectedSize(s)}
+              onClick={() => setSelectedSize(s.size)}
               type="button"
             >
-              {s}
+              {s.size}
             </button>
           ))}
         </div>
 
         {/* Free Backup Size */}
-        <div className="p-3.5 rounded-DEFAULT bg-secondary-container/40 flex flex-col gap-2.5 mt-2">
+        <div className="p-3.5 rounded-xl bg-secondary-container/40 flex flex-col gap-2.5 mt-2">
           <label className="flex items-center gap-2.5 cursor-pointer">
             <input defaultChecked className="w-4 h-4 rounded accent-primary text-on-primary focus:ring-0" type="checkbox" />
             <span className="font-label-sm text-label-sm font-semibold text-on-surface">
@@ -202,8 +376,8 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
           <div className="flex items-center gap-2 pl-6">
             <span className="font-body-sm text-body-sm text-on-surface-variant whitespace-nowrap">Size dự phòng:</span>
             <select className="flex-1 bg-surface-container-lowest text-on-surface font-label-sm text-label-sm rounded-full px-3 py-1.5 outline-none shadow-sm cursor-pointer">
-              {sizes.filter(s => s !== selectedSize).map(s => (
-                <option key={s} value={s}>Size {s}</option>
+              {product.sizes.filter(s => s.size !== selectedSize).map(s => (
+                <option key={s.size} value={s.size}>Size {s.size}</option>
               ))}
             </select>
           </div>
@@ -214,16 +388,28 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
       <div className="space-y-2.5 pt-1">
         <button
           onClick={handleAddToCart}
-          disabled={isLoading}
-          className="w-full h-12 rounded-full bg-primary-container hover:bg-tertiary-container text-on-primary-container font-label-lg text-label-lg font-bold shadow-[0_6px_20px_rgba(36,30,26,0.12)] hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
+          disabled={isLoading || !isAvailable || isCheckingAvailability}
+          className={`w-full h-12 rounded-full font-label-lg text-label-lg font-bold shadow-[0_6px_20px_rgba(36,30,26,0.12)] transition-all flex items-center justify-center gap-2 ${
+            isAvailable && !isCheckingAvailability
+              ? 'bg-primary-container hover:bg-tertiary-container text-on-primary-container hover:shadow-lg active:scale-[0.99] cursor-pointer'
+              : 'bg-surface-container text-outline cursor-not-allowed opacity-70'
+          }`}
           type="button"
         >
-          <span className="material-symbols-outlined text-[20px]">{isLoading ? 'progress_activity' : 'shopping_bag'}</span>
-          <span>{isLoading ? 'Đang thêm...' : `Thêm Vào Giỏ • ${currentPrice}K`}</span>
+          <span className="material-symbols-outlined text-[20px]">
+            {isLoading ? 'progress_activity' : isAvailable ? 'shopping_bag' : 'event_busy'}
+          </span>
+          <span>
+            {isLoading
+              ? 'Đang thêm...'
+              : isAvailable
+              ? `Thêm Vào Giỏ • ${currentPrice}K`
+              : 'Đã Kín Lịch Trong Khoảng Ngày Này'}
+          </span>
         </button>
         <div className="flex items-center gap-2">
           <button
-            className="flex-1 h-11 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-2"
+            className="flex-1 h-11 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
             type="button"
           >
             <span className="material-symbols-outlined text-[18px]">favorite</span>
@@ -234,17 +420,17 @@ export function BookingEngine({ price, retailPrice, sizes }: BookingEngineProps)
 
       {/* Guarantees */}
       <div className="grid grid-cols-3 gap-2 pt-2 border-t-0">
-        <div className="flex flex-col items-center text-center p-2 rounded-DEFAULT bg-surface-container-low">
+        <div className="flex flex-col items-center text-center p-2 rounded-xl bg-surface-container-low">
           <span className="material-symbols-outlined text-[20px] text-primary mb-1">dry_cleaning</span>
           <span className="font-label-sm text-label-sm font-semibold text-on-surface leading-tight">Giặt ủi</span>
           <span className="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Rent-ish lo</span>
         </div>
-        <div className="flex flex-col items-center text-center p-2 rounded-DEFAULT bg-surface-container-low">
+        <div className="flex flex-col items-center text-center p-2 rounded-xl bg-surface-container-low">
           <span className="material-symbols-outlined text-[20px] text-primary mb-1">health_and_safety</span>
           <span className="font-label-sm text-label-sm font-semibold text-on-surface leading-tight">Bảo hiểm</span>
           <span className="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Rách, xước nhỏ</span>
         </div>
-        <div className="flex flex-col items-center text-center p-2 rounded-DEFAULT bg-surface-container-low">
+        <div className="flex flex-col items-center text-center p-2 rounded-xl bg-surface-container-low">
           <span className="material-symbols-outlined text-[20px] text-primary mb-1">autorenew</span>
           <span className="font-label-sm text-label-sm font-semibold text-on-surface leading-tight">Hoàn trả</span>
           <span className="font-body-sm text-[11px] text-on-surface-variant mt-0.5">Túi đóng sẵn tem</span>

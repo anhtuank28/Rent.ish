@@ -4,6 +4,11 @@ export const getProductsSchema = z.object({
   query: z.object({
     page: z.string().optional().transform(val => (val ? parseInt(val) : 1)),
     limit: z.string().optional().transform(val => (val ? parseInt(val) : 12)),
+    search: z.string().optional(),
+    size: z.string().optional(),
+    color: z.string().optional(),
+    minPrice: z.string().optional().transform(val => (val ? parseFloat(val) : undefined)),
+    maxPrice: z.string().optional().transform(val => (val ? parseFloat(val) : undefined)),
   })
 });
 
@@ -11,6 +16,7 @@ export const createProductSchema = z.object({
   body: z.object({
     name: z.string().min(1, "Tên sản phẩm không được để trống").trim(),
     description: z.string().optional(),
+    image_url: z.string().optional(),
     retail_price: z.number().positive("Giá bán lẻ phải lớn hơn 0"),
     rental_price: z.number().positive("Giá thuê phải lớn hơn 0"),
     variants: z.array(z.object({
@@ -29,6 +35,7 @@ export const updateProductSchema = z.object({
   body: z.object({
     name: z.string().min(1).trim().optional(),
     description: z.string().optional(),
+    image_url: z.string().optional(),
     retail_price: z.number().positive().optional(),
     rental_price: z.number().positive().optional(),
   }).refine(data => Object.keys(data).length > 0, {
