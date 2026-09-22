@@ -29,7 +29,7 @@ function HeroStatItem({ stat }: { stat: typeof HERO_STATS[number] }) {
 
 function HeroSocialProof() {
   return (
-    <div className="absolute top-8 sm:top-12 -left-3 sm:-left-6 lg:-left-8 z-20 bg-surface-container-lowest/90 backdrop-blur-xl p-3 sm:px-4 sm:py-3 rounded-2xl border border-white/70 shadow-[0_16px_36px_-6px_rgba(36,30,26,0.12)] flex items-center gap-3 transition-all duration-300 hover:scale-105 hover:shadow-[0_20px_40px_-6px_rgba(36,30,26,0.18)] cursor-default">
+    <div className="absolute top-1 sm:top-2 -left-3 sm:-left-6 lg:-left-8 z-20 bg-surface-container-lowest/90 backdrop-blur-xl p-3 sm:px-4 sm:py-3 rounded-2xl border border-white/70 shadow-[0_16px_36px_-6px_rgba(36,30,26,0.12)] flex items-center gap-3 transition-all duration-300 hover:scale-105 hover:shadow-[0_20px_40px_-6px_rgba(36,30,26,0.18)] cursor-default">
       {/* Live pulse dot + Avatars */}
       <div className="relative flex items-center">
         <div className="flex -space-x-2.5">
