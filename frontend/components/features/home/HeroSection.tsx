@@ -29,26 +29,42 @@ function HeroStatItem({ stat }: { stat: typeof HERO_STATS[number] }) {
 
 function HeroSocialProof() {
   return (
-    <div className="absolute -top-4 -left-4 sm:left-4 bg-surface-container-lowest/90 backdrop-blur-md p-space-sm sm:px-space-md sm:py-space-sm rounded-full shadow-[0_12px_32px_-4px_rgba(36,30,26,0.12)] flex items-center gap-space-sm transition-transform hover:scale-105">
-      <div className="flex -space-x-2">
-        <img
-          alt="Avatar người dùng"
-          className="w-7 h-7 rounded-full object-cover"
-          src="https://lh3.googleusercontent.com/aida/AEtjO1X0Jr74IOGD9ioWsHhrZhoW78-aRNPj-d9bVe7_5615dwaaM7XeKZXBJ15-GZMv2ftNJip9kkqAixsrR4mQ8hFESexU4mLZwFFik236P66fFIkZHp3gSn0ZC1kV3Gs6PzvaB6W3XB1_e6D_jDRuVtOxVhzM_t4ZL39N0hUGI_15KxYKH1Om7Xuk2aScdpeujOafTiBXPUzR8iNr9ETMIkFJcv75aJiaGO5i4JBMIF6sHl-gjwHc_KwEEp62"
-        />
-        <div className="w-7 h-7 rounded-full bg-primary-container text-on-primary-fixed flex items-center justify-center font-label-sm text-label-sm font-semibold">
-          M
+    <div className="absolute top-8 sm:top-12 -left-3 sm:-left-6 lg:-left-8 z-20 bg-surface-container-lowest/90 backdrop-blur-xl p-3 sm:px-4 sm:py-3 rounded-2xl border border-white/70 shadow-[0_16px_36px_-6px_rgba(36,30,26,0.12)] flex items-center gap-3 transition-all duration-300 hover:scale-105 hover:shadow-[0_20px_40px_-6px_rgba(36,30,26,0.18)] cursor-default">
+      {/* Live pulse dot + Avatars */}
+      <div className="relative flex items-center">
+        <div className="flex -space-x-2.5">
+          <img
+            alt="Khách thuê Mai Anh"
+            className="w-8 h-8 rounded-full object-cover ring-2 ring-surface-container-lowest shadow-sm"
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face"
+          />
+          <img
+            alt="Khách thuê Lan Hương"
+            className="w-8 h-8 rounded-full object-cover ring-2 ring-surface-container-lowest shadow-sm"
+            src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face"
+          />
+          <div className="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center text-[10px] font-bold ring-2 ring-surface-container-lowest shadow-sm">
+            +48
+          </div>
         </div>
-        <div className="w-7 h-7 rounded-full bg-secondary-fixed-dim text-on-secondary-fixed flex items-center justify-center font-label-sm text-label-sm font-semibold">
-          K
-        </div>
+
+        {/* Live realtime booking dot */}
+        <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 ring-1.5 ring-white"></span>
+        </span>
       </div>
-      <div className="text-left">
-        <div className="font-label-sm text-label-sm text-on-surface font-semibold flex items-center gap-1">
-          <span>✨ 35 lượt thuê tháng này</span>
+
+      {/* Thông tin đặt lịch & trạng thái */}
+      <div className="text-left pr-1">
+        <div className="flex items-center gap-1.5">
+          <span className="font-label-sm text-label-sm text-on-surface font-bold tracking-tight">
+            35+ lượt thuê tháng này
+          </span>
         </div>
-        <div className="font-label-sm text-label-sm text-tertiary">
-          Lịch trống tiếp theo: Thứ Sáu
+        <div className="flex items-center gap-1 text-[11px] font-medium text-tertiary mt-0.5">
+          <span className="material-symbols-outlined text-[13px] text-primary">event_available</span>
+          <span>Lịch trống tiếp: <strong className="text-on-surface font-semibold">Thứ Sáu</strong></span>
         </div>
       </div>
     </div>
@@ -87,7 +103,7 @@ function HeroTrendingCard() {
 
 export function HeroSection() {
   return (
-    <section className="w-full relative overflow-hidden pb-space-xl">
+    <section className="w-full relative overflow-hidden pt-4 sm:pt-6 pb-space-xl">
       {/* Background blobs */}
       <div className="absolute top-12 left-1/4 w-96 h-96 rounded-full bg-primary-container/25 blur-3xl -z-10 pointer-events-none" />
       <div className="absolute top-48 right-10 w-[28rem] h-[28rem] rounded-full bg-tertiary-container/20 blur-3xl -z-10 pointer-events-none" />
