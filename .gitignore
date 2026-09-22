@@ -3,20 +3,36 @@
 .AppleDouble
 .LSOverride
 
-# Node
+# Node & Dependencies
 node_modules/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
-# Environment
+# Environment & Secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
-# IDEs and Editors
+# Testing & Coverage
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# Build & Cache
+.next/
+dist/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# IDEs & OS Junk
 .idea/
 .vscode/
 *.swp
 *.swo
+.tempmediaStorage/
+ai-templates/

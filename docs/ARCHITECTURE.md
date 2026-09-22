@@ -172,5 +172,5 @@ erDiagram
 ### 3.3. Bảo Mật Đa Tầng (Enterprise Security)
 - **JWT HttpOnly Cookies:** Access token (thời hạn 15 phút) và Refresh token (thời hạn 7 ngày) được lưu trữ an toàn trong `httpOnly` cookie (`SameSite: Lax`), miễn nhiễm hoàn toàn với các cuộc tấn công đánh cắp token qua XSS.
 - **Role-Based Access Control (RBAC):** Middleware `authorize("ADMIN")` bảo vệ nghiêm ngặt các route quản trị (`/api/products` (POST/PUT/DELETE), `/api/users`, `/api/bookings/admin/all`).
-- **Khóa an toàn tài khoản gốc:** API quản lý tài khoản chặn thao tác hạ quyền hoặc xóa tài khoản quản trị tối cao (`tài khoản quản trị viên`).
+- **Khóa an toàn tài khoản quản trị:** API quản lý tài khoản chặn thao tác tự hạ quyền quản trị viên của chính mình khi đang trong phiên làm việc.
 - **HTTP Protection:** Helmet điều chỉnh security headers, Express Rate Limiter ngăn chặn tấn công từ chối dịch vụ (DDoS) và brute force mật khẩu.

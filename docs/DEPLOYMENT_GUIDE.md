@@ -71,12 +71,16 @@
 
 ---
 
-## 4. Tài Khoản Quản Trị & Truy Cập Mặc Định
+## 4. Thiết Lập Tài Khoản Quản Trị (Admin Setup)
 
-Sau khi chạy seed dữ liệu thành công:
-- **Tài khoản Admin:** `[EMAIL_QUAN_TRI]` / Mật khẩu: `[MAT_KHAU_AN_TOAN]`
-- **Trang quản trị chủ shop:** `https://your-app.vercel.app/admin`
-- **Tài liệu Swagger API:** `https://your-backend.onrender.com/api/docs`
+Để đảm bảo an toàn bảo mật chuẩn production, hệ thống tuyệt đối không lưu cứng tài khoản/mật khẩu quản trị mặc định:
+1. Đăng ký tài khoản quản trị viên mới thông qua trang `/register` với mật khẩu an toàn do bạn tự đặt (tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường và số).
+2. Phân quyền Quản trị viên (ADMIN) qua SQL Editor trên Dashboard Supabase hoặc CLI:
+   ```sql
+   UPDATE "User" SET role = 'ADMIN' WHERE email = 'EMAIL_QUAN_TRI_CUA_BAN';
+   ```
+3. **Trang quản trị chủ shop:** `https://your-app.vercel.app/admin`
+4. **Tài liệu Swagger API:** `https://your-backend.onrender.com/api/docs`
 
 ---
 
