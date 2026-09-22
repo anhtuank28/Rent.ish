@@ -19,6 +19,8 @@ export function ProductGallery({ images }: ProductGalleryProps) {
             <img
               src={mainImage}
               alt="Main Product"
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
           )}
@@ -76,6 +78,8 @@ export function ProductGallery({ images }: ProductGalleryProps) {
             <img
               src={img}
               alt={`Thumbnail ${idx}`}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover rounded-DEFAULT"
             />
           </button>
@@ -106,6 +110,8 @@ export function ProductGallery({ images }: ProductGalleryProps) {
               <img
                 src={images[0]}
                 alt={`Member ${member}`}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-on-background/80 via-transparent to-transparent flex flex-col justify-end p-2.5">

@@ -27,6 +27,8 @@ function FeaturedProductCard({ product }: { product: FeaturedProduct }) {
         <Link href={`/dresses/${product.id}`}>
           <img
             alt={product.imageAlt}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
             src={product.imageUrl}
           />
