@@ -81,6 +81,7 @@ export class ProductService {
           rental_price: true,
           retail_price: true,
           image_url: true,
+          images: true,
           variants: true,
         },
       }),
@@ -130,6 +131,7 @@ export class ProductService {
     name: string;
     description?: string;
     image_url?: string;
+    images?: string[];
     retail_price: number;
     rental_price: number;
     variants?: Array<{
@@ -139,7 +141,13 @@ export class ProductService {
       inventory_count?: number;
     }>;
   }) {
-    const { variants, ...productData } = data;
+    const { variants, images, ...rest } = data;
+    const finalImages = images && images.length > 0 ? images : (rest.image_url ? [rest.image_url] : []);
+    const productData = {
+      ...rest,
+      image_url: finalImages[0] || rest.image_url || null,
+      images: finalImages,
+    };
 
     return await prisma.$transaction(async (tx) => {
       const product = await tx.product.create({
@@ -183,9 +191,19 @@ export class ProductService {
     // Kiểm tra xem có tồn tại không
     await this.getProductById(id);
 
+    const { images, ...rest } = data;
+    const updateData: any = { ...rest };
+    if (images !== undefined) {
+      updateData.images = images;
+      if (images.length > 0) {
+        // Tự động đồng bộ ảnh đầu tiên trong mảng làm ảnh đại diện chính
+        updateData.image_url = images[0];
+      }
+    }
+
     const product = await prisma.product.update({
       where: { id },
-      data,
+      data: updateData,
     });
     return product;
   }

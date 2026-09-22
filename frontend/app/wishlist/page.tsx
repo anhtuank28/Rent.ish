@@ -38,7 +38,8 @@ export default function WishlistPage() {
               sizes,
               price: Number(p.rental_price) / 1000,
               retailPrice: Number(p.retail_price) / 1000,
-              imageUrl: p.image_url || fallbackImages[idx % fallbackImages.length],
+              imageUrl: (p.images && p.images.length > 0) ? p.images[0] : (p.image_url || fallbackImages[idx % fallbackImages.length]),
+              images: (p.images && p.images.length > 0) ? p.images : [p.image_url || fallbackImages[idx % fallbackImages.length]],
               badges: idx === 0 ? ['Thịnh Hành'] : [],
             };
           });

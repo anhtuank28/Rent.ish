@@ -13,6 +13,7 @@ export interface ProductCardProps {
   price: number;
   retailPrice: number;
   imageUrl: string;
+  images?: string[];
   badges?: string[];
 }
 
@@ -25,22 +26,47 @@ export function ProductCard({
   price,
   retailPrice,
   imageUrl,
+  images = [],
   badges = [],
 }: ProductCardProps) {
   const savePercentage = Math.round(((retailPrice - price) / retailPrice) * 100);
 
+  const displayPrimary = images && images.length > 0 ? images[0] : imageUrl;
+  const secondaryImg = images && images.length > 1 ? images[1] : null;
+
   return (
     <article className="group bg-surface-container-lowest rounded-lg p-space-sm shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] hover:shadow-[0_16px_36px_-4px_rgba(36,30,26,0.12)] transition-all duration-300 flex flex-col justify-between">
       <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden bg-surface-container-low mb-space-md">
-        <Link href={`/dresses/${id}`}>
+        <Link href={`/dresses/${id}`} className="block w-full h-full relative overflow-hidden">
           <img
-            src={imageUrl}
+            src={displayPrimary}
             alt={title}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ease-out ${
+              secondaryImg ? 'group-hover:opacity-0' : ''
+            }`}
           />
+          {secondaryImg && (
+            <img
+              src={secondaryImg}
+              alt={`${title} - Góc chụp phụ`}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover absolute inset-0 opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 ease-out"
+            />
+          )}
         </Link>
+        
+        {/* Multi-image count indicator */}
+        {images && images.length > 1 && (
+          <div className="absolute bottom-2 right-2 z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+            <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+              <span className="material-symbols-outlined text-[12px]">photo_library</span>
+              <span>{images.length}</span>
+            </span>
+          </div>
+        )}
         
         {/* Badges */}
         {badges.length > 0 && (

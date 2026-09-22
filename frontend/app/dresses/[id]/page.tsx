@@ -25,14 +25,18 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800'
       ];
       
+      const productImages = (p.images && p.images.length > 0)
+        ? p.images
+        : (p.image_url ? [p.image_url, ...fallbackImages.slice(0, 3)] : fallbackImages);
+
       product = {
         id: p.id,
         name: p.name,
         brand: 'RENT-ISH EXCLUSIVE',
         price: Number(p.rental_price) / 1000,
         retailPrice: Number(p.retail_price) / 1000,
-        images: p.image_url ? [p.image_url, ...fallbackImages.slice(0, 3)] : fallbackImages,
-        image: p.image_url || fallbackImages[0],
+        images: productImages,
+        image: productImages[0],
         sizes: sizes.length > 0 ? sizes : [{ size: 'S', variantId: '' }, { size: 'M', variantId: '' }],
       };
     }

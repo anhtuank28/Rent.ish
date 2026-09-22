@@ -21,6 +21,7 @@ interface ProductItem {
   rental_price: string | number;
   retail_price: string | number;
   image_url?: string;
+  images?: string[];
   variants?: Variant[];
 }
 
@@ -71,6 +72,10 @@ function DressesContent() {
             'https://images.unsplash.com/photo-1550639525-c97d455acf70?w=800'
           ];
 
+          const productImages = (p.images && p.images.length > 0)
+            ? p.images
+            : (p.image_url ? [p.image_url] : [fallbackImages[index % fallbackImages.length]]);
+
           return {
             id: p.id,
             brand: 'RENT-ISH EXCLUSIVE',
@@ -78,7 +83,8 @@ function DressesContent() {
             sizes: sizes.length > 0 ? sizes : ['S', 'M'],
             price: Number(p.rental_price) / 1000,
             retailPrice: Number(p.retail_price) / 1000,
-            imageUrl: p.image_url || fallbackImages[index % fallbackImages.length],
+            imageUrl: productImages[0],
+            images: productImages,
             badges: index === 0 ? ['Xu Hướng'] : [],
             rawRentalPrice: Number(p.rental_price)
           };
