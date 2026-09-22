@@ -26,6 +26,7 @@ async function main() {
       description: "Chiếc váy cưới hoàng gia lộng lẫy được đính kết 1000 viên pha lê thủ công. Thiết kế bồng bềnh giúp cô dâu tỏa sáng trong ngày trọng đại.",
       retail_price: 25000000,
       rental_price: 3500000,
+      image_url: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800",
       variants: {
         create: [
           {
@@ -63,6 +64,7 @@ async function main() {
       description: "Áo dài truyền thống làm từ lụa tơ tằm Bảo Lộc thượng hạng, họa tiết Hạc Tiên được nghệ nhân thêu tay suốt 14 ngày.",
       retail_price: 8000000,
       rental_price: 1200000,
+      image_url: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800",
       variants: {
         create: [
           {
@@ -98,6 +100,7 @@ async function main() {
       description: "Thiết kế táo bạo nhưng không kém phần thanh lịch. Chất liệu thun lạnh cao cấp ôm sát đường cong cơ thể.",
       retail_price: 4500000,
       rental_price: 600000,
+      image_url: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800",
       variants: {
         create: [
           {
@@ -133,6 +136,7 @@ async function main() {
       description: "Trang phục Suit chuẩn phong cách Gentleman Ý, cắt may tinh tế, phù hợp cho sự kiện, tiệc cưới.",
       retail_price: 6000000,
       rental_price: 900000,
+      image_url: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800",
       variants: {
         create: [
           {
@@ -170,6 +174,7 @@ async function main() {
       description: "Áo măng tô dạ dáng dài giữ ấm hoàn hảo cho những ngày đông giá rét ở miền Bắc hoặc du lịch nước ngoài.",
       retail_price: 3200000,
       rental_price: 450000,
+      image_url: "https://images.unsplash.com/photo-1550639525-c97d455acf70?w=800",
       variants: {
         create: [
           {

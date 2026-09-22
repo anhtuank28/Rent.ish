@@ -27,6 +27,7 @@ model Product {
   description  String?
   retail_price Decimal   @db.Decimal(10, 2)
   rental_price Decimal   @db.Decimal(10, 2)
+  image_url    String?
   created_at   DateTime  @default(now())
   deleted_at   DateTime?
 
