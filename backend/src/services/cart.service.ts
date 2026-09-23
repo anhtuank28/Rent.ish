@@ -26,31 +26,41 @@ export class CartService {
     return cart;
   }
 
-  // Merge giỏ hàng từ LocalStorage vào Database
-  async mergeCart(userId: string, localItems: any[]) {
+  // Merge hoặc Đồng bộ giỏ hàng từ LocalStorage vào Database
+  async mergeCart(userId: string, localItems: any[], replace: boolean = false) {
     const cart = await this.getCart(userId);
 
-    for (const item of localItems) {
-      // Kiểm tra trùng lặp
-      const existingItem = await prisma.cartItem.findFirst({
-        where: {
-          cart_id: cart.id,
-          variant_id: item.variantId,
-          rental_start_date: new Date(item.rentalStartDate),
-          rental_end_date: new Date(item.rentalEndDate)
-        }
+    // Nếu replace = true (đồng bộ chính xác), xóa toàn bộ item cũ trong DB trước
+    if (replace) {
+      await prisma.cartItem.deleteMany({
+        where: { cart_id: cart.id }
       });
+    }
 
-      if (!existingItem) {
-        await prisma.cartItem.create({
-          data: {
+    for (const item of localItems) {
+      if (!item.variantId) continue;
+
+      // Nếu không phải replace thì kiểm tra trùng lặp
+      if (!replace) {
+        const existingItem = await prisma.cartItem.findFirst({
+          where: {
             cart_id: cart.id,
             variant_id: item.variantId,
             rental_start_date: new Date(item.rentalStartDate),
             rental_end_date: new Date(item.rentalEndDate)
           }
         });
+        if (existingItem) continue;
       }
+
+      await prisma.cartItem.create({
+        data: {
+          cart_id: cart.id,
+          variant_id: item.variantId,
+          rental_start_date: new Date(item.rentalStartDate),
+          rental_end_date: new Date(item.rentalEndDate)
+        }
+      });
     }
 
     return this.getCart(userId);

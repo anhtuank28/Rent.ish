@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useAuthStore } from '../../../store/authStore';
+import { useAuthStore, authFetch } from '../../../store/authStore';
 
 interface UserItem {
   id: string;
@@ -35,7 +35,7 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/users', { credentials: 'include' });
+      const res = await authFetch('/api/users');
       const json = await res.json();
       if (json.success) {
         setUsers(json.data || []);
@@ -60,7 +60,7 @@ export default function AdminUsersPage() {
     setConfirmModal({ isOpen: false, user: null, targetRole: 'CUSTOMER' });
 
     try {
-      const res = await fetch(`/api/users/${targetUserId}/role`, {
+      const res = await authFetch(`/api/users/${targetUserId}/role`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

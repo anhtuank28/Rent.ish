@@ -35,10 +35,15 @@ export class BookingController {
       
       const booking = await BookingService.checkoutCart(userId, address, paymentMethod, items);
       
+      const skippedItems = (booking as any).skippedItems || [];
+      const message = skippedItems.length > 0
+        ? `Đặt thuê thành công! Lưu ý: ${skippedItems.length} sản phẩm đã hết hàng và bị bỏ qua.`
+        : "Đặt thuê thành công";
+      
       res.status(201).json({
         success: true,
-        message: "Đặt thuê thành công",
-        data: booking,
+        message,
+        data: { ...booking, skippedItems },
       });
     } catch (error) {
       next(error);

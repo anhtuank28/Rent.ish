@@ -9,6 +9,7 @@ export const getProductsSchema = z.object({
     color: z.string().optional(),
     minPrice: z.string().optional().transform(val => (val ? parseFloat(val) : undefined)),
     maxPrice: z.string().optional().transform(val => (val ? parseFloat(val) : undefined)),
+    sortBy: z.enum(['newest', 'price_asc', 'price_desc']).optional(),
   })
 });
 

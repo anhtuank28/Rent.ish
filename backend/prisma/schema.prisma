@@ -87,6 +87,7 @@ model BookingItem {
   inventory_unit_id String        @db.Uuid
   inventory_unit    InventoryUnit @relation(fields: [inventory_unit_id], references: [id], onDelete: Cascade)
   item_type         String        @default("PRIMARY")
+  status            String        @default("ACTIVE")
 
   rental_period Unsupported("daterange")
 

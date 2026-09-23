@@ -75,10 +75,10 @@ export function CartItem({
       <div className="sm:self-center flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-surface-container">
         <div className="text-left sm:text-right">
           <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
-            {price}K
+            {(price >= 10000 ? price : price * 1000).toLocaleString('vi-VN')}đ
           </span>
           <span className="block text-label-sm text-outline line-through">
-            Gốc {retailPrice}K
+            Gốc {(retailPrice >= 10000 ? retailPrice : retailPrice * 1000).toLocaleString('vi-VN')}đ
           </span>
         </div>
         <button

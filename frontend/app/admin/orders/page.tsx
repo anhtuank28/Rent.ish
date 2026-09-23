@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { authFetch } from '@/store/authStore';
 
 interface BookingItem {
   id: string;
@@ -55,7 +56,7 @@ export default function AdminOrdersPage() {
   const fetchOrders = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/bookings', { credentials: 'include' });
+      const res = await authFetch('/api/bookings');
       const json = await res.json();
       if (json.success) {
         setOrders(json.data || []);
@@ -74,7 +75,7 @@ export default function AdminOrdersPage() {
   const handleUpdateStatus = async (orderId: string, newStatus: string) => {
     setUpdatingId(orderId);
     try {
-      const res = await fetch(`/api/bookings/${orderId}/status`, {
+      const res = await authFetch(`/api/bookings/${orderId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

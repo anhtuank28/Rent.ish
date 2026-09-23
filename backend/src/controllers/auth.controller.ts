@@ -55,8 +55,8 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
 export const logout = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     // Xóa cả 2 cookie bằng cách set maxAge = 0
-    res.clearCookie('accessToken', { path: '/' });
-    res.clearCookie('refreshToken', { path: '/api/auth' });
+    res.clearCookie('accessToken', { ...COOKIE_OPTIONS.accessToken, maxAge: 0 });
+    res.clearCookie('refreshToken', { ...COOKIE_OPTIONS.refreshToken, maxAge: 0 });
 
     res.status(200).json({
       success: true,

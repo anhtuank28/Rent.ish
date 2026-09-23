@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import { authFetch } from "@/store/authStore";
 
 interface ProductGalleryManagerProps {
   images: string[];
@@ -83,7 +84,7 @@ export default function ProductGalleryManager({
       const formData = new FormData();
       validFiles.forEach((f) => formData.append("images", f));
 
-      const res = await fetch("/api/upload", {
+      const res = await authFetch("/api/upload", {
         method: "POST",
         body: formData,
       });

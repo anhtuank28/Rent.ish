@@ -103,7 +103,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       </section>
 
       <ProductTabs />
-      <CompleteTheLook />
+      <CompleteTheLook currentId={id} />
       <CustomerReviews />
 
       {/* Mobile Sticky Add to Cart (Visible only on small screens) */}
@@ -111,7 +111,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         <div className="flex flex-col">
           <div className="flex items-baseline gap-1.5">
             <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
-              {product.price}K
+              {(product.price >= 10000 ? product.price : product.price * 1000).toLocaleString('vi-VN')}đ
             </span>
             <span className="font-body-sm text-[12px] text-on-surface-variant">
               / 4 ngày

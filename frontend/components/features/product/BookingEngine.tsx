@@ -33,7 +33,8 @@ export function BookingEngine({ product }: BookingEngineProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   // Trạng thái kiểm tra trống lịch (Real-time Availability)
-  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(true);
+  const [availableUnits, setAvailableUnits] = useState<any[]>([]);
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const [availableCount, setAvailableCount] = useState<number>(1);
 
@@ -73,6 +74,27 @@ export function BookingEngine({ product }: BookingEngineProps) {
     }
   };
 
+  // Helper tính số lượng còn của từng size
+  const getStockForSize = (sizeName: string, unitsList: any[] = availableUnits) => {
+    return unitsList.filter(u => 
+      !sizeName || !u.size || 
+      u.size.toLowerCase() === sizeName.toLowerCase() || 
+      u.size.toLowerCase() === 'freesize'
+    ).length;
+  };
+
+  const handleSizeChange = (newSize: string) => {
+    setSelectedSize(newSize);
+    const count = getStockForSize(newSize);
+    if (count > 0) {
+      setIsAvailable(true);
+      setAvailableCount(count);
+    } else {
+      setIsAvailable(false);
+      setAvailableCount(0);
+    }
+  };
+
   // Gọi API kiểm tra lịch trống (Availability)
   useEffect(() => {
     if (!startDateStr || !endDateStr || !product.id) return;
@@ -85,19 +107,25 @@ export function BookingEngine({ product }: BookingEngineProps) {
         const json = await res.json();
         if (isMounted && json.success) {
           const units: any[] = json.data || [];
-          // Kiểm tra xem có unit nào thuộc size đã chọn hay không (hoặc freesize)
-          const matchingUnits = units.filter(u => 
-            !selectedSize || !u.size || 
-            u.size.toLowerCase() === selectedSize.toLowerCase() || 
-            u.size.toLowerCase() === 'freesize'
-          );
+          setAvailableUnits(units);
 
-          if (matchingUnits.length > 0) {
+          const currentSizeCount = getStockForSize(selectedSize, units);
+
+          if (currentSizeCount > 0) {
             setIsAvailable(true);
-            setAvailableCount(matchingUnits.length);
+            setAvailableCount(currentSizeCount);
           } else {
-            setIsAvailable(false);
-            setAvailableCount(0);
+            // Tự động chuyển sang size đầu tiên còn hàng (nếu có)
+            const firstAvailable = product.sizes.find(s => getStockForSize(s.size, units) > 0);
+            if (firstAvailable) {
+              setSelectedSize(firstAvailable.size);
+              setIsAvailable(true);
+              setAvailableCount(getStockForSize(firstAvailable.size, units));
+            } else {
+              // Toàn bộ các size đều hết hàng
+              setIsAvailable(false);
+              setAvailableCount(0);
+            }
           }
         }
       } catch (err) {
@@ -112,7 +140,7 @@ export function BookingEngine({ product }: BookingEngineProps) {
       isMounted = false;
       clearTimeout(timer);
     };
-  }, [product.id, startDateStr, endDateStr, selectedSize]);
+  }, [product.id, startDateStr, endDateStr]);
 
   // Đặt nhanh ngày
   const handleQuickDateSelect = (daysFromNow: number) => {
@@ -203,7 +231,7 @@ export function BookingEngine({ product }: BookingEngineProps) {
         <div className="flex items-baseline justify-between">
           <div className="flex items-baseline gap-2">
             <span className="font-headline-lg text-headline-lg font-bold text-on-surface">
-              {currentPrice}K
+              {(currentPrice >= 10000 ? currentPrice : currentPrice * 1000).toLocaleString('vi-VN')}đ
             </span>
             <span className="font-body-sm text-body-sm text-on-surface-variant">
               / {duration} ngày
@@ -211,7 +239,7 @@ export function BookingEngine({ product }: BookingEngineProps) {
           </div>
           <div className="text-right">
             <span className="font-body-sm text-body-sm text-outline line-through">
-              Giá gốc {product.retailPrice}K
+              Giá gốc {(product.retailPrice >= 10000 ? product.retailPrice : product.retailPrice * 1000).toLocaleString('vi-VN')}đ
             </span>
             <span className="block font-label-sm text-label-sm text-primary font-semibold">
               Tiết kiệm {savePercentage}%
@@ -350,20 +378,35 @@ export function BookingEngine({ product }: BookingEngineProps) {
           </button>
         </div>
         <div className="grid grid-cols-4 gap-2">
-          {product.sizes.map((s) => (
-            <button
-              key={s.size}
-              className={`py-2.5 rounded-xl font-label-md text-label-md font-semibold text-center transition-all cursor-pointer ${
-                selectedSize === s.size 
-                  ? 'bg-on-surface text-on-primary shadow-sm' 
-                  : 'bg-surface-container-low text-on-surface hover:bg-surface-container'
-              }`}
-              onClick={() => setSelectedSize(s.size)}
-              type="button"
-            >
-              {s.size}
-            </button>
-          ))}
+          {product.sizes.map((s) => {
+            const stockCount = isCheckingAvailability ? null : getStockForSize(s.size);
+            const isOutOfStock = stockCount !== null && stockCount === 0;
+
+            return (
+              <button
+                key={s.size}
+                disabled={isOutOfStock}
+                className={`py-2 px-1 rounded-xl font-label-md text-label-md font-semibold text-center transition-all flex flex-col items-center justify-center ${
+                  isOutOfStock
+                    ? 'bg-surface-container-low/50 text-outline border border-surface-container/60 cursor-not-allowed opacity-50'
+                    : selectedSize === s.size 
+                    ? 'bg-on-surface text-on-primary shadow-sm cursor-pointer' 
+                    : 'bg-surface-container-low text-on-surface hover:bg-surface-container cursor-pointer'
+                }`}
+                onClick={() => handleSizeChange(s.size)}
+                type="button"
+              >
+                <span className={isOutOfStock ? 'line-through' : ''}>{s.size}</span>
+                {stockCount !== null && (
+                  <span className={`text-[10px] font-normal leading-tight mt-0.5 ${
+                    isOutOfStock ? 'text-rose-500' : selectedSize === s.size ? 'text-surface-container-lowest/80' : 'text-emerald-700'
+                  }`}>
+                    {isOutOfStock ? 'Hết lịch' : `Còn ${stockCount}`}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Free Backup Size */}
@@ -385,26 +428,37 @@ export function BookingEngine({ product }: BookingEngineProps) {
         </div>
       </div>
 
+      {/* Out of Stock Alert Banner */}
+      {!isCheckingAvailability && (!isAvailable || getStockForSize(selectedSize) === 0) && (
+        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2.5">
+          <span className="material-symbols-outlined text-rose-600 text-[20px] shrink-0">event_busy</span>
+          <div>
+            <p className="font-semibold">Size {selectedSize} đã kín lịch trong khoảng ngày này!</p>
+            <p className="text-rose-700/80 mt-0.5">Vui lòng chọn size khác hoặc đổi khoảng thời gian nhận đồ.</p>
+          </div>
+        </div>
+      )}
+
       {/* CTAs */}
       <div className="space-y-2.5 pt-1">
         <button
           onClick={handleAddToCart}
-          disabled={isLoading || !isAvailable || isCheckingAvailability}
+          disabled={isLoading || !isAvailable || isCheckingAvailability || getStockForSize(selectedSize) === 0}
           className={`w-full h-12 rounded-full font-label-lg text-label-lg font-bold shadow-[0_6px_20px_rgba(36,30,26,0.12)] transition-all flex items-center justify-center gap-2 ${
-            isAvailable && !isCheckingAvailability
+            isAvailable && !isCheckingAvailability && getStockForSize(selectedSize) > 0
               ? 'bg-primary-container hover:bg-tertiary-container text-on-primary-container hover:shadow-lg active:scale-[0.99] cursor-pointer'
               : 'bg-surface-container text-outline cursor-not-allowed opacity-70'
           }`}
           type="button"
         >
           <span className="material-symbols-outlined text-[20px]">
-            {isLoading ? 'progress_activity' : isAvailable ? 'shopping_bag' : 'event_busy'}
+            {isLoading ? 'progress_activity' : isAvailable && getStockForSize(selectedSize) > 0 ? 'shopping_bag' : 'event_busy'}
           </span>
           <span>
             {isLoading
               ? 'Đang thêm...'
-              : isAvailable
-              ? `Thêm Vào Giỏ • ${currentPrice}K`
+              : isAvailable && getStockForSize(selectedSize) > 0
+              ? `Thêm Vào Giỏ • ${(currentPrice >= 10000 ? currentPrice : currentPrice * 1000).toLocaleString('vi-VN')}đ`
               : 'Đã Kín Lịch Trong Khoảng Ngày Này'}
           </span>
         </button>

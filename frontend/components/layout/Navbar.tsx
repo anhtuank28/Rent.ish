@@ -48,8 +48,8 @@ export function Navbar() {
 
           {/* Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1 bg-surface-container-low/70 px-1 py-1 rounded-full">
-            <Link href="/dresses?sort=new" className="font-label-lg text-label-lg px-4 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface transition-colors">
-              Hàng Mới Về
+            <Link href="/how-it-works" className="font-label-lg text-label-lg px-4 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface transition-colors">
+              Quy Trình Thuê
             </Link>
             <Link href="/dresses" className="font-label-lg text-label-lg px-4 py-1.5 rounded-full text-on-surface-variant hover:text-on-surface transition-colors">
               Trang Phục

@@ -10,12 +10,64 @@ import { useCartStore } from '../../store/cartStore';
 export default function CartPage() {
   const { items, isHydrated, removeItem } = useCartStore();
   const [mounted, setMounted] = useState(false);
+  const [stockStatus, setStockStatus] = useState<Record<string, boolean>>({});
+  const [isCheckingStock, setIsCheckingStock] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (!isHydrated || items.length === 0) return;
+    let isMounted = true;
+
+    const checkStock = async () => {
+      setIsCheckingStock(true);
+      const status: Record<string, boolean> = {};
+
+      for (const item of items) {
+        try {
+          const start = item.rentalStartDate?.split('T')[0];
+          const end = item.rentalEndDate?.split('T')[0];
+          if (!start || !end || !item.product?.id) continue;
+
+          const res = await fetch(`/api/products/${item.product.id}/availability?startDate=${start}&endDate=${end}`);
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) {
+            const hasUnit = json.data.some((u: any) =>
+              !item.product.size || !u.size ||
+              u.size.toLowerCase() === item.product.size.toLowerCase() ||
+              u.size.toLowerCase() === 'freesize'
+            );
+            status[item.id] = hasUnit;
+          }
+        } catch {
+          // ignore network errors
+        }
+      }
+
+      if (isMounted) {
+        setStockStatus(status);
+        setIsCheckingStock(false);
+      }
+    };
+
+    checkStock();
+    return () => { isMounted = false; };
+  }, [isHydrated, items]);
+
   if (!mounted || !isHydrated) return null; // Hydration mismatch fix
+
+  const hasUnavailableItems = Object.values(stockStatus).some(status => status === false);
+  const unavailableCount = Object.values(stockStatus).filter(status => status === false).length;
+
+  const removeAllUnavailable = () => {
+    items.forEach(item => {
+      if (stockStatus[item.id] === false) {
+        removeItem(item.id);
+      }
+    });
+  };
 
   const subtotal = items.reduce((sum, item) => sum + (item.product.price * (Math.ceil((new Date(item.rentalEndDate).getTime() - new Date(item.rentalStartDate).getTime()) / (1000 * 3600 * 24)) || 1)), 0);
   const careProtectionPrice = 50 * items.length; // 50K per item
@@ -35,6 +87,16 @@ export default function CartPage() {
                 {items.length} sản phẩm
               </span>
             </div>
+            {hasUnavailableItems && (
+              <button
+                onClick={removeAllUnavailable}
+                className="text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-full border border-rose-200 transition-colors flex items-center gap-1 cursor-pointer"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[15px]">delete_sweep</span>
+                <span>Xóa {unavailableCount} món hết hàng</span>
+              </button>
+            )}
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -44,30 +106,51 @@ export default function CartPage() {
                   <p className="text-body-lg text-on-surface-variant">Giỏ hàng của bạn đang trống</p>
                 </div>
               ) : (
-                items.map((item) => (
-                  <div key={item.id} className="relative">
-                    <button 
-                      onClick={() => removeItem(item.id)}
-                      className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-low text-secondary hover:text-error hover:bg-error-container transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">close</span>
-                    </button>
-                    <CartItem 
-                      id={item.id}
-                      brand={item.product.brand}
-                      name={item.product.name}
-                      image={item.product.image}
-                      size={item.product.size}
-                      fits="N/A"
-                      backupSize="Không"
-                      startDate={new Date(item.rentalStartDate).toLocaleDateString('vi-VN')}
-                      endDate={new Date(item.rentalEndDate).toLocaleDateString('vi-VN')}
-                      durationDays={Math.ceil((new Date(item.rentalEndDate).getTime() - new Date(item.rentalStartDate).getTime()) / (1000 * 3600 * 24)) || 1}
-                      price={item.product.price}
-                      retailPrice={item.product.retailPrice}
-                    />
-                  </div>
-                ))
+                items.map((item) => {
+                  const isItemUnavailable = stockStatus[item.id] === false;
+
+                  return (
+                    <div key={item.id} className="relative">
+                      {isItemUnavailable && (
+                        <div className="mb-2 p-2.5 px-3 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-between text-xs text-rose-700">
+                          <span className="flex items-center gap-1.5 font-medium">
+                            <span className="material-symbols-outlined text-[16px] text-rose-600">event_busy</span>
+                            Sản phẩm này đã kín lịch trong khoảng ngày bạn chọn!
+                          </span>
+                          <button
+                            onClick={() => removeItem(item.id)}
+                            className="font-bold underline hover:text-rose-900 cursor-pointer ml-2"
+                            type="button"
+                          >
+                            Xóa ngay
+                          </button>
+                        </div>
+                      )}
+                      <button 
+                        onClick={() => removeItem(item.id)}
+                        className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-surface-container-low text-secondary hover:text-error hover:bg-error-container transition-colors cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">close</span>
+                      </button>
+                      <div className={isItemUnavailable ? 'opacity-70 border border-rose-300 rounded-xl overflow-hidden' : ''}>
+                        <CartItem 
+                          id={item.id}
+                          brand={item.product.brand}
+                          name={item.product.name}
+                          image={item.product.image}
+                          size={item.product.size}
+                          fits="N/A"
+                          backupSize="Không"
+                          startDate={new Date(item.rentalStartDate).toLocaleDateString('vi-VN')}
+                          endDate={new Date(item.rentalEndDate).toLocaleDateString('vi-VN')}
+                          durationDays={Math.ceil((new Date(item.rentalEndDate).getTime() - new Date(item.rentalStartDate).getTime()) / (1000 * 3600 * 24)) || 1}
+                          price={item.product.price}
+                          retailPrice={item.product.retailPrice}
+                        />
+                      </div>
+                    </div>
+                  );
+                })
               )}
               
               <div className="bg-surface-container-lowest rounded-DEFAULT p-3.5 px-4 shadow-[0_1px_4px_rgba(36,30,26,0.03)] flex items-center justify-between gap-3 mt-1">
@@ -99,7 +182,9 @@ export default function CartPage() {
                 itemCount={items.length} 
                 subtotal={subtotal} 
                 careProtectionPrice={careProtectionPrice}
-                hasCareProtection={true} 
+                hasCareProtection={true}
+                disabled={hasUnavailableItems}
+                disabledReason={hasUnavailableItems ? `Có ${unavailableCount} sản phẩm đã hết hàng trong giỏ. Vui lòng xóa trước khi thanh toán.` : undefined}
               />
             </div>
           </div>

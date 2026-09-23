@@ -124,7 +124,7 @@ export default function WishlistPage() {
                       Đang lưu {items.length} bộ trang phục tuyển chọn
                     </h2>
                     <p className="font-body-sm text-xs text-on-surface-variant mt-0.5">
-                      Tổng chi phí thuê ước tính: <strong className="text-on-surface">{totalRental.toLocaleString()}K</strong>
+                      Tổng chi phí thuê ước tính: <strong className="text-on-surface">{(totalRental * 1000).toLocaleString('vi-VN')}đ</strong>
                     </p>
                   </div>
                 </div>
@@ -135,7 +135,7 @@ export default function WishlistPage() {
                       Tiết kiệm ước tính
                     </span>
                     <span className="font-headline-sm text-base font-bold">
-                      ~{totalSavings.toLocaleString()}K so với mua mới
+                      ~{(totalSavings * 1000).toLocaleString('vi-VN')}đ so với mua mới
                     </span>
                   </div>
                 )}
@@ -208,7 +208,7 @@ export default function WishlistPage() {
                           <div className="flex items-baseline justify-between">
                             <div>
                               <span className="font-headline-sm text-lg font-bold text-on-surface">
-                                {item.price}K
+                                {(item.price >= 10000 ? item.price : item.price * 1000).toLocaleString('vi-VN')}đ
                               </span>
                               <span className="font-body-sm text-xs text-on-surface-variant">
                                 {' '}/ 4 ngày

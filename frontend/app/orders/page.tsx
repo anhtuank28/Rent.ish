@@ -45,7 +45,9 @@ export default function OrdersPage() {
     if (isAuthenticated) {
       const fetchOrders = async () => {
         try {
-          const res = await fetch('/api/bookings/my-orders');
+          const res = await fetch('/api/bookings/my-orders', {
+            credentials: 'include'
+          });
           const json = await res.json();
           if (json.success) {
             setOrders(json.data);
@@ -146,7 +148,7 @@ export default function OrdersPage() {
                             const raw = order.total_price ?? order.total_amount;
                             const num = Number(raw);
                             if (isNaN(num) || num <= 0) return '0đ';
-                            return num >= 1000 ? `${(num / 1000).toLocaleString('vi-VN')}K` : `${num.toLocaleString('vi-VN')}đ`;
+                            return `${num.toLocaleString('vi-VN')}đ`;
                           })()}
                         </p>
                       </div>
@@ -197,7 +199,7 @@ export default function OrdersPage() {
                                   const rawPrice = item.price ?? product.rental_price;
                                   const numPrice = Number(rawPrice);
                                   if (isNaN(numPrice) || numPrice <= 0) return '0đ / kỳ thuê';
-                                  return numPrice >= 1000 ? `${(numPrice / 1000).toLocaleString('vi-VN')}K / kỳ thuê` : `${numPrice.toLocaleString('vi-VN')}đ / kỳ thuê`;
+                                  return `${numPrice.toLocaleString('vi-VN')}đ / kỳ thuê`;
                                 })()}
                               </div>
                             </div>

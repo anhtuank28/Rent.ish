@@ -9,10 +9,11 @@ import { ApiError } from '../utils/ApiError.js';
  * Refresh Token: 7 ngày — dùng để gia hạn Access Token khi hết hạn.
  */
 function generateTokens(userId: string, role: string) {
+  const isProd = process.env['NODE_ENV'] === 'production';
   const accessToken = jwt.sign(
     { userId, role },
     process.env['JWT_ACCESS_SECRET'] as string,
-    { expiresIn: (process.env['JWT_ACCESS_EXPIRES_IN'] || '15m') as NonNullable<jwt.SignOptions['expiresIn']> }
+    { expiresIn: (process.env['JWT_ACCESS_EXPIRES_IN'] || (isProd ? '15m' : '1d')) as NonNullable<jwt.SignOptions['expiresIn']> }
   );
 
   const refreshToken = jwt.sign(
@@ -27,25 +28,26 @@ function generateTokens(userId: string, role: string) {
 /**
  * Cookie options chuẩn bảo mật:
  * - httpOnly: JavaScript không thể đọc cookie → chống XSS
- * - secure: Chỉ gửi qua HTTPS (tắt ở dev)
- * - sameSite: Chống CSRF
+ * - secure: Chỉ bật qua HTTPS khi production (tắt ở local HTTP để browser không drop cookie)
+ * - sameSite: 'none' khi cross-origin production (Vercel->Render), 'lax' khi local dev
  */
 const IS_PRODUCTION = process.env['NODE_ENV'] === 'production';
+const SAME_SITE = (IS_PRODUCTION ? 'none' : 'lax') as 'none' | 'lax';
 
 export const COOKIE_OPTIONS = {
   accessToken: {
     httpOnly: true,
-    secure: true,
-    sameSite: 'none' as const,
-    maxAge: 15 * 60 * 1000,        // 15 phút
+    secure: IS_PRODUCTION,
+    sameSite: SAME_SITE,
+    maxAge: (IS_PRODUCTION ? 15 : 24 * 60) * 60 * 1000, // Dev: 24h, Prod: 15m
     path: '/',
   },
   refreshToken: {
     httpOnly: true,
-    secure: true,
-    sameSite: 'none' as const,
+    secure: IS_PRODUCTION,
+    sameSite: SAME_SITE,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
-    path: '/api/auth',               // Chỉ gửi kèm request đến auth routes
+    path: '/',
   },
 };
 

@@ -8,7 +8,7 @@ import VietQrPaymentModal, { VietQrData } from '../../components/features/checko
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, isHydrated, clearCart } = useCartStore();
+  const { items, isHydrated, clearCart, removeItem } = useCartStore();
   const { user, isAuthenticated, isLoading: authLoading, checkAuth } = useAuthStore();
   
   const [address, setAddress] = useState({
@@ -23,6 +23,7 @@ export default function CheckoutPage() {
   const [qrData, setQrData] = useState<VietQrData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [stockErrors, setStockErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     checkAuth();
@@ -43,6 +44,49 @@ export default function CheckoutPage() {
     }
   }, [user]);
 
+  // Pre-check availability khi vào trang checkout
+  useEffect(() => {
+    if (!isHydrated || items.length === 0) return;
+    const checkStock = async () => {
+      const errors: Record<string, string> = {};
+      for (const item of items) {
+        try {
+          const start = item.rentalStartDate?.split('T')[0];
+          const end = item.rentalEndDate?.split('T')[0];
+          if (!start || !end || !item.product?.id) continue;
+          const res = await fetch(`/api/products/${item.product.id}/availability?startDate=${start}&endDate=${end}`);
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) {
+            const hasUnit = json.data.some((u: any) =>
+              !item.product.size || !u.size ||
+              u.size.toLowerCase() === item.product.size.toLowerCase() ||
+              u.size.toLowerCase() === 'freesize'
+            );
+            if (!hasUnit) {
+              errors[item.id] = `Sản phẩm ${item.product.name} (Size: ${item.product.size}) đã hết hàng trong khoảng thời gian bạn chọn.`;
+            }
+          }
+        } catch { /* ignore network errors */ }
+      }
+      setStockErrors(errors);
+    };
+    checkStock();
+  }, [isHydrated, items]);
+
+  const handleRemoveStockError = (itemId: string) => {
+    removeItem(itemId);
+    setStockErrors(prev => {
+      const next = { ...prev };
+      delete next[itemId];
+      return next;
+    });
+  };
+
+  const handleRemoveAllStockErrors = () => {
+    Object.keys(stockErrors).forEach(id => removeItem(id));
+    setStockErrors({});
+  };
+
   const subtotal = items.reduce((sum, item) => {
     const price = item?.product?.price || 0;
     const start = new Date(item?.rentalStartDate || Date.now()).getTime();
@@ -50,7 +94,7 @@ export default function CheckoutPage() {
     const days = Math.ceil((end - start) / (1000 * 3600 * 24)) || 1;
     return sum + (price * days);
   }, 0);
-  const shippingFee = 30; // 30K
+  const shippingFee: number = 30; // 30K
   const total = subtotal + shippingFee;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,12 +103,12 @@ export default function CheckoutPage() {
     setError('');
 
     try {
-      // 1. Đồng bộ giỏ hàng LocalStorage lên Backend Database
+      // 1. Đồng bộ chính xác giỏ hàng LocalStorage lên Backend Database (replace: true để dọn dẹp hàng cũ)
       const syncRes = await fetch('/api/cart/merge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ localItems: items })
+        body: JSON.stringify({ localItems: items, replace: true })
       });
 
       if (syncRes.status === 401) {
@@ -91,6 +135,11 @@ export default function CheckoutPage() {
       }
 
       const booking = data.data;
+
+      // Thông báo nếu có sản phẩm bị bỏ qua do hết hàng
+      if (booking.skippedItems && booking.skippedItems.length > 0) {
+        setError(`⚠️ ${booking.skippedItems.length} sản phẩm đã hết hàng và bị bỏ qua: ${booking.skippedItems.join(', ')}. Đơn hàng chỉ gồm các sản phẩm còn hàng.`);
+      }
 
       // 3. Nếu chọn Chuyển khoản VietQR: Tạo mã QR và mở modal
       if (paymentMethod === 'VIETQR') {
@@ -299,18 +348,45 @@ export default function CheckoutPage() {
 
         {/* Cột phải: Tóm tắt đơn hàng */}
         <div className="bg-surface-container-low p-6 rounded-2xl h-fit sticky top-24">
-          <h2 className="font-headline-sm text-headline-sm text-on-surface mb-6">Tóm Tắt Đơn Đặt</h2>
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="font-headline-sm text-headline-sm text-on-surface">Tóm Tắt Đơn Đặt</h2>
+            {Object.keys(stockErrors).length > 0 && (
+              <button
+                type="button"
+                onClick={handleRemoveAllStockErrors}
+                className="text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-full border border-rose-200 transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[14px]">delete_sweep</span>
+                <span>Xóa {Object.keys(stockErrors).length} món hết hàng</span>
+              </button>
+            )}
+          </div>
           
           <div className="space-y-4 mb-6 max-h-[340px] overflow-y-auto pr-1">
             {items.map(item => (
-              <div key={item.id} className="flex gap-4 items-center bg-surface-container-lowest p-3 rounded-xl">
+              <div key={item.id} className={`flex gap-4 items-start bg-surface-container-lowest p-3 rounded-xl ${stockErrors[item.id] ? 'ring-2 ring-error/40' : ''}`}>
                 <img src={item.product?.image || ''} className="w-16 h-20 object-cover rounded-lg bg-surface-container-high shrink-0" alt={item.product?.name || 'Sản phẩm'} />
                 <div className="flex-1 min-w-0">
                   <h4 className="text-label-md text-on-surface font-medium truncate">{item.product?.name || 'Sản phẩm'}</h4>
                   <p className="text-body-xs text-on-surface-variant">Size: {item.product?.size || 'N/A'}</p>
                   <p className="text-body-xs text-primary font-semibold mt-1">
-                    {item.product?.price ? `${Number(item.product.price).toLocaleString('vi-VN')}K/ngày` : 'N/A'}
+                    {item.product?.price ? `${(Number(item.product.price) >= 10000 ? Number(item.product.price) : Number(item.product.price) * 1000).toLocaleString('vi-VN')}đ / ngày` : 'N/A'}
                   </p>
+                  {stockErrors[item.id] && (
+                    <div className="mt-1 flex items-center justify-between">
+                      <p className="text-body-xs text-error font-medium flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm">error</span>
+                        Hết hàng
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveStockError(item.id)}
+                        className="text-xs text-rose-600 hover:text-rose-800 underline font-semibold cursor-pointer ml-2"
+                      >
+                        Xóa
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -319,22 +395,22 @@ export default function CheckoutPage() {
           <div className="space-y-3 pt-4 border-t border-surface-container-high text-body-md text-on-surface">
             <div className="flex justify-between">
               <span>Tạm tính</span>
-              <span>{subtotal}.000đ</span>
+              <span>{(subtotal * 1000).toLocaleString('vi-VN')}đ</span>
             </div>
             <div className="flex justify-between">
               <span>Phí vận chuyển</span>
-              <span>{shippingFee}.000đ</span>
+              <span>{shippingFee === 0 ? 'Miễn phí' : `${(shippingFee * 1000).toLocaleString('vi-VN')}đ`}</span>
             </div>
             <div className="flex justify-between font-title-lg text-title-lg text-primary pt-2 border-t border-dashed border-outline-variant/30">
               <span>Tổng thanh toán</span>
-              <span>{total}.000đ</span>
+              <span>{(total * 1000).toLocaleString('vi-VN')}đ</span>
             </div>
           </div>
 
           <button 
             type="submit" 
             form="checkout-form"
-            disabled={isLoading}
+            disabled={isLoading || Object.keys(stockErrors).length > 0}
             className="w-full mt-8 h-12 rounded-full bg-primary text-on-primary font-label-lg transition-transform active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             {isLoading ? (
@@ -354,10 +430,6 @@ export default function CheckoutPage() {
               </>
             )}
           </button>
-
-          <p className="text-center text-body-xs text-on-surface-variant mt-4">
-            🔒 Thông tin của bạn được bảo mật tuyệt đối theo chuẩn PCI-DSS & Napas 247
-          </p>
         </div>
       </div>
 

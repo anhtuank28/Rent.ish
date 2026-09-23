@@ -39,6 +39,10 @@
 | **Quản lý nhiều ảnh & đổi thứ tự ảnh đại diện (Admin & Catalog)** | ✅ Hoàn thành |
 | **Hệ thống Upload ảnh Cloud (Supabase Storage + Drag & Drop UI)** | ✅ Hoàn thành |
 | **Cổng thanh toán Ngân hàng VietQR (PayOS SDK + Webhook IPN + Mock Sandbox)** | ✅ Hoàn thành |
+| **Hệ thống Trang Tĩnh Hướng Dẫn & Chính Sách (/how-it-works, /fit-guarantee, /faq, /sustainability, /privacy, /terms)** | ✅ Hoàn thành |
+| **Tinh chỉnh Admin giá tự do & định dạng tiền tệ chấm phân cách (xxx.000đ)** | ✅ Hoàn thành |
+| **Tự động làm mới Auth Token & Sửa lỗi phiên đăng nhập** | ✅ Hoàn thành |
+| **Cập nhật Hero Section & Tối ưu UI Checkout** | ✅ Hoàn thành |
 
 ## 5. Sprint Plan (Thứ tự triển khai)
 

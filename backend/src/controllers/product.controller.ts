@@ -11,6 +11,7 @@ export class ProductController {
       const color = req.query["color"] as string | undefined;
       const minPrice = req.query["minPrice"] ? parseFloat(req.query["minPrice"] as string) : undefined;
       const maxPrice = req.query["maxPrice"] ? parseFloat(req.query["maxPrice"] as string) : undefined;
+      const sortBy = req.query["sortBy"] as 'newest' | 'price_asc' | 'price_desc' | undefined;
 
       const result = await ProductService.getAllProducts({
         page,
@@ -20,6 +21,7 @@ export class ProductController {
         color,
         minPrice,
         maxPrice,
+        sortBy,
       });
       
       res.status(200).json({

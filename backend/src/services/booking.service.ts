@@ -35,8 +35,11 @@ export class BookingService {
       WHERE pv.product_id = ${productId}::uuid
       AND iu.status = 'AVAILABLE'
       AND NOT EXISTS (
-        SELECT 1 FROM "BookingItem" bi 
+        SELECT 1 FROM "BookingItem" bi
+        JOIN "Booking" b ON bi.booking_id = b.id
         WHERE bi.inventory_unit_id = iu.id
+        AND b.status IN ('PENDING', 'CONFIRMED', 'SHIPPED')
+        AND bi.status != 'CANCELLED'
         AND bi.rental_period && daterange(${startDate}::date, ${endDate}::date, '[]')
       )
     `;
@@ -74,12 +77,13 @@ export class BookingService {
         try {
           // Phải dùng executeRaw vì Prisma không hỗ trợ insert trực tiếp kiểu daterange
           await tx.$executeRaw`
-            INSERT INTO "BookingItem" (id, booking_id, inventory_unit_id, item_type, rental_period)
+            INSERT INTO "BookingItem" (id, booking_id, inventory_unit_id, item_type, status, rental_period)
             VALUES (
               ${itemId}::uuid, 
               ${booking.id}::uuid, 
               ${item.inventoryUnitId}::uuid, 
               'PRIMARY', 
+              'ACTIVE', 
               daterange(${item.startDate}::date, ${item.endDate}::date, '[]')
             )
           `;
@@ -142,10 +146,21 @@ export class BookingService {
     const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
     if (!booking) throw ApiError.notFound("Không tìm thấy đơn đặt");
 
-    return await prisma.booking.update({
+    const updated = await prisma.booking.update({
       where: { id: bookingId },
       data: { status },
     });
+
+    // Nếu hủy đơn hàng, giải phóng BookingItem để GiST constraint không chặn khách thuê mới
+    if (status === "CANCELLED") {
+      await prisma.$executeRaw`
+        UPDATE "BookingItem"
+        SET status = 'CANCELLED'
+        WHERE booking_id = ${bookingId}::uuid
+      `;
+    }
+
+    return updated;
   }
 
   /**
@@ -225,6 +240,7 @@ export class BookingService {
   static async checkoutCart(userId: string, addressData: any, paymentMethod: string, localItems?: any[]) {
     return await prisma.$transaction(async (tx) => {
       // 1. Get cart
+      // 1. Get or create user Cart
       let cart = await tx.cart.findUnique({
         where: { user_id: userId },
         include: { items: { include: { variant: { include: { product: true } } } } }
@@ -237,8 +253,12 @@ export class BookingService {
         });
       }
 
-      // Fallback: nếu giỏ hàng trong DB trống nhưng client có gửi kèm localItems, tự động lưu vào DB
-      if (cart.items.length === 0 && localItems && localItems.length > 0) {
+      // Luôn đồng bộ danh sách món từ client gửi lên (nếu có) để tránh hàng cũ bị kẹt trong DB
+      if (localItems && localItems.length > 0) {
+        await tx.cartItem.deleteMany({
+          where: { cart_id: cart.id }
+        });
+
         for (const item of localItems) {
           if (item.variantId) {
             await tx.cartItem.create({
@@ -262,7 +282,51 @@ export class BookingService {
         throw ApiError.badRequest("Giỏ hàng của bạn đang trống!");
       }
 
-      // 2. Create Address
+      // 2. Pre-check availability & Cấp phát unit cho TẤT CẢ các món trong giỏ (hỗ trợ thuê nhiều bộ khác nhau)
+      const availableItems: typeof cart.items = [];
+      const unavailableItems: string[] = [];
+      const assignedUnitsMap = new Map<string, string>(); // cartItemId -> inventoryUnitId
+      const allocatedUnitIds = new Set<string>(); // Theo dõi unit đã gán trong đơn này để không trùng
+
+      for (const item of cart.items) {
+        const startStr = item.rental_start_date.toISOString().split('T')[0];
+        const endStr = item.rental_end_date.toISOString().split('T')[0];
+
+        const units = await tx.$queryRaw<AvailableUnit[]>`
+          SELECT iu.id as inventory_unit_id
+          FROM "InventoryUnit" iu
+          WHERE iu.variant_id = ${item.variant_id}::uuid
+          AND iu.status = 'AVAILABLE'
+          AND NOT EXISTS (
+            SELECT 1 FROM "BookingItem" bi
+            JOIN "Booking" b ON bi.booking_id = b.id
+            WHERE bi.inventory_unit_id = iu.id
+            AND b.status IN ('PENDING', 'CONFIRMED', 'SHIPPED')
+            AND bi.status != 'CANCELLED'
+            AND bi.rental_period && daterange(${startStr}::date, ${endStr}::date, '[]')
+          )
+        `;
+
+        // Tìm unit chưa bị gán cho món nào khác trong cùng lần checkout này
+        const candidateUnit = units.find(u => !allocatedUnitIds.has(u.inventory_unit_id));
+
+        if (candidateUnit) {
+          allocatedUnitIds.add(candidateUnit.inventory_unit_id);
+          assignedUnitsMap.set(item.id, candidateUnit.inventory_unit_id);
+          availableItems.push(item);
+        } else {
+          unavailableItems.push(`${item.variant.product.name} (Size: ${item.variant.size})`);
+        }
+      }
+
+      // Nếu toàn bộ sản phẩm đều hết hàng, báo lỗi rõ ràng
+      if (availableItems.length === 0) {
+        throw ApiError.conflict(
+          `Tất cả sản phẩm trong giỏ hàng đã hết hàng hoặc kín lịch: ${unavailableItems.join(', ')}`
+        );
+      }
+
+      // 3. Create Address
       const address = await tx.address.create({
         data: {
           user_id: userId,
@@ -275,18 +339,18 @@ export class BookingService {
         }
       });
 
-      // 3. Calculate total price
+      // 4. Calculate total price cho các món khả dụng
       let totalPrice = 0;
-      for (const item of cart.items) {
+      for (const item of availableItems) {
         const durationDays = Math.ceil((item.rental_end_date.getTime() - item.rental_start_date.getTime()) / (1000 * 3600 * 24));
         totalPrice += Number(item.variant.product.rental_price) * (durationDays || 1);
       }
       
-      const isFullVnd = cart.items.some(i => Number(i.variant.product.rental_price) >= 1000);
+      const isFullVnd = availableItems.some(i => Number(i.variant.product.rental_price) >= 1000);
       const shippingFee = isFullVnd ? 30000 : 30; // 30K phí ship
       totalPrice += shippingFee;
 
-      // 4. Create Booking
+      // 5. Create Booking
       const booking = await tx.booking.create({
         data: {
           user_id: userId,
@@ -297,7 +361,7 @@ export class BookingService {
         }
       });
 
-      // 5. Create PaymentTransaction
+      // 6. Create PaymentTransaction
       await tx.paymentTransaction.create({
         data: {
           booking_id: booking.id,
@@ -307,54 +371,42 @@ export class BookingService {
         }
       });
 
-      // 6. Assign Inventory Units & Create BookingItems
-      for (const item of cart.items) {
+      // 7. Tạo BookingItem với các unit đã được phân bổ an toàn
+      for (const item of availableItems) {
         const startStr = item.rental_start_date.toISOString().split('T')[0];
         const endStr = item.rental_end_date.toISOString().split('T')[0];
+        const unitId = assignedUnitsMap.get(item.id);
+        if (!unitId) continue;
 
-        const availableUnits = await tx.$queryRaw<AvailableUnit[]>`
-          SELECT iu.id as inventory_unit_id
-          FROM "InventoryUnit" iu
-          WHERE iu.variant_id = ${item.variant_id}::uuid
-          AND iu.status = 'AVAILABLE'
-          AND NOT EXISTS (
-            SELECT 1 FROM "BookingItem" bi 
-            WHERE bi.inventory_unit_id = iu.id
-            AND bi.rental_period && daterange(${startStr}::date, ${endStr}::date, '[]')
-          )
-          LIMIT 1
-        `;
-
-        if (availableUnits.length === 0) {
-          throw ApiError.conflict(`Sản phẩm ${item.variant.product.name} (Size: ${item.variant.size}) đã hết hàng trong khoảng thời gian bạn chọn.`);
-        }
-
-        const unitId = availableUnits[0]!.inventory_unit_id;
         const itemId = crypto.randomUUID();
 
         try {
           await tx.$executeRaw`
-            INSERT INTO "BookingItem" (id, booking_id, inventory_unit_id, item_type, rental_period)
+            INSERT INTO "BookingItem" (id, booking_id, inventory_unit_id, item_type, status, rental_period)
             VALUES (
               ${itemId}::uuid, 
               ${booking.id}::uuid, 
               ${unitId}::uuid, 
               'PRIMARY', 
+              'ACTIVE', 
               daterange(${startStr}::date, ${endStr}::date, '[]')
             )
           `;
         } catch (error: any) {
           if (error.code === "P2010" || (error.message && error.message.includes("conflicting key value"))) {
-            throw ApiError.conflict(`Lỗi xung đột ngày thuê cho sản phẩm ${item.variant.product.name}.`);
+            throw ApiError.conflict(`Lỗi xung đột ngày thuê cho sản phẩm ${item.variant.product.name}. Vui lòng chọn ngày khác.`);
           }
           throw error;
         }
       }
 
-      // 7. Clear Cart
+      // 8. Clear Cart sau khi checkout thành công
       await tx.cartItem.deleteMany({
         where: { cart_id: cart.id }
       });
+
+      // Gắn kèm danh sách sản phẩm bị bỏ qua (nếu có) để frontend thông báo
+      (booking as any).skippedItems = unavailableItems;
 
       return booking;
     });

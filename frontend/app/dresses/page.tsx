@@ -29,17 +29,42 @@ function DressesContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Filter States
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
-  const [selectedSize, setSelectedSize] = useState(searchParams.get('size') || 'Tất cả');
-  const [selectedPriceRange, setSelectedPriceRange] = useState(searchParams.get('price') || 'all');
-  const [sortBy, setSortBy] = useState<'newest' | 'price_asc' | 'price_desc'>('newest');
+  // Filter States initialized from URL
+  const [searchTerm, setSearchTerm] = useState(() => searchParams.get('search') || '');
+  const [selectedSize, setSelectedSize] = useState(() => searchParams.get('size') || 'Tất cả');
+  const [selectedPriceRange, setSelectedPriceRange] = useState(() => searchParams.get('price') || 'all');
+  const [sortBy, setSortBy] = useState<'newest' | 'price_asc' | 'price_desc'>(
+    () => (searchParams.get('sort') as any) || 'newest'
+  );
+
+  // Pagination States (9 items per page, sync with URL)
+  const [currentPage, setCurrentPage] = useState(() => {
+    const p = searchParams.get('page');
+    return p ? Math.max(1, parseInt(p)) : 1;
+  });
+  const [totalPages, setTotalPages] = useState(1);
 
   const [products, setProducts] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch filtered products
+  // Listen to Browser Back/Forward navigation (popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      setSearchTerm(urlParams.get('search') || '');
+      setSelectedSize(urlParams.get('size') || 'Tất cả');
+      setSelectedPriceRange(urlParams.get('price') || 'all');
+      setSortBy((urlParams.get('sort') as any) || 'newest');
+      const p = urlParams.get('page');
+      setCurrentPage(p ? Math.max(1, parseInt(p)) : 1);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Fetch filtered products (Enterprise Server-side sorting & pagination)
   const fetchFilteredProducts = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -56,14 +81,16 @@ function DressesContent() {
         params.set('minPrice', '1000000');
       }
 
-      params.set('limit', '24');
+      params.set('limit', '9');
+      params.set('page', String(currentPage));
+      if (sortBy) params.set('sortBy', sortBy);
 
       const res = await fetch(`/api/products?${params.toString()}`);
       const json = await res.json();
 
       if (json.success) {
-        let items = (json.data || []).map((p: ProductItem, index: number) => {
-          const sizes = p.variants ? Array.from(new Set(p.variants.map((v) => v.size))) : ['S', 'M'];
+        let items = (json.data || []).map((p: any, index: number) => {
+          const sizes = p.variants ? Array.from(new Set(p.variants.map((v: any) => v.size))) : ['S', 'M'];
           const fallbackImages = [
             'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800',
             'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800',
@@ -85,26 +112,38 @@ function DressesContent() {
             retailPrice: Number(p.retail_price) / 1000,
             imageUrl: productImages[0],
             images: productImages,
-            badges: index === 0 ? ['Xu Hướng'] : [],
-            rawRentalPrice: Number(p.rental_price)
+            badges: index === 0 && currentPage === 1 ? ['Xu Hướng'] : [],
+            rawRentalPrice: Number(p.rental_price),
+            isOutOfStock: !!p.isOutOfStock,
+            availableSizes: p.availableSizes || []
           };
         });
 
-        // Client-side sorting
-        if (sortBy === 'price_asc') {
-          items.sort((a: any, b: any) => a.price - b.price);
-        } else if (sortBy === 'price_desc') {
-          items.sort((a: any, b: any) => b.price - a.price);
-        }
-
         setProducts(items);
-        setTotal(json.pagination?.total || items.length);
+        setTotal(json.pagination?.total ?? items.length);
+        setTotalPages(json.pagination?.totalPages ?? Math.ceil((json.pagination?.total ?? items.length) / 9));
+
+        // Sync URL query without reloading the page
+        const urlQuery = new URLSearchParams();
+        if (searchTerm.trim()) urlQuery.set('search', searchTerm.trim());
+        if (selectedSize && selectedSize !== 'Tất cả') urlQuery.set('size', selectedSize);
+        if (selectedPriceRange && selectedPriceRange !== 'all') urlQuery.set('price', selectedPriceRange);
+        if (sortBy && sortBy !== 'newest') urlQuery.set('sort', sortBy);
+        if (currentPage > 1) urlQuery.set('page', String(currentPage));
+
+        const newPath = `${window.location.pathname}${urlQuery.toString() ? `?${urlQuery.toString()}` : ''}`;
+        window.history.replaceState(null, '', newPath);
       }
     } catch (err) {
       console.error("Lỗi khi tải danh sách sản phẩm:", err);
     } finally {
       setIsLoading(false);
     }
+  }, [searchTerm, selectedSize, selectedPriceRange, sortBy, currentPage]);
+
+  // Reset to page 1 whenever search, size, price, or sort changes
+  useEffect(() => {
+    setCurrentPage(1);
   }, [searchTerm, selectedSize, selectedPriceRange, sortBy]);
 
   // Debounce search / fetch on filter changes
@@ -120,6 +159,13 @@ function DressesContent() {
     setSelectedSize('Tất cả');
     setSelectedPriceRange('all');
     setSortBy('newest');
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages || newPage === currentPage) return;
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 350, behavior: 'smooth' });
   };
 
   const hasActiveFilters = searchTerm !== '' || selectedSize !== 'Tất cả' || selectedPriceRange !== 'all';
@@ -351,7 +397,7 @@ function DressesContent() {
               <div className="lg:col-span-9">
                 {isLoading ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-gutter">
-                    {[1, 2, 3, 4, 5, 6].map((idx) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((idx) => (
                       <div key={idx} className="bg-surface-container-lowest rounded-2xl p-4 animate-pulse space-y-3">
                         <div className="w-full aspect-[3/4] bg-surface-container rounded-xl" />
                         <div className="h-4 bg-surface-container rounded w-1/3" />
@@ -361,11 +407,59 @@ function DressesContent() {
                     ))}
                   </div>
                 ) : products.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-gutter">
-                    {products.map((product) => (
-                      <ProductCard key={product.id} {...product} />
-                    ))}
-                  </div>
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-gutter">
+                      {products.map((product) => (
+                        <ProductCard key={product.id} {...product} />
+                      ))}
+                    </div>
+
+                    {/* Pagination Controls (9 items per page) */}
+                    {totalPages > 1 && (
+                      <div className="mt-12 pt-8 border-t border-surface-container flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p className="text-xs text-on-surface-variant font-label-md">
+                          Hiển thị <span className="font-bold text-on-surface">{(currentPage - 1) * 9 + 1} - {Math.min(currentPage * 9, total)}</span> trong số <span className="font-bold text-on-surface">{total}</span> trang phục
+                        </p>
+
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage <= 1}
+                            className="w-10 h-10 rounded-full flex items-center justify-center border border-surface-container text-on-surface hover:bg-surface-container disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed"
+                            aria-label="Trang trước"
+                          >
+                            <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+                          </button>
+
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => (
+                            <button
+                              key={pNum}
+                              type="button"
+                              onClick={() => handlePageChange(pNum)}
+                              className={`w-10 h-10 rounded-full font-label-md text-sm font-bold transition-all cursor-pointer ${
+                                currentPage === pNum
+                                  ? 'bg-primary text-on-primary shadow-sm scale-105'
+                                  : 'bg-surface-container-low hover:bg-surface-container text-on-surface'
+                              }`}
+                            >
+                              {pNum}
+                            </button>
+                          ))}
+
+                          <button
+                            type="button"
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage >= totalPages}
+                            className="w-10 h-10 rounded-full flex items-center justify-center border border-surface-container text-on-surface hover:bg-surface-container disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed"
+                            aria-label="Trang sau"
+                          >
+                            <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className="col-span-full py-16 text-center bg-surface-container-lowest rounded-2xl p-8 shadow-sm border border-surface-container">
                     <span className="material-symbols-outlined text-[48px] text-outline mb-3 inline-block">

@@ -9,6 +9,7 @@ export interface ProductFilterOptions {
   color?: string | undefined;
   minPrice?: number | undefined;
   maxPrice?: number | undefined;
+  sortBy?: 'newest' | 'price_asc' | 'price_desc' | undefined;
 }
 
 export class ProductService {
@@ -67,13 +68,21 @@ export class ProductService {
       }
     }
 
-    const [products, total] = await Promise.all([
+    let orderBy: any = { created_at: "desc" };
+    if (options.sortBy === "price_asc") {
+      orderBy = { rental_price: "asc" };
+    } else if (options.sortBy === "price_desc") {
+      orderBy = { rental_price: "desc" };
+    } else if (options.sortBy === "newest") {
+      orderBy = { created_at: "desc" };
+    }
+
+    const [productsRaw, total] = await Promise.all([
       prisma.product.findMany({
         where,
         skip,
         take: limit,
-        orderBy: { created_at: "desc" },
-        // Chỉ lấy những thông tin cơ bản để hiển thị ngoài danh sách
+        orderBy,
         select: {
           id: true,
           name: true,
@@ -82,11 +91,39 @@ export class ProductService {
           retail_price: true,
           image_url: true,
           images: true,
-          variants: true,
+          variants: {
+            include: {
+              inventory: true,
+            },
+          },
         },
       }),
       prisma.product.count({ where }),
     ]);
+
+    const products = productsRaw.map((p) => {
+      let totalUnits = 0;
+      let availableUnits = 0;
+      const availableSizes: string[] = [];
+
+      (p.variants || []).forEach((v) => {
+        const vUnits = v.inventory?.length || 0;
+        const vAvail = (v.inventory || []).filter((i) => i.status === "AVAILABLE").length;
+        totalUnits += vUnits;
+        availableUnits += vAvail;
+        if (vAvail > 0 && !availableSizes.includes(v.size)) {
+          availableSizes.push(v.size);
+        }
+      });
+
+      return {
+        ...p,
+        totalInventory: totalUnits,
+        availableInventory: availableUnits,
+        isOutOfStock: totalUnits === 0 || availableUnits === 0,
+        availableSizes,
+      };
+    });
 
     return {
       products,

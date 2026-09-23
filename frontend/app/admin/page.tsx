@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { authFetch } from '@/store/authStore';
 
 interface Booking {
   id: string;
@@ -35,7 +36,7 @@ export default function AdminDashboardPage() {
     async function fetchData() {
       try {
         const [bookingsRes, productsRes] = await Promise.all([
-          fetch('/api/bookings', { credentials: 'include' }),
+          authFetch('/api/bookings'),
           fetch('/api/products')
         ]);
 

@@ -73,29 +73,32 @@ function HeroSocialProof() {
 
 function HeroTrendingCard() {
   return (
-    <div className="absolute -bottom-6 -right-2 sm:right-6 bg-surface-container-lowest p-space-md rounded-lg shadow-[0_16px_36px_-6px_rgba(36,30,26,0.14)] max-w-[260px] transition-transform hover:-translate-y-1">
+    <Link
+      href="/dresses/d2b1dcbd-5ba1-4636-89fe-179bbe20f18a"
+      className="absolute -bottom-6 -right-2 sm:right-6 bg-surface-container-lowest p-space-md rounded-lg shadow-[0_16px_36px_-6px_rgba(36,30,26,0.14)] max-w-[260px] transition-transform hover:-translate-y-1 block z-20 group cursor-pointer"
+    >
       <div className="flex items-center justify-between gap-space-sm mb-1">
         <span className="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">
           Đang thịnh hành
         </span>
         <span className="flex items-center text-tertiary text-label-sm font-semibold">
           <span className="material-symbols-outlined text-label-md">star</span>
-          4.9 (84)
+          4.9 (92)
         </span>
       </div>
-      <div className="font-headline-sm text-headline-sm font-semibold text-on-surface leading-tight">
-        Váy Midi Cổ Đổ Lụa Bóng
+      <div className="font-headline-sm text-headline-sm font-semibold text-on-surface leading-tight group-hover:text-primary transition-colors">
+        Đầm Voan Tơ Xếp Tầng Cổ Yếm
       </div>
       <div className="flex items-baseline gap-space-xs mt-space-xs">
-        <span className="font-label-lg text-label-lg text-primary font-bold">350K</span>
+        <span className="font-label-lg text-label-lg text-primary font-bold">230K</span>
         <span className="font-body-sm text-body-sm text-on-surface-variant">/ 4 ngày</span>
-        <span className="font-body-sm text-body-sm text-outline line-through ml-1">3.6tr giá gốc</span>
+        <span className="font-body-sm text-body-sm text-outline line-through ml-1">3.5tr giá gốc</span>
       </div>
       <div className="mt-space-xs flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
         <span className="material-symbols-outlined text-label-md text-primary">local_shipping</span>
         <span>Cam kết giao trước 2 ngày</span>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -163,9 +166,9 @@ export function HeroSection() {
             <div className="relative w-full max-w-md lg:max-w-lg">
               <div className="w-full h-[32rem] sm:h-[38rem] rounded-t-[14rem] rounded-b-xl overflow-hidden shadow-[0_24px_48px_-12px_rgba(36,30,26,0.18)] bg-surface-container-high relative">
                 <img
-                  alt="Người mẫu mặc váy lụa trễ vai màu hồng phấn"
-                  className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700 ease-out"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXIGqaTBbVzuie1zm2rW_1XAfF6TCEHSIr6xU3GsX5KNwdVm8yznCM0lDy7sFCwDdi5bWO7Dp1GHlgvXaA8i-Nn87or0oi-t5Uv-434Ozr7fqy9f-rTOA-FTdWgY5dXm5sh6dr0FA2wmQZCn-9kvzIUWsuQMLEc9lx7hRw48rtP6NA7hqFcnhnExOj2KpK8GX7QLVpcQr48P4VIA2ZQ-XdD2xDKqIEiK6ypAQUTiyXoBCVuYyFcZHUoA"
+                  alt="Người mẫu diện Đầm Voan Tơ Xếp Tầng Cổ Yếm Màu Nude"
+                  className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-700 ease-out"
+                  src="/uploads/products/product-1790150980799-e787e494.jpg"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-on-secondary-fixed/40 via-transparent to-transparent pointer-events-none" />
               </div>

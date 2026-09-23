@@ -8,9 +8,11 @@ interface OrderSummaryProps {
   subtotal: number;
   careProtectionPrice: number;
   hasCareProtection: boolean;
+  disabled?: boolean;
+  disabledReason?: string;
 }
 
-export function OrderSummary({ itemCount, subtotal, careProtectionPrice, hasCareProtection }: OrderSummaryProps) {
+export function OrderSummary({ itemCount, subtotal, careProtectionPrice, hasCareProtection, disabled = false, disabledReason }: OrderSummaryProps) {
   const [showPromo, setShowPromo] = useState(false);
   
   const total = subtotal + (hasCareProtection ? careProtectionPrice : 0);
@@ -24,7 +26,7 @@ export function OrderSummary({ itemCount, subtotal, careProtectionPrice, hasCare
       <div className="py-3 flex flex-col gap-2.5 font-body-sm text-body-sm">
         <div className="flex items-center justify-between text-on-surface">
           <span>Tạm tính ({itemCount} sản phẩm)</span>
-          <span className="font-semibold">{subtotal}K</span>
+          <span className="font-semibold">{(subtotal >= 10000 ? subtotal : subtotal * 1000).toLocaleString('vi-VN')}đ</span>
         </div>
         <div className="flex items-center justify-between text-on-surface">
           <span>Size dự phòng ({itemCount}x)</span>
@@ -41,12 +43,12 @@ export function OrderSummary({ itemCount, subtotal, careProtectionPrice, hasCare
         {hasCareProtection && (
           <div className="flex items-center justify-between text-on-surface">
             <span>Bảo hiểm Rent-ish Care</span>
-            <span className="font-semibold">{careProtectionPrice}K</span>
+            <span className="font-semibold">{(careProtectionPrice >= 10000 ? careProtectionPrice : careProtectionPrice * 1000).toLocaleString('vi-VN')}đ</span>
           </div>
         )}
         <div className="flex items-center justify-between text-on-surface-variant text-[13px]">
           <span>Phí cọc bảo đảm (Hoàn lại)</span>
-          <span className="font-medium text-on-surface-variant">0K (Không giữ tiền)</span>
+          <span className="font-medium text-on-surface-variant">0đ (Không giữ tiền)</span>
         </div>
       </div>
       
@@ -80,18 +82,34 @@ export function OrderSummary({ itemCount, subtotal, careProtectionPrice, hasCare
       <div className="pt-4 mb-5 border-t border-surface-container bg-surface-container-low/50 -mx-6 px-6 py-4 flex items-baseline justify-between">
         <span className="font-headline-sm text-[18px] font-semibold text-on-surface">Tổng cộng</span>
         <div className="text-right">
-          <span className="font-headline-lg text-headline-lg font-bold text-on-surface">{total}K</span>
+          <span className="font-headline-lg text-headline-lg font-bold text-on-surface">{(total >= 10000 ? total : total * 1000).toLocaleString('vi-VN')}đ</span>
           <p className="text-[11px] text-on-surface-variant">Thuế VAT tính ở bước sau</p>
         </div>
       </div>
+
+      {disabled && disabledReason && (
+        <p className="text-xs font-semibold text-rose-600 mb-3 text-center bg-rose-50 p-2 rounded-lg border border-rose-200">
+          {disabledReason}
+        </p>
+      )}
       
-      <Link
-        className="w-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container h-12 rounded-full flex items-center justify-center gap-2 font-headline-sm text-[16px] font-semibold shadow-sm transition-all transform active:scale-[0.99] text-center"
-        href="/checkout"
-      >
-        <span>Tiến hành thanh toán</span>
-        <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-      </Link>
+      {disabled ? (
+        <button
+          disabled
+          className="w-full bg-surface-container text-outline h-12 rounded-full flex items-center justify-center gap-2 font-headline-sm text-[16px] font-semibold cursor-not-allowed opacity-70 text-center"
+        >
+          <span>Vui lòng kiểm tra lại giỏ hàng</span>
+          <span className="material-symbols-outlined text-[18px]">block</span>
+        </button>
+      ) : (
+        <Link
+          className="w-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container h-12 rounded-full flex items-center justify-center gap-2 font-headline-sm text-[16px] font-semibold shadow-sm transition-all transform active:scale-[0.99] text-center cursor-pointer"
+          href="/checkout"
+        >
+          <span>Tiến hành thanh toán</span>
+          <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </Link>
+      )}
       
       <div className="mt-5 pt-4 border-t border-surface-container flex flex-col gap-2 font-label-sm text-on-surface-variant">
         <div className="flex items-center gap-2">

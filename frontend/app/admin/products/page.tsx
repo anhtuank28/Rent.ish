@@ -1,7 +1,108 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import ProductGalleryManager from '@/components/features/admin/ProductGalleryManager';
+import { authFetch } from '@/store/authStore';
+
+// ─── Format số tiền VNĐ với dấu chấm phân cách hàng nghìn ───
+const formatVND = (value: number): string => {
+  if (!value && value !== 0) return '';
+  if (value === 0) return '';
+  return value.toLocaleString('vi-VN');
+};
+
+function numberToVietnameseWords(n: number): string {
+  if (!n || n <= 0) return '';
+  const digits = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+  
+  function readTriple(num: number, showZeroHundred: boolean): string {
+    const h = Math.floor(num / 100);
+    const t = Math.floor((num % 100) / 10);
+    const u = num % 10;
+    if (num === 0) return '';
+    let res = '';
+    if (h > 0 || showZeroHundred) {
+      res += `${digits[h]} trăm `;
+    }
+    if (t === 0 && u > 0) {
+      if (h > 0 || showZeroHundred) res += 'lẻ ';
+      res += digits[u];
+    } else if (t === 1) {
+      res += 'mười ';
+      if (u === 1) res += 'một';
+      else if (u === 5) res += 'lăm';
+      else if (u > 0) res += digits[u];
+    } else if (t > 1) {
+      res += `${digits[t]} mươi `;
+      if (u === 1) res += 'mốt';
+      else if (u === 4) res += 'tư';
+      else if (u === 5) res += 'lăm';
+      else if (u > 0) res += digits[u];
+    }
+    return res.trim();
+  }
+
+  const billions = Math.floor(n / 1_000_000_000);
+  const millions = Math.floor((n % 1_000_000_000) / 1_000_000);
+  const thousands = Math.floor((n % 1_000_000) / 1_000);
+  const units = n % 1_000;
+
+  const parts: string[] = [];
+  if (billions > 0) parts.push(`${readTriple(billions, false)} tỷ`);
+  if (millions > 0) parts.push(`${readTriple(millions, parts.length > 0)} triệu`);
+  if (thousands > 0) parts.push(`${readTriple(thousands, parts.length > 0)} nghìn`);
+  if (units > 0) parts.push(`${readTriple(units, parts.length > 0)}`);
+
+  const str = parts.join(' ').trim();
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1) + ' đồng';
+}
+
+// ─── Component Input Giá với format tự động & đọc chữ ───
+function PriceInput({ value, onChange, placeholder, className, required }: {
+  value: number;
+  onChange: (val: number) => void;
+  placeholder?: string;
+  className?: string;
+  required?: boolean;
+}) {
+  const displayValue = formatVND(value);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\D/g, '');
+    const num = raw ? parseInt(raw, 10) : 0;
+    onChange(num);
+  };
+
+  const words = value > 0 ? numberToVietnameseWords(value) : '';
+
+  return (
+    <div>
+      <div className="relative">
+        <input
+          type="text"
+          inputMode="numeric"
+          required={required}
+          placeholder={placeholder}
+          value={displayValue}
+          onChange={handleChange}
+          className={className}
+        />
+        {value > 0 && (
+          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[11px] font-semibold text-primary/70 pointer-events-none bg-surface-container px-1 py-0.5 rounded">
+            VNĐ
+          </span>
+        )}
+      </div>
+      {words && (
+        <p className="text-[11px] text-emerald-600 font-medium mt-1 flex items-center gap-1 animate-in fade-in">
+          <span className="material-symbols-outlined text-[13px]">check_circle</span>
+          <span>{words}</span>
+        </p>
+      )}
+    </div>
+  );
+}
 
 interface ProductVariant {
   id: string;
@@ -38,8 +139,8 @@ export default function AdminProductsPage() {
     name: '',
     description: '',
     images: ['https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800'],
-    rental_price: 350000,
-    retail_price: 2500000,
+    rental_price: 0,
+    retail_price: 0,
     size: 'Freesize',
     color: 'Tiêu chuẩn',
     inventory_count: 3
@@ -54,10 +155,12 @@ export default function AdminProductsPage() {
     retail_price: 0
   });
 
+  const [searchQuery, setSearchQuery] = useState('');
+
   const fetchProducts = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/products');
+      const res = await fetch('/api/products?limit=100');
       const json = await res.json();
       if (json.success) {
         setProducts(json.data || []);
@@ -83,7 +186,7 @@ export default function AdminProductsPage() {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/products', {
+      const res = await authFetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -114,8 +217,8 @@ export default function AdminProductsPage() {
           name: '',
           description: '',
           images: ['https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=800'],
-          rental_price: 350000,
-          retail_price: 2500000,
+          rental_price: 0,
+          retail_price: 0,
           size: 'Freesize',
           color: 'Tiêu chuẩn',
           inventory_count: 3
@@ -159,7 +262,7 @@ export default function AdminProductsPage() {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch(`/api/products/${editingProduct.id}`, {
+      const res = await authFetch(`/api/products/${editingProduct.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -196,7 +299,7 @@ export default function AdminProductsPage() {
 
     setDeletingId(productId);
     try {
-      const res = await fetch(`/api/products/${productId}`, {
+      const res = await authFetch(`/api/products/${productId}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -227,22 +330,39 @@ export default function AdminProductsPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-headline-md text-headline-md font-semibold text-on-surface">
-            Quản Lý Kho Trang Phục
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="font-headline-md text-headline-md font-semibold text-on-surface">
+              Quản Lý Kho Trang Phục
+            </h1>
+            <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-bold text-xs">
+              {products.length} trang phục
+            </span>
+          </div>
           <p className="text-body-md text-on-surface-variant mt-1">
-            Danh sách các mẫu đầm, áo dạ hội và số lượng tồn kho khả dụng để cho thuê.
+            Toàn bộ danh sách trang phục đang hiển thị trên website và tồn kho cho thuê.
           </p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl font-label-md hover:bg-primary/90 transition-all shadow-sm active:scale-95"
-        >
-          <span className="material-symbols-outlined text-[20px]">add</span>
-          <span>Thêm Trang Phục Mới</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[18px]">search</span>
+            <input
+              type="text"
+              placeholder="Tìm kiếm trang phục..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 pr-3 py-2 bg-surface-container-low rounded-xl text-body-sm text-on-surface placeholder:text-secondary outline-none focus:ring-2 focus:ring-primary/40 w-48 sm:w-60"
+            />
+          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl font-label-md hover:bg-primary/90 transition-all shadow-sm active:scale-95 shrink-0"
+          >
+            <span className="material-symbols-outlined text-[20px]">add</span>
+            <span>Thêm Mới</span>
+          </button>
+        </div>
       </div>
 
       {/* Products Table */}
@@ -270,7 +390,9 @@ export default function AdminProductsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-container-low text-body-sm text-on-surface">
-                {products.map((p) => {
+                {products
+                  .filter(p => !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description?.toLowerCase().includes(searchQuery.toLowerCase()))
+                  .map((p) => {
                   const isDeleting = deletingId === p.id;
                   const displayImages = p.images && p.images.length > 0 ? p.images : (p.image_url ? [p.image_url] : []);
                   const primaryImg = displayImages[0] || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800';
@@ -406,26 +528,22 @@ export default function AdminProductsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-label-md font-medium text-on-surface mb-1">Giá thuê / ngày (VNĐ) *</label>
-                  <input
-                    type="number"
+                  <PriceInput
                     required
-                    min={1000}
-                    step={10000}
+                    placeholder="Ví dụ: 350.000"
                     value={editFormData.rental_price}
-                    onChange={e => setEditFormData({ ...editFormData, rental_price: Number(e.target.value) })}
-                    className="w-full h-11 px-3.5 bg-surface-container-low rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-body-md text-on-surface font-semibold text-primary"
+                    onChange={val => setEditFormData({ ...editFormData, rental_price: val })}
+                    className="w-full h-11 px-3.5 pr-12 bg-surface-container-low rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-body-md text-on-surface font-semibold text-primary"
                   />
                 </div>
                 <div>
                   <label className="block text-label-md font-medium text-on-surface mb-1">Giá bán thị trường (VNĐ) *</label>
-                  <input
-                    type="number"
+                  <PriceInput
                     required
-                    min={1000}
-                    step={50000}
+                    placeholder="Ví dụ: 2.500.000"
                     value={editFormData.retail_price}
-                    onChange={e => setEditFormData({ ...editFormData, retail_price: Number(e.target.value) })}
-                    className="w-full h-11 px-3.5 bg-surface-container-low rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-body-md text-on-surface"
+                    onChange={val => setEditFormData({ ...editFormData, retail_price: val })}
+                    className="w-full h-11 px-3.5 pr-12 bg-surface-container-low rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-body-md text-on-surface"
                   />
                 </div>
               </div>
@@ -515,26 +633,22 @@ export default function AdminProductsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-label-md font-medium text-on-surface mb-1">Giá thuê / ngày (VNĐ) *</label>
-                  <input
-                    type="number"
+                  <PriceInput
                     required
-                    min={1000}
-                    step={10000}
+                    placeholder="Ví dụ: 350.000"
                     value={formData.rental_price}
-                    onChange={e => setFormData({ ...formData, rental_price: Number(e.target.value) })}
-                    className="w-full h-11 px-3.5 bg-surface-container-low rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-body-md text-on-surface font-semibold text-primary"
+                    onChange={val => setFormData({ ...formData, rental_price: val })}
+                    className="w-full h-11 px-3.5 pr-12 bg-surface-container-low rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-body-md text-on-surface font-semibold text-primary"
                   />
                 </div>
                 <div>
                   <label className="block text-label-md font-medium text-on-surface mb-1">Giá bán thị trường (VNĐ) *</label>
-                  <input
-                    type="number"
+                  <PriceInput
                     required
-                    min={1000}
-                    step={50000}
+                    placeholder="Ví dụ: 2.500.000"
                     value={formData.retail_price}
-                    onChange={e => setFormData({ ...formData, retail_price: Number(e.target.value) })}
-                    className="w-full h-11 px-3.5 bg-surface-container-low rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-body-md text-on-surface"
+                    onChange={val => setFormData({ ...formData, retail_price: val })}
+                    className="w-full h-11 px-3.5 pr-12 bg-surface-container-low rounded-xl outline-none focus:ring-2 focus:ring-primary/50 text-body-md text-on-surface"
                   />
                 </div>
               </div>

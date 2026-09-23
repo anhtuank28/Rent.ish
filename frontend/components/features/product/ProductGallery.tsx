@@ -101,43 +101,6 @@ export function ProductGallery({ images, product }: ProductGalleryProps) {
           </button>
         ))}
       </div>
-
-      {/* Rent-ish In Real Life (RIRL) Mini-Section */}
-      <div className="bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_8px_24px_-4px_rgba(36,30,26,0.04)] mt-2">
-        <div className="flex items-center justify-between mb-space-md">
-          <div>
-            <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-              <span>Khách hàng thực tế</span>
-              <span className="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">RIRL</span>
-            </h3>
-            <p className="font-body-sm text-body-sm text-on-surface-variant">
-              Xem ảnh review từ những người đã thuê sản phẩm này
-            </p>
-          </div>
-          <a className="font-label-md text-label-md text-primary font-semibold hover:underline flex items-center gap-1" href="#customer-gallery">
-            <span>Xem 42 ảnh</span>
-            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-          </a>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {/* We use the same image just as a placeholder for 4 members */}
-          {[1, 2, 3, 4].map((member) => (
-            <div key={member} className="relative group rounded-DEFAULT overflow-hidden aspect-[4/5] bg-surface-container">
-              <img
-                src={images[0]}
-                alt={`Member ${member}`}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-on-background/80 via-transparent to-transparent flex flex-col justify-end p-2.5">
-                <span className="font-label-sm text-label-sm text-white font-semibold leading-tight">Camille</span>
-                <span className="font-body-sm text-[11px] text-surface-container-high">1m65 • Size S</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

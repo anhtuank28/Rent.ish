@@ -15,8 +15,8 @@ export class CartController {
   mergeCart = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user!.userId;
-      const { localItems } = req.body;
-      const cart = await cartService.mergeCart(userId, localItems || []);
+      const { localItems, replace } = req.body;
+      const cart = await cartService.mergeCart(userId, localItems || [], !!replace);
       res.status(200).json({ success: true, data: cart });
     } catch (error) {
       next(error);

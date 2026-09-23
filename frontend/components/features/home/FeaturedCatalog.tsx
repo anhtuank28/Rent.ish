@@ -14,6 +14,7 @@ interface FeaturedProduct {
   retailPrice: number;
   badge: { label: string; className: string };
   hoverNote: string;
+  isOutOfStock?: boolean;
 }
 
 /* ─── Static Data Removed (Fetching from API) ─── */
@@ -22,7 +23,9 @@ interface FeaturedProduct {
 
 function FeaturedProductCard({ product }: { product: FeaturedProduct }) {
   return (
-    <div className="group bg-surface-container-lowest rounded-lg overflow-hidden shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] hover:shadow-[0_16px_36px_-6px_rgba(36,30,26,0.12)] transition-all flex flex-col justify-between">
+    <div className={`group bg-surface-container-lowest rounded-lg overflow-hidden shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] hover:shadow-[0_16px_36px_-6px_rgba(36,30,26,0.12)] transition-all flex flex-col justify-between ${
+      product.isOutOfStock ? 'opacity-90' : ''
+    }`}>
       {/* Image */}
       <div className="relative w-full aspect-[3/4] overflow-hidden bg-surface-container">
         <Link href={`/dresses/${product.id}`}>
@@ -30,7 +33,9 @@ function FeaturedProductCard({ product }: { product: FeaturedProduct }) {
             alt={product.imageAlt}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out ${
+              product.isOutOfStock ? 'grayscale-[35%] contrast-[0.9]' : ''
+            }`}
             src={product.imageUrl}
           />
         </Link>
@@ -77,19 +82,23 @@ function FeaturedProductCard({ product }: { product: FeaturedProduct }) {
           <div>
             <div className="flex items-baseline gap-1">
               <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
-                {product.price}K
+                {(product.price >= 10000 ? product.price : product.price * 1000).toLocaleString('vi-VN')}đ
               </span>
               <span className="font-label-sm text-label-sm text-on-surface-variant">/ 4 ngày</span>
             </div>
             <span className="font-label-sm text-label-sm text-outline line-through">
-              Giá gốc {product.retailPrice}K
+              Giá gốc {(product.retailPrice >= 10000 ? product.retailPrice : product.retailPrice * 1000).toLocaleString('vi-VN')}đ
             </span>
           </div>
           <Link
             href={`/dresses/${product.id}`}
-            className="bg-primary-container hover:bg-tertiary-container text-on-primary-fixed font-label-md text-label-md px-space-md py-2 rounded-full transition-colors shadow-sm"
+            className={`font-label-md text-label-md px-space-md py-2 rounded-full transition-colors shadow-sm ${
+              product.isOutOfStock
+                ? 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'
+                : 'bg-primary-container hover:bg-tertiary-container text-on-primary-fixed'
+            }`}
           >
-            Thuê Ngay
+            {product.isOutOfStock ? 'Xem Lịch' : 'Thuê Ngay'}
           </Link>
         </div>
       </div>
@@ -107,8 +116,9 @@ export async function FeaturedCatalog() {
     const json = await res.json();
     if (json.success) {
       products = json.data.map((p: any, index: number) => {
+        const isOutOfStock = !!p.isOutOfStock;
         // Pseudo-random badge logic based on index
-        const badges = [
+        const defaultBadges = [
           { label: '🔥 Xu Hướng', className: 'bg-on-secondary-fixed/80 backdrop-blur-sm text-surface-container-lowest' },
           { label: 'Gợi ý từ Staff', className: 'bg-tertiary text-on-tertiary' },
           { label: 'Dạ Hội', className: 'bg-secondary text-on-secondary' },
@@ -123,8 +133,11 @@ export async function FeaturedCatalog() {
           imageAlt: p.name,
           price: Number(p.rental_price) / 1000, // Convert to K format
           retailPrice: Number(p.retail_price) / 1000,
-          badge: badges[index % badges.length],
-          hoverNote: 'Sẵn sàng giao ngay',
+          badge: isOutOfStock
+            ? { label: 'ĐÃ KÍN LỊCH', className: 'bg-rose-600 text-white font-bold' }
+            : defaultBadges[index % defaultBadges.length],
+          hoverNote: isOutOfStock ? 'Tạm thời kín lịch' : 'Sẵn sàng giao ngay',
+          isOutOfStock,
         };
       });
     }
