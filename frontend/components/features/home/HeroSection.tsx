@@ -167,7 +167,7 @@ export function HeroSection() {
                 <img
                   alt="Người mẫu diện Đầm Voan Tơ Xếp Tầng Cổ Yếm Màu Nude"
                   className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-700 ease-out"
-                  src="/uploads/products/product-1790150980799-e787e494.jpg"
+                  src="https://wpbqdfwkjmrxmakubtbn.supabase.co/storage/v1/object/public/products/product-1790150980799-e787e494.jpg"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-on-secondary-fixed/40 via-transparent to-transparent pointer-events-none" />
               </div>
