@@ -222,13 +222,13 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="w-full min-h-screen bg-surface py-12 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+    <main className="w-full min-h-screen bg-surface py-6 sm:py-12 px-3 sm:px-6">
+      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         
         {/* Cột trái: Form Địa chỉ + Chọn phương thức thanh toán */}
         <div className="space-y-6">
           {/* Form Địa chỉ */}
-          <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm">
+          <div className="bg-surface-container-lowest p-4 sm:p-6 rounded-2xl shadow-sm">
             <h2 className="font-headline-sm text-headline-sm text-on-surface mb-6 flex items-center gap-2">
               <span className="material-symbols-outlined text-primary">local_shipping</span>
               Thông Tin Giao Hàng
@@ -347,7 +347,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Cột phải: Tóm tắt đơn hàng */}
-        <div className="bg-surface-container-low p-6 rounded-2xl h-fit sticky top-24">
+        <div className="bg-surface-container-low p-4 sm:p-6 rounded-2xl h-fit sticky top-24">
           <div className="flex items-baseline justify-between mb-4">
             <h2 className="font-headline-sm text-headline-sm text-on-surface">Tóm Tắt Đơn Đặt</h2>
             {Object.keys(stockErrors).length > 0 && (

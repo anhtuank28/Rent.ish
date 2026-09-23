@@ -76,14 +76,14 @@ export default function CartPage() {
     <>
       <CartHeader />
       <main className="w-full pt-20 bg-surface min-h-[calc(100vh-140px)] flex flex-col">
-        <div className="max-w-7xl mx-auto px-gutter-sm lg:px-margin py-8 w-full flex-1">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-margin py-6 sm:py-8 w-full flex-1">
           
-          <div className="flex items-baseline justify-between mb-6 pb-2">
-            <div className="flex items-baseline gap-3">
-              <h1 className="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight">
+          <div className="flex flex-wrap items-baseline justify-between gap-3 mb-6 pb-2">
+            <div className="flex items-baseline gap-2.5">
+              <h1 className="text-xl sm:text-headline-md text-on-surface font-semibold tracking-tight">
                 Giỏ Hàng Của Bạn
               </h1>
-              <span className="font-label-md text-label-md text-on-surface-variant font-medium bg-surface-container-low px-2.5 py-0.5 rounded-full">
+              <span className="font-label-md text-xs sm:text-label-md text-on-surface-variant font-medium bg-surface-container-low px-2.5 py-0.5 rounded-full">
                 {items.length} sản phẩm
               </span>
             </div>
@@ -99,7 +99,7 @@ export default function CartPage() {
             )}
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
             <div className="lg:col-span-7 flex flex-col gap-4">
               {items.length === 0 ? (
                 <div className="p-8 text-center bg-surface-container-lowest rounded-DEFAULT border border-surface-container-low">

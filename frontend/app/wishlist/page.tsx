@@ -64,7 +64,7 @@ export default function WishlistPage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-background pt-28 pb-space-xl">
-        <div className="max-w-7xl mx-auto px-margin sm:px-margin-lg">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-margin-lg">
           
           {/* Breadcrumbs & Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between pb-6 mb-8 border-b border-surface-container gap-4">
@@ -104,9 +104,9 @@ export default function WishlistPage() {
 
           {/* Loading Skeleton during hydration */}
           {!isHydrated ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter py-12">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 py-12">
               {[1, 2, 3, 4].map((n) => (
-                <div key={n} className="bg-surface-container-low rounded-xl h-96 animate-pulse" />
+                <div key={n} className="bg-surface-container-low rounded-xl h-64 sm:h-96 animate-pulse" />
               ))}
             </div>
           ) : items.length > 0 ? (
@@ -142,7 +142,7 @@ export default function WishlistPage() {
               </div>
 
               {/* Wishlist Items Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter">
+              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                 {items.map((item) => {
                   const savePercentage = item.retailPrice && item.price
                     ? Math.round(((item.retailPrice - item.price) / item.retailPrice) * 100)
@@ -151,10 +151,10 @@ export default function WishlistPage() {
                   return (
                     <article
                       key={item.id}
-                      className="group bg-surface-container-lowest rounded-2xl p-space-sm shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] hover:shadow-[0_16px_36px_-4px_rgba(36,30,26,0.12)] transition-all duration-300 flex flex-col justify-between border border-surface-container/60"
+                      className="group bg-surface-container-lowest rounded-2xl p-2 sm:p-3.5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between border border-surface-container/60"
                     >
                       {/* Image & Badges */}
-                      <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-container-low mb-space-md">
+                      <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-surface-container-low mb-2 sm:mb-3">
                         <Link href={`/dresses/${item.id}`}>
                           <img
                             src={item.imageUrl}

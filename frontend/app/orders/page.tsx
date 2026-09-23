@@ -129,21 +129,21 @@ export default function OrdersPage() {
           ) : (
             <div className="space-y-6">
               {orders.map((order) => (
-                <div key={order.id} className="bg-surface-container-lowest rounded-xl border border-surface-container overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div key={order.id} className="bg-surface-container-lowest rounded-2xl border border-surface-container overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                   {/* Order Header */}
-                  <div className="bg-surface-container-low px-6 py-4 border-b border-surface-container flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-6">
+                  <div className="bg-surface-container-low px-4 sm:px-6 py-3.5 sm:py-4 border-b border-surface-container flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                    <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                       <div>
-                        <p className="text-xs text-on-surface-variant uppercase font-semibold mb-1">Mã đơn hàng</p>
-                        <p className="font-mono text-sm">{order.id.split('-')[0].toUpperCase()}</p>
+                        <p className="text-xs text-on-surface-variant uppercase font-semibold mb-0.5 sm:mb-1">Mã đơn hàng</p>
+                        <p className="font-mono text-xs sm:text-sm font-bold">{order.id.split('-')[0].toUpperCase()}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-on-surface-variant uppercase font-semibold mb-1">Ngày đặt</p>
-                        <p className="text-sm">{new Date(order.created_at).toLocaleDateString('vi-VN')}</p>
+                        <p className="text-xs text-on-surface-variant uppercase font-semibold mb-0.5 sm:mb-1">Ngày đặt</p>
+                        <p className="text-xs sm:text-sm">{new Date(order.created_at).toLocaleDateString('vi-VN')}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-on-surface-variant uppercase font-semibold mb-1">Tổng tiền</p>
-                        <p className="text-sm font-bold text-primary">
+                        <p className="text-xs text-on-surface-variant uppercase font-semibold mb-0.5 sm:mb-1">Tổng tiền</p>
+                        <p className="text-xs sm:text-sm font-bold text-primary">
                           {(() => {
                             const raw = order.total_price ?? order.total_amount;
                             const num = Number(raw);
@@ -153,13 +153,13 @@ export default function OrdersPage() {
                         </p>
                       </div>
                     </div>
-                    <div>
+                    <div className="self-start sm:self-auto">
                       {getStatusBadge(order.status)}
                     </div>
                   </div>
                   
                   {/* Order Items */}
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <ul className="space-y-6">
                       {order.items.map((item, idx) => {
                         const product = item.inventory_unit.variant.product;

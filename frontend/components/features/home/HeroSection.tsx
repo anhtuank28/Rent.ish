@@ -29,7 +29,7 @@ function HeroStatItem({ stat }: { stat: typeof HERO_STATS[number] }) {
 
 function HeroSocialProof() {
   return (
-    <div className="absolute top-1 sm:top-2 -left-3 sm:-left-6 lg:-left-8 z-20 bg-surface-container-lowest/90 backdrop-blur-xl p-3 sm:px-4 sm:py-3 rounded-2xl border border-white/70 shadow-[0_16px_36px_-6px_rgba(36,30,26,0.12)] flex items-center gap-3 transition-all duration-300 hover:scale-105 hover:shadow-[0_20px_40px_-6px_rgba(36,30,26,0.18)] cursor-default">
+    <div className="absolute top-2 left-2 sm:-left-6 lg:-left-8 z-20 bg-surface-container-lowest/90 backdrop-blur-xl p-2 sm:px-4 sm:py-3 rounded-2xl border border-white/70 shadow-[0_16px_36px_-6px_rgba(36,30,26,0.12)] flex items-center gap-2 sm:gap-3 transition-all duration-300 hover:scale-105 hover:shadow-[0_20px_40px_-6px_rgba(36,30,26,0.18)] cursor-default">
       {/* Live pulse dot + Avatars */}
       <div className="relative flex items-center">
         <div className="flex -space-x-2.5">
@@ -75,8 +75,7 @@ function HeroTrendingCard() {
   return (
     <Link
       href="/dresses/d2b1dcbd-5ba1-4636-89fe-179bbe20f18a"
-      className="absolute -bottom-6 -right-2 sm:right-6 bg-surface-container-lowest p-space-md rounded-lg shadow-[0_16px_36px_-6px_rgba(36,30,26,0.14)] max-w-[260px] transition-transform hover:-translate-y-1 block z-20 group cursor-pointer"
-    >
+      className="absolute -bottom-5 right-2 sm:right-6 bg-surface-container-lowest p-3 sm:p-space-md rounded-2xl shadow-[0_16px_36px_-6px_rgba(36,30,26,0.14)] max-w-[215px] sm:max-w-[260px] transition-transform hover:-translate-y-1 block z-20 group cursor-pointer border border-surface-container-low/80">
       <div className="flex items-center justify-between gap-space-sm mb-1">
         <span className="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">
           Đang thịnh hành
@@ -125,7 +124,7 @@ export function HeroSection() {
             </div>
 
             {/* Heading */}
-            <h1 className="font-display text-display text-on-surface font-semibold tracking-tight leading-tight max-w-xl">
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-display text-on-surface font-semibold tracking-tight leading-tight max-w-xl">
               Curate Your Endless Wardrobe, The{' '}
               <span className="text-primary italic font-serif font-normal">Rent-ish</span> Way
             </h1>
@@ -164,7 +163,7 @@ export function HeroSection() {
           {/* Right Column — Hero Image */}
           <div className="lg:col-span-6 relative flex justify-center lg:justify-end">
             <div className="relative w-full max-w-md lg:max-w-lg">
-              <div className="w-full h-[32rem] sm:h-[38rem] rounded-t-[14rem] rounded-b-xl overflow-hidden shadow-[0_24px_48px_-12px_rgba(36,30,26,0.18)] bg-surface-container-high relative">
+              <div className="w-full h-[26rem] sm:h-[34rem] lg:h-[38rem] rounded-t-[10rem] sm:rounded-t-[14rem] rounded-b-xl overflow-hidden shadow-[0_24px_48px_-12px_rgba(36,30,26,0.18)] bg-surface-container-high relative">
                 <img
                   alt="Người mẫu diện Đầm Voan Tơ Xếp Tầng Cổ Yếm Màu Nude"
                   className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-700 ease-out"

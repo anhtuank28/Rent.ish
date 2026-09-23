@@ -39,10 +39,10 @@ export function ProductCard({
   const secondaryImg = images && images.length > 1 ? images[1] : null;
 
   return (
-    <article className={`group bg-surface-container-lowest rounded-lg p-space-sm shadow-[0_8px_24px_-4px_rgba(36,30,26,0.05)] hover:shadow-[0_16px_36px_-4px_rgba(36,30,26,0.12)] transition-all duration-300 flex flex-col justify-between ${
+    <article className={`group bg-surface-container-lowest rounded-xl p-2 sm:p-3 shadow-[0_4px_16px_-4px_rgba(36,30,26,0.05)] hover:shadow-[0_16px_36px_-4px_rgba(36,30,26,0.12)] transition-all duration-300 flex flex-col justify-between ${
       isOutOfStock ? 'opacity-90' : ''
     }`}>
-      <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden bg-surface-container-low mb-space-md">
+      <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden bg-surface-container-low mb-2 sm:mb-3">
         <Link href={`/dresses/${id}`} className="block w-full h-full relative overflow-hidden">
           <img
             src={displayPrimary}
@@ -69,25 +69,26 @@ export function ProductCard({
         {/* Multi-image count indicator */}
         {images && images.length > 1 && (
           <div className="absolute bottom-2 right-2 z-10 opacity-70 group-hover:opacity-100 transition-opacity">
-            <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
-              <span className="material-symbols-outlined text-[12px]">photo_library</span>
+            <span className="bg-black/60 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+              <span className="material-symbols-outlined text-[11px] sm:text-[12px]">photo_library</span>
               <span>{images.length}</span>
             </span>
           </div>
         )}
         
         {/* Out of Stock Badge / Badges */}
-        <div className="absolute top-space-sm left-space-sm flex flex-col gap-1 z-10">
+        <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
           {isOutOfStock ? (
-            <span className="bg-rose-600/95 backdrop-blur-md text-white font-label-sm text-[11px] px-2.5 py-1 rounded-full font-bold shadow-md flex items-center gap-1">
-              <span className="material-symbols-outlined text-[13px]">event_busy</span>
-              ĐÃ KÍN LỊCH
+            <span className="bg-rose-600/95 backdrop-blur-md text-white font-label-sm text-[10px] sm:text-[11px] px-2 py-0.5 sm:py-1 rounded-full font-bold shadow-md flex items-center gap-1">
+              <span className="material-symbols-outlined text-[12px]">event_busy</span>
+              <span className="hidden sm:inline">ĐÃ KÍN LỊCH</span>
+              <span className="sm:hidden">HẾT LỊCH</span>
             </span>
           ) : (
-            badges.map((badge, idx) => (
+            badges.slice(0, 1).map((badge, idx) => (
               <span
                 key={idx}
-                className="bg-surface-container-lowest/90 backdrop-blur-md font-label-sm text-label-sm text-on-surface px-2 py-0.5 rounded-full font-semibold"
+                className="bg-surface-container-lowest/90 backdrop-blur-md text-[10px] sm:text-xs text-on-surface px-1.5 sm:px-2 py-0.5 rounded-full font-semibold"
               >
                 {badge}
               </span>
@@ -96,7 +97,7 @@ export function ProductCard({
         </div>
 
         {/* Wishlist Button */}
-        <div className="absolute top-space-sm right-space-sm z-10">
+        <div className="absolute top-2 right-2 z-10">
           <WishlistButton
             item={{
               id,
@@ -111,8 +112,8 @@ export function ProductCard({
           />
         </div>
 
-        {/* Hover Quick Rent Pill */}
-        <div className="absolute inset-x-space-sm bottom-space-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+        {/* Hover Quick Rent Pill (Desktop only) */}
+        <div className="hidden sm:block absolute inset-x-space-sm bottom-space-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
           {isOutOfStock ? (
             <Link
               href={`/dresses/${id}`}
@@ -134,36 +135,36 @@ export function ProductCard({
       </div>
 
       {/* Meta details */}
-      <div className="space-y-1 px-1 pb-1 flex-grow flex flex-col justify-between">
+      <div className="space-y-0.5 sm:space-y-1 px-0.5 sm:px-1 pb-1 flex-grow flex flex-col justify-between">
         <div>
-          <div className="font-label-sm text-label-sm text-primary uppercase tracking-widest font-bold">
+          <div className="text-[10px] sm:text-xs text-primary uppercase tracking-wider font-bold truncate">
             {brand}
           </div>
           <Link href={`/dresses/${id}`}>
-            <h2 className="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors font-semibold truncate line-clamp-1">
+            <h2 className="text-xs sm:text-sm font-semibold text-on-surface group-hover:text-primary transition-colors truncate mt-0.5">
               {title}
             </h2>
           </Link>
-          <div className="font-body-sm text-body-sm text-outline mt-1">
+          <div className="text-[11px] sm:text-xs text-outline mt-0.5 truncate">
             Size: {sizes.join(', ')} {material ? `• ${material}` : ''}
           </div>
         </div>
         
-        <div className="pt-2 flex items-baseline justify-between mt-auto border-t border-surface-container-high">
+        <div className="pt-1.5 sm:pt-2 flex items-baseline justify-between mt-auto border-t border-surface-container-high">
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
+              <span className="text-xs sm:text-sm font-bold text-on-surface">
                 {(price >= 10000 ? price : price * 1000).toLocaleString('vi-VN')}đ
               </span>
-              <span className="font-body-sm text-[12px] text-on-surface-variant">
-                / 4 ngày
+              <span className="text-[10px] sm:text-xs text-on-surface-variant">
+                / 4n
               </span>
             </div>
-            <span className="block text-[11px] text-outline line-through">
-              Gốc {(retailPrice >= 10000 ? retailPrice : retailPrice * 1000).toLocaleString('vi-VN')}đ
+            <span className="block text-[10px] sm:text-[11px] text-outline line-through">
+              {(retailPrice >= 10000 ? retailPrice : retailPrice * 1000).toLocaleString('vi-VN')}đ
             </span>
           </div>
-          <div className="font-label-sm text-[11px] text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full font-semibold shrink-0">
+          <div className="text-[10px] sm:text-[11px] text-emerald-800 bg-emerald-100/80 px-1.5 sm:px-2 py-0.5 rounded-full font-semibold shrink-0">
             -{savePercentage}%
           </div>
         </div>

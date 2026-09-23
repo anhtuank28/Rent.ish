@@ -377,7 +377,7 @@ export function BookingEngine({ product }: BookingEngineProps) {
             <span>Hướng dẫn chọn size</span>
           </button>
         </div>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="flex flex-wrap gap-2">
           {product.sizes.map((s) => {
             const stockCount = isCheckingAvailability ? null : getStockForSize(s.size);
             const isOutOfStock = stockCount !== null && stockCount === 0;
@@ -386,7 +386,7 @@ export function BookingEngine({ product }: BookingEngineProps) {
               <button
                 key={s.size}
                 disabled={isOutOfStock}
-                className={`py-2 px-1 rounded-xl font-label-md text-label-md font-semibold text-center transition-all flex flex-col items-center justify-center ${
+                className={`flex-1 min-w-[68px] py-2 px-1 rounded-xl font-label-md text-label-md font-semibold text-center transition-all flex flex-col items-center justify-center ${
                   isOutOfStock
                     ? 'bg-surface-container-low/50 text-outline border border-surface-container/60 cursor-not-allowed opacity-50'
                     : selectedSize === s.size 

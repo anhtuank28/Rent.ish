@@ -95,7 +95,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Right Column: Booking Engine (Sticky) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24 mt-space-md lg:mt-0">
+          <div id="booking-engine-section" className="lg:col-span-5 lg:sticky lg:top-24 mt-space-md lg:mt-0 scroll-mt-24">
             <BookingEngine product={product} />
           </div>
 
@@ -107,7 +107,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <CustomerReviews />
 
       {/* Mobile Sticky Add to Cart (Visible only on small screens) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-3 bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_24px_rgba(36,30,26,0.12)] z-40 flex items-center justify-between gap-3">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-3 bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-8px_24px_rgba(36,30,26,0.12)] z-40 flex items-center justify-between gap-3 border-t border-surface-container/60">
         <div className="flex flex-col">
           <div className="flex items-baseline gap-1.5">
             <span className="font-headline-sm text-headline-sm font-bold text-on-surface">
@@ -118,16 +118,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </span>
           </div>
           <span className="font-label-sm text-[11px] text-primary font-medium">
-            Kèm 1 size miễn phí
+            Kèm 1 size dự phòng
           </span>
         </div>
-        <button
-          className="flex-1 max-w-[220px] h-11 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md font-bold shadow-md hover:bg-tertiary-container transition-colors flex items-center justify-center gap-1.5"
-          type="button"
+        <a
+          href="#booking-engine-section"
+          className="flex-1 max-w-[220px] h-11 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md font-bold shadow-md hover:bg-tertiary-container transition-colors flex items-center justify-center gap-1.5 cursor-pointer text-center"
         >
           <span className="material-symbols-outlined text-[18px]">calendar_today</span>
           <span>Chọn ngày thuê</span>
-        </button>
+        </a>
       </div>
 
     </main>

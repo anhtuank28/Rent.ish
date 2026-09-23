@@ -36,6 +36,7 @@ function DressesContent() {
   const [sortBy, setSortBy] = useState<'newest' | 'price_asc' | 'price_desc'>(
     () => (searchParams.get('sort') as any) || 'newest'
   );
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   // Pagination States (9 items per page, sync with URL)
   const [currentPage, setCurrentPage] = useState(() => {
@@ -47,6 +48,18 @@ function DressesContent() {
   const [products, setProducts] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Lock body scroll when mobile filter is open
+  useEffect(() => {
+    if (isFilterModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isFilterModalOpen]);
 
   // Listen to Browser Back/Forward navigation (popstate)
   useEffect(() => {
@@ -244,11 +257,24 @@ function DressesContent() {
           </section>
 
           {/* Floating Sticky Filter / Control Bar */}
-          <section className="sticky top-20 z-30 w-full px-margin sm:px-margin-lg -mt-4 mb-space-lg">
-            <div className="max-w-7xl mx-auto bg-surface-container-lowest/95 backdrop-blur-md rounded-2xl shadow-[0_12px_32px_-4px_rgba(36,30,26,0.08),0_2px_6px_0_rgba(36,30,26,0.03)] px-space-md py-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+          <section className="sticky top-20 z-30 w-full px-margin-sm sm:px-margin -mt-4 mb-space-lg">
+            <div className="max-w-7xl mx-auto bg-surface-container-lowest/95 backdrop-blur-md rounded-2xl shadow-[0_12px_32px_-4px_rgba(36,30,26,0.08),0_2px_6px_0_rgba(36,30,26,0.03)] px-3 sm:px-space-md py-2.5 sm:py-space-sm flex items-center justify-between gap-2">
               
-              {/* Quick Size Filters */}
-              <div className="flex items-center gap-space-xs overflow-x-auto py-0.5">
+              {/* Mobile Filter Button */}
+              <button
+                onClick={() => setIsFilterModalOpen(true)}
+                className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-container text-on-surface font-label-md text-xs font-semibold hover:bg-tertiary-container transition-colors cursor-pointer shadow-sm shrink-0"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[16px]">tune</span>
+                <span>Bộ Lọc</span>
+                {hasActiveFilters && (
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                )}
+              </button>
+
+              {/* Quick Size Filters (Desktop & Tablet) */}
+              <div className="hidden sm:flex items-center gap-space-xs overflow-x-auto py-0.5">
                 <span className="font-label-sm text-label-sm text-outline uppercase tracking-wider hidden sm:inline-block mr-space-xs">
                   Size:
                 </span>
@@ -256,7 +282,7 @@ function DressesContent() {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-space-md py-space-xs rounded-full font-label-md text-label-md transition-all cursor-pointer ${
+                    className={`px-3 sm:px-space-md py-1 sm:py-space-xs rounded-full font-label-md text-xs sm:text-label-md transition-all cursor-pointer ${
                       selectedSize === size
                         ? 'bg-primary-container text-on-surface font-semibold shadow-sm' 
                         : 'bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
@@ -269,27 +295,27 @@ function DressesContent() {
               </div>
 
               {/* Sort & Reset */}
-              <div className="flex items-center gap-space-sm ml-auto">
+              <div className="flex items-center gap-2 sm:gap-space-sm ml-auto shrink-0">
                 <div className="relative inline-block">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
-                    className="flex items-center gap-space-xs font-label-md text-label-md text-on-surface bg-surface-container-low px-space-md py-space-xs rounded-full hover:bg-surface-container transition-colors outline-none cursor-pointer"
+                    className="flex items-center gap-space-xs font-label-md text-xs sm:text-label-md text-on-surface bg-surface-container-low px-2.5 sm:px-space-md py-1.5 sm:py-space-xs rounded-full hover:bg-surface-container transition-colors outline-none cursor-pointer"
                   >
                     <option value="newest">Mới nhất</option>
-                    <option value="price_asc">Giá thuê: Thấp đến Cao</option>
-                    <option value="price_desc">Giá thuê: Cao đến Thấp</option>
+                    <option value="price_asc">Giá: Thấp → Cao</option>
+                    <option value="price_desc">Giá: Cao → Thấp</option>
                   </select>
                 </div>
 
                 {hasActiveFilters && (
                   <button
                     onClick={handleResetFilters}
-                    className="flex items-center gap-1 text-primary hover:text-on-surface font-label-sm text-label-sm underline px-2 py-1"
+                    className="flex items-center gap-1 text-primary hover:text-on-surface font-label-sm text-xs sm:text-label-sm underline px-1.5 py-1"
                     type="button"
                   >
-                    <span className="material-symbols-outlined text-[16px]">restart_alt</span>
-                    <span>Đặt lại</span>
+                    <span className="material-symbols-outlined text-[15px]">restart_alt</span>
+                    <span className="hidden sm:inline">Đặt lại</span>
                   </button>
                 )}
               </div>
@@ -396,9 +422,9 @@ function DressesContent() {
               {/* Main Product Grid (9 cols = 75%) */}
               <div className="lg:col-span-9">
                 {isLoading ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-gutter">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((idx) => (
-                      <div key={idx} className="bg-surface-container-lowest rounded-2xl p-4 animate-pulse space-y-3">
+                      <div key={idx} className="bg-surface-container-lowest rounded-2xl p-2.5 sm:p-4 animate-pulse space-y-3">
                         <div className="w-full aspect-[3/4] bg-surface-container rounded-xl" />
                         <div className="h-4 bg-surface-container rounded w-1/3" />
                         <div className="h-5 bg-surface-container rounded w-3/4" />
@@ -408,7 +434,7 @@ function DressesContent() {
                   </div>
                 ) : products.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-gutter">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                       {products.map((product) => (
                         <ProductCard key={product.id} {...product} />
                       ))}
@@ -484,6 +510,148 @@ function DressesContent() {
             </div>
           </section>
         </div>
+
+        {/* ─── Mobile Filter Drawer / Bottom Sheet ─── */}
+        {isFilterModalOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden flex flex-col justify-end">
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+              onClick={() => setIsFilterModalOpen(false)}
+            />
+
+            {/* Sheet Panel */}
+            <div className="relative w-full max-h-[85vh] bg-surface-container-lowest rounded-t-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-300 z-10">
+              {/* Header */}
+              <div className="p-4 px-6 border-b border-surface-container flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-[22px]">tune</span>
+                  <h3 className="font-headline-sm text-lg font-bold text-on-surface">Bộ Lọc Trang Phục</h3>
+                </div>
+                <button
+                  onClick={() => setIsFilterModalOpen(false)}
+                  className="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer"
+                  aria-label="Đóng bộ lọc"
+                >
+                  <span className="material-symbols-outlined text-[22px]">close</span>
+                </button>
+              </div>
+
+              {/* Filter Content */}
+              <div className="p-6 space-y-6 overflow-y-auto">
+                {/* Khoảng giá */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-outline mb-3">
+                    Khoảng Giá Thuê
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'all', label: 'Tất cả mức giá' },
+                      { id: 'under500', label: 'Dưới 500.000đ' },
+                      { id: '500to1000', label: '500K - 1.000.000đ' },
+                      { id: 'above1000', label: 'Trên 1.000.000đ' },
+                    ].map((range) => (
+                      <button
+                        key={range.id}
+                        type="button"
+                        onClick={() => setSelectedPriceRange(range.id)}
+                        className={`p-3 rounded-xl text-xs font-semibold text-center transition-all cursor-pointer ${
+                          selectedPriceRange === range.id
+                            ? 'bg-primary-container text-on-surface font-bold ring-2 ring-primary/40'
+                            : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                        }`}
+                      >
+                        {range.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Kích cỡ */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-outline mb-3">
+                    Chọn Kích Cỡ
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {['Tất cả', 'S', 'M', 'L', 'Freesize'].map((size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => setSelectedSize(size)}
+                        className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                          selectedSize === size
+                            ? 'bg-primary text-on-primary shadow-sm'
+                            : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sắp xếp */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-outline mb-3">
+                    Thứ Tự Sắp Xếp
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { id: 'newest', label: 'Mới nhất' },
+                      { id: 'price_asc', label: 'Giá: Thấp → Cao' },
+                      { id: 'price_desc', label: 'Giá: Cao → Thấp' },
+                    ].map((s) => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => setSortBy(s.id as any)}
+                        className={`p-2.5 rounded-xl text-xs font-semibold text-center transition-all cursor-pointer ${
+                          sortBy === s.id
+                            ? 'bg-primary-container text-on-surface font-bold ring-2 ring-primary/40'
+                            : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                        }`}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Cam kết */}
+                <div className="p-3.5 rounded-xl bg-primary-container/20 border border-primary/20 space-y-1 text-xs text-on-surface">
+                  <div className="flex items-center gap-1.5 font-semibold text-primary">
+                    <span className="material-symbols-outlined text-[16px]">verified</span>
+                    <span>Miễn phí 1 size dự phòng</span>
+                  </div>
+                  <p className="text-[11px] text-on-surface-variant pl-5">
+                    Mỗi đơn thuê luôn được đính kèm 1 size dự phòng để bạn an tâm mặc vừa vặn nhất.
+                  </p>
+                </div>
+              </div>
+
+              {/* Footer Buttons */}
+              <div className="p-4 px-6 border-t border-surface-container bg-surface-container-lowest flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleResetFilters();
+                    setIsFilterModalOpen(false);
+                  }}
+                  className="py-3 px-4 rounded-xl border border-surface-container font-label-md text-sm text-on-surface-variant hover:bg-surface-container font-medium cursor-pointer"
+                >
+                  Đặt lại
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsFilterModalOpen(false)}
+                  className="flex-1 py-3 px-4 rounded-xl bg-primary text-on-primary font-label-md text-sm font-bold shadow-md hover:bg-primary/90 transition-colors text-center cursor-pointer"
+                >
+                  Xem {total} trang phục
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </>

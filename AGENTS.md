@@ -43,6 +43,7 @@
 | **Tinh chỉnh Admin giá tự do & định dạng tiền tệ chấm phân cách (xxx.000đ)** | ✅ Hoàn thành |
 | **Tự động làm mới Auth Token & Sửa lỗi phiên đăng nhập** | ✅ Hoàn thành |
 | **Cập nhật Hero Section & Tối ưu UI Checkout** | ✅ Hoàn thành |
+| **Tối ưu hiển thị Mobile Responsive toàn diện (Navbar Drawer, Catalog 2-col, Filter Bottom Sheet, Admin Drawer)** | ✅ Hoàn thành |
 
 ## 5. Sprint Plan (Thứ tự triển khai)
 
